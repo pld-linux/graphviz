@@ -35,6 +35,7 @@ rozmieszczania grafów.
 %setup -q
 
 %build
+rm -f missing
 libtoolize --copy --force
 aclocal
 autoconf
