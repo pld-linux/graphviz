@@ -10,14 +10,13 @@ URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	bison
 BuildRequires:	flex
-BuildRequires:	freetype-devel
+BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	zlib-devel
-
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
