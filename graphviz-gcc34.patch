@@ -1,3 +1,18 @@
+--- graphviz-1.10/dynagraph/common/LGraph-cdt.h.orig	2002-12-19 23:30:25.000000000 +0100
++++ graphviz-1.10/dynagraph/common/LGraph-cdt.h	2004-02-23 11:53:04.176513440 +0100
+@@ -232,10 +232,10 @@
+ 			return !(*this==other);
+ 		}
+ 		inedge_iter inIter() {
+-			return head()->inIter(this);
++			return this->head->inIter(this);
+ 		}
+ 		outedge_iter outIter() {
+-			return tail()->outIter(this);
++			return this->tail->outIter(this);
+ 		}
+ 	};
+ 	// workaround for circular typing problems w/ friend decl: do not call!
 --- graphviz-1.10/dynagraph/common/traversal.h.orig	2002-12-19 23:30:25.000000000 +0100
 +++ graphviz-1.10/dynagraph/common/traversal.h	2004-02-23 10:33:01.743594216 +0100
 @@ -78,10 +78,10 @@
