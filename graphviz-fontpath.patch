@@ -1,5 +1,5 @@
---- graphviz-1.10/configure.in.orig	Fri Aug  2 22:55:20 2002
-+++ graphviz-1.10/configure.in	Sat Aug 10 18:06:08 2002
+--- graphviz-1.10/configure.ac.orig	Fri Aug  2 22:55:20 2002
++++ graphviz-1.10/configure.ac	Sat Aug 10 18:06:08 2002
 @@ -48,7 +48,7 @@
  	PATHSEPARATOR=":"
  	;;
