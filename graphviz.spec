@@ -3,9 +3,6 @@
 #
 # Conditional build:
 %bcond_without	dynagraph	# without dynagraph program (they say it requires gcc 3.1)
-%bcond_with	system_gd	# use included libgd instead of system-wide one
-#                      		(needed if your libgd doesn't support GIF format)
-#                               (need cvs version 2.0.29 libgd)
 #
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
@@ -27,16 +24,19 @@ BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
 %{?with_dynagraph:BuildRequires:	gcc-c++ >= 5:3.1}
-%{?with_system_gd:BuildRequires:	gd-devel(gif) >= 2.0.29}
+BuildRequires:	gd-devel >= 2.0.29
 BuildRequires:	gettext-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
+BuildRequires:	libsvg-cairo-devel >= 0.1.3
 BuildRequires:	libtool
+BuildRequires:	pkgconfig
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
 BuildRequires:	zlib-devel
-%{?with_system_gd:Requires:	gd(gif) >= 2.0.9}
+Requires:	gd >= 2.0.29
+Requires:	libsvg-cairo >= 0.1.3
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -91,14 +91,12 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 %patch1 -p1
 
 %build
-rm -f missing
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
 %{__automake}
 %configure \
-	%{?with_dynagraph:--with-dynagraph} \
-	%{?without_system_gd:--with-mylibgd} \
+	%{?with_dynagraph:--enable-dynagraph} \
 	--enable-gvrender
 
 %{__make}
