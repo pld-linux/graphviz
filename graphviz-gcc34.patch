@@ -1,3 +1,51 @@
+--- graphviz-1.10/dynagraph/dynadag/DynaDAG.h.orig	2002-12-19 23:30:25.000000000 +0100
++++ graphviz-1.10/dynagraph/dynadag/DynaDAG.h	2004-02-23 12:42:39.206240176 +0100
+@@ -209,10 +209,10 @@
+ 		typename Chain<N,E>::edge_iter ei;
+ 	};
+ 	node_iter nBegin() {
+-		return node_iter(eBegin(),false);
++		return node_iter(this->eBegin(),false);
+ 	}
+ 	node_iter nEnd() {
+-		return node_iter(eEnd(),true);
++		return node_iter(this->eEnd(),true);
+ 	}
+ 	Position pos() {
+ 		if(!top() || !DDd(top()).cur.valid)
+@@ -220,10 +220,10 @@
+ 		return Position(DDd(top()).cur.x,(DDd(top()).cur.y+DDd(bottom()).cur.y)/2.0);
+ 	}
+ 	N *top() {
+-		return node?node:first->tail;
++		return node?node:this->first->tail;
+ 	}
+ 	N *bottom() {
+-		return node?node:last->head;
++		return node?node:this->last->head;
+ 	}
+ 	int len() {
+ 		int n=0;
+--- graphviz-1.10/dynagraph/common/emitGraph.h.orig	2003-01-31 06:46:44.000000000 +0100
++++ graphviz-1.10/dynagraph/common/emitGraph.h	2004-02-23 12:34:46.289134504 +0100
+@@ -18,7 +18,7 @@
+ template<typename G>
+ void emitGraph(std::ostream &os,G *g) {
+   os << "digraph " << mquote(gd<Name>(g));
+-  os << " {" << endl << "\tgraph ";
++  os << " {" << std::endl << "\tgraph ";
+   emitAttrs(os,gd<StrAttrs>(g));
+   for(typename G::node_iter ni = g->nodes().begin(); ni!=g->nodes().end(); ++ni) {
+     os << '\t' << mquote(gd<Name>(*ni)) << ' ';
+@@ -44,7 +44,7 @@
+ 	Name &gname = (ati!=gd<StrAttrs>(g).end())?ati->second:gd<Name>(g);
+ 
+ 	os << "digraph " << mquote(gname);
+-	os << " {" << endl << "\tgraph ";
++	os << " {" << std::endl << "\tgraph ";
+ 	emitAttrs(os,gd<StrAttrs>(g));
+ 	for(typename G::node_iter ni = g->nodes().begin(); ni!=g->nodes().end(); ++ni) {
+ 		StrAttrs::iterator ati = gd<StrAttrs>(*ni).find("label");
 --- graphviz-1.10/dynagraph/common/LGraph-cdt.h.orig	2002-12-19 23:30:25.000000000 +0100
 +++ graphviz-1.10/dynagraph/common/LGraph-cdt.h	2004-02-23 11:53:04.176513440 +0100
 @@ -232,10 +232,10 @@
@@ -5,11 +53,11 @@
  		}
  		inedge_iter inIter() {
 -			return head()->inIter(this);
-+			return this->head->inIter(this);
++			return this->head()->inIter(this);
  		}
  		outedge_iter outIter() {
 -			return tail()->outIter(this);
-+			return this->tail->outIter(this);
++			return this->tail()->outIter(this);
  		}
  	};
  	// workaround for circular typing problems w/ friend decl: do not call!
@@ -50,26 +98,6 @@
 +	refstr_t *key = (refstr_t*)(s - ((refstr_t *)0)->s[0]);
  	key->refcnt++;
  }
---- graphviz-1.10/dynagraph/common/emitGraph.h.orig	2003-01-31 06:46:44.000000000 +0100
-+++ graphviz-1.10/dynagraph/common/emitGraph.h	2004-02-23 12:34:46.289134504 +0100
-@@ -18,7 +18,7 @@
- template<typename G>
- void emitGraph(std::ostream &os,G *g) {
-   os << "digraph " << mquote(gd<Name>(g));
--  os << " {" << endl << "\tgraph ";
-+  os << " {" << std::endl << "\tgraph ";
-   emitAttrs(os,gd<StrAttrs>(g));
-   for(typename G::node_iter ni = g->nodes().begin(); ni!=g->nodes().end(); ++ni) {
-     os << '\t' << mquote(gd<Name>(*ni)) << ' ';
-@@ -44,7 +44,7 @@
- 	Name &gname = (ati!=gd<StrAttrs>(g).end())?ati->second:gd<Name>(g);
- 
- 	os << "digraph " << mquote(gname);
--	os << " {" << endl << "\tgraph ";
-+	os << " {" << std::endl << "\tgraph ";
- 	emitAttrs(os,gd<StrAttrs>(g));
- 	for(typename G::node_iter ni = g->nodes().begin(); ni!=g->nodes().end(); ++ni) {
- 		StrAttrs::iterator ati = gd<StrAttrs>(*ni).find("label");
 --- graphviz-1.10/dynagraph/common/traversal.h.orig	2002-12-19 23:30:25.000000000 +0100
 +++ graphviz-1.10/dynagraph/common/traversal.h	2004-02-23 10:33:01.743594216 +0100
 @@ -78,10 +78,10 @@
