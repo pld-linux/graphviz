@@ -1,20 +1,20 @@
 #
 # Conditional build:
-# _with_dynagraph - with dynagraph program (they say it requires gcc 3.1;
-#	it builds with 2.95.4, but doesn't seem to work - fstream problems)
-#	-- doesn't build now anyway in 1.9 (missing file?)
+# _without_dynagraph - without dynagraph program (they say it requires gcc 3.1)
 # _without_system_gd - use included libgd instead of system-wide one
 #                      (needed if your libgd doesn't support GIF format)
 #
+# TODO:
+# - linking (duplicate code, somewhere linked dynamically, somewhere statically)
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	1.9
+Version:	1.10
 Release:	1
 License:	custom (AT&T)
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/%{name}-%{version}.tar.gz
-# Source0-md5:	5f8d1e1f15594f4869fc9c68f32e7dbb
+# Source0-md5:	e1402531abff68d146bf94e72b44dc2a
 Patch0:		%{name}-lt14d.patch
 Patch1:		%{name}-system-gd.patch
 Patch2:		%{name}-fontpath.patch
@@ -26,6 +26,7 @@ BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
+%{!?_without_dynagraph:BuildRequires:	gcc-c++ >= 5:3.1}
 %{!?_without_system_gd:BuildRequires:	gd-devel(gif) >= 2.0.9}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
@@ -97,7 +98,7 @@ rm -f missing
 %{__autoconf}
 %{__automake}
 %configure \
-	%{?_with_dynagraph:--with-dynagraph}
+	%{!?_without_dynagraph:--with-dynagraph}
 
 %{__make}
 
