@@ -1,7 +1,7 @@
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	1.8.4
+Version:	1.8.8
 Release:	1
 License:	custom (AT&T)
 Group:		X11/Applications/Graphics
@@ -40,8 +40,6 @@ aclocal
 %{__autoconf}
 %{__automake}
 %configure 
-# \
-#	--with-dynagraph
 %{__make}
 
 %install
@@ -49,8 +47,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
-
-gzip -9 AUTHORS COPYING ChangeLog FAQ.txt NEWS
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -62,11 +58,10 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/%{name}
-%{_libdir}/%{name}/*.tcl
+%{_libdir}/%{name}/
 %attr(755,root,root) %{_libdir}/%{name}/lib*.so.*.*
-%{_libdir}/%{name}/graphs
-%dir %{_libdir}/%{name}/lefty
-%attr(755,root,root) %{_libdir}/%{name}/lefty/*
+%attr(755,root,root) %{_datadir}/%{name}/*
+%doc AUTHORS COPYING ChangeLog FAQ.txt NEWS
 
 %{_mandir}/man1/*
 %{_mandir}/mann/*
