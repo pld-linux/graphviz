@@ -1,7 +1,7 @@
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	1.8.2
+Version:	1.8.4
 Release:	1
 License:	custom (AT&T)
 Group:		X11/Applications/Graphics
@@ -35,7 +35,12 @@ rozmieszczania grafów.
 %setup -q
 
 %build
-%configure \
+libtoolize --copy --force
+aclocal
+autoconf
+automake -a -c -f
+%configure 
+# \
 #	--with-dynagraph
 %{__make}
 
