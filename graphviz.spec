@@ -29,6 +29,7 @@ BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
 %{?with_dynagraph:BuildRequires:	gcc-c++ >= 5:3.1}
 %{?with_system_gd:BuildRequires:	gd-devel(gif) >= 2.0.9}
+BuildRequires:	gettext-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
