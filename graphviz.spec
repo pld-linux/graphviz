@@ -14,6 +14,7 @@ Release:	1
 License:	custom (AT&T)
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/%{name}-%{version}.tar.gz
+# Source0-md5:	5f8d1e1f15594f4869fc9c68f32e7dbb
 Patch0:		%{name}-lt14d.patch
 Patch1:		%{name}-system-gd.patch
 Patch2:		%{name}-fontpath.patch
