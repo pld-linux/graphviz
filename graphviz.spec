@@ -57,11 +57,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/*
-%dir %{_libdir}/%{name}
-%{_libdir}/%{name}/
 %attr(755,root,root) %{_libdir}/%{name}/lib*.so.*.*
+%{_libdir}/%{name}/pkgIndex.tcl
 %attr(755,root,root) %{_datadir}/%{name}/*
 %doc AUTHORS COPYING ChangeLog FAQ.txt NEWS
 
 %{_mandir}/man1/*
+%{_mandir}/man3/*
 %{_mandir}/mann/*
