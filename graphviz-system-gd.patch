@@ -1,95 +1,104 @@
---- graphviz-1.8.9/dotneato/Makefile.am.orig	Fri Aug  2 05:13:43 2002
-+++ graphviz-1.8.9/dotneato/Makefile.am	Sat Aug 10 02:06:45 2002
-@@ -39,8 +39,7 @@
- 	common/libdotneato.la \
- 	../pathplan/libpathplan.la \
- 	../graph/libgraph.la \
--	../cdt/libcdt.la \
--	../gd/libgd.la
-+	../cdt/libcdt.la -lgd
+--- graphviz-1.9/dotneato/Makefile.am.orig	2003-01-15 21:04:57.000000000 +0100
++++ graphviz-1.9/dotneato/Makefile.am	2003-05-15 20:26:05.000000000 +0200
+@@ -43,16 +43,14 @@
+ 	$(top_srcdir)/dotneato/pack/libpack.la \
+ 	$(top_srcdir)/pathplan/libpathplan.la \
+ 	$(top_srcdir)/graph/libgraph.la \
+-	$(top_srcdir)/cdt/libcdt.la \
+-	$(top_srcdir)/gd/libgdconvenience.la
++	$(top_srcdir)/cdt/libcdt.la -lgd
  
- neato_LDADD = common/libdotneato.la \
- 	neatogen/libneato.la \
-@@ -48,8 +47,7 @@
- 	common/libdotneato.la \
- 	../pathplan/libpathplan.la \
- 	../graph/libgraph.la \
--	../cdt/libcdt.la \
--	../gd/libgd.la
-+	../cdt/libcdt.la -lgd
+ dot_LDADD = $(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/dotneato/dotgen/libdotconvenience.la \
+ 	$(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/pathplan/libpathplan.la \
+ 	$(top_srcdir)/graph/libgraph.la \
+-	$(top_srcdir)/cdt/libcdt.la \
+-	$(top_srcdir)/gd/libgdconvenience.la
++	$(top_srcdir)/cdt/libcdt.la -lgd
  
- twopi_LDADD = common/libdotneato.la \
- 	twopigen/libtwopi.la \
-@@ -58,16 +56,14 @@
- 	pack/libpack.la \
- 	../pathplan/libpathplan.la \
- 	../graph/libgraph.la \
--	../cdt/libcdt.la \
--	../gd/libgd.la
-+	../cdt/libcdt.la -lgd
+ neato_LDADD = $(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/dotneato/neatogen/libneatoconvenience.la \
+@@ -60,8 +58,7 @@
+ 	$(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/pathplan/libpathplan.la \
+ 	$(top_srcdir)/graph/libgraph.la \
+-	$(top_srcdir)/cdt/libcdt.la \
+-	$(top_srcdir)/gd/libgdconvenience.la
++	$(top_srcdir)/cdt/libcdt.la -lgd
  
- dotmemtest_LDADD = common/libdotneato.la \
- 	dotgen/libdot.la \
- 	common/libdotneato.la \
- 	../pathplan/libpathplan.la \
- 	../graph/libgraph.la \
--	../cdt/libcdt.la \
--	../gd/libgd.la
-+	../cdt/libcdt.la -lgd
+ twopi_LDADD = $(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/dotneato/twopigen/libtwopiconvenience.la \
+@@ -70,16 +67,14 @@
+ 	$(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/pathplan/libpathplan.la \
+ 	$(top_srcdir)/graph/libgraph.la \
+-	$(top_srcdir)/cdt/libcdt.la \
+-	$(top_srcdir)/gd/libgdconvenience.la
++	$(top_srcdir)/cdt/libcdt.la -lgd
  
- neatomemtest_LDADD = common/libdotneato.la \
- 	neatogen/libneato.la \
-@@ -75,8 +71,7 @@
- 	common/libdotneato.la \
- 	../pathplan/libpathplan.la \
- 	../graph/libgraph.la \
--	../cdt/libcdt.la \
--        ../gd/libgd.la
-+	../cdt/libcdt.la -lgd
+ dotmemtest_LDADD = $(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/dotneato/dotgen/libdotconvenience.la \
+ 	$(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/pathplan/libpathplan.la \
+ 	$(top_srcdir)/graph/libgraph.la \
+-	$(top_srcdir)/cdt/libcdt.la \
+-	$(top_srcdir)/gd/libgdconvenience.la
++	$(top_srcdir)/cdt/libcdt.la -lgd
  
- twopimemtest_LDADD = common/libdotneato.la \
- 	twopigen/libtwopi.la \
-@@ -85,8 +80,7 @@
- 	pack/libpack.la \
- 	../pathplan/libpathplan.la \
-         ../graph/libgraph.la \
--        ../cdt/libcdt.la \
--        ../gd/libgd.la
-+        ../cdt/libcdt.la -lgd
+ neatomemtest_LDADD = $(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/dotneato/neatogen/libneatoconvenience.la \
+@@ -87,8 +82,7 @@
+ 	$(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/pathplan/libpathplan.la \
+ 	$(top_srcdir)/graph/libgraph.la \
+-	$(top_srcdir)/cdt/libcdt.la \
+-        $(top_srcdir)/gd/libgdconvenience.la
++	$(top_srcdir)/cdt/libcdt.la -lgd
+ 
+ twopimemtest_LDADD = $(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/dotneato/twopigen/libtwopiconvenience.la \
+@@ -97,8 +91,7 @@
+ 	$(top_srcdir)/dotneato/common/libcommonconvenience.la \
+ 	$(top_srcdir)/pathplan/libpathplan.la \
+         $(top_srcdir)/graph/libgraph.la \
+-        $(top_srcdir)/cdt/libcdt.la \
+-	$(top_srcdir)/gd/libgdconvenience.la
++        $(top_srcdir)/cdt/libcdt.la -lgd
  
  man_MANS = dot.1 neato.1 twopi.1
  
---- graphviz-1.8.9/gdtclft/Makefile.am.orig	Thu Aug  1 17:43:30 2002
-+++ graphviz-1.8.9/gdtclft/Makefile.am	Sat Aug 10 02:07:35 2002
-@@ -17,8 +17,7 @@
+--- graphviz-1.9/gdtclft/Makefile.am.orig	2003-01-15 18:22:13.000000000 +0100
++++ graphviz-1.9/gdtclft/Makefile.am	2003-05-15 20:26:48.000000000 +0200
+@@ -19,8 +19,7 @@
  
  libgdtclft_la_LIBADD = \
- 	../tclhandle/libtclhandle.la \
--	../gd/libgdconvenience.la \
--	../tclstubs/libtclstubs.la
-+	../tclstubs/libtclstubs.la -lgd
+ 	$(top_srcdir)/tclhandle/libtclhandle.la \
+-	$(top_srcdir)/gd/libgdconvenience.la \
+-	$(top_srcdir)/tclstubs/libtclstubs.la
++	$(top_srcdir)/tclstubs/libtclstubs.la -lgd
  
  all-local: pkgIndex.tcl
  
---- graphviz-1.8.9/tcldot/Makefile.am.orig	Fri Aug  2 22:54:46 2002
-+++ graphviz-1.8.9/tcldot/Makefile.am	Sat Aug 10 02:08:13 2002
+--- graphviz-1.9/tcldot/Makefile.am.orig	2003-01-15 18:35:46.000000000 +0100
++++ graphviz-1.9/tcldot/Makefile.am	2003-05-15 20:27:16.000000000 +0200
 @@ -34,9 +34,8 @@
-         ../pathplan/libpathplanconvenience.la \
-         ../graph/libgraphconvenience.la \
- 	../cdt/libcdtconvenience.la \
--	../gd/libgdconvenience.la \
- 	../gdtclft/gdtclft.lo \
--	../tclstubs/libtclstubs.la
-+	../tclstubs/libtclstubs.la -lgd
+         $(top_srcdir)/pathplan/libpathplanconvenience.la \
+         $(top_srcdir)/graph/libgraphconvenience.la \
+ 	$(top_srcdir)/cdt/libcdtconvenience.la \
+-	$(top_srcdir)/gd/libgdconvenience.la \
+ 	$(top_srcdir)/gdtclft/gdtclft.lo \
+-	$(top_srcdir)/tclstubs/libtclstubs.la
++	$(top_srcdir)/tclstubs/libtclstubs.la -lgd
  
  all-local: pkgIndex.tcl
  
---- graphviz-1.8.9/Makefile.am.orig	Thu Jul 11 17:27:01 2002
-+++ graphviz-1.8.9/Makefile.am	Sat Aug 10 02:09:08 2002
-@@ -6,7 +6,7 @@
+--- graphviz-1.9/Makefile.am.orig	2003-01-27 21:11:38.000000000 +0100
++++ graphviz-1.9/Makefile.am	2003-05-15 20:27:31.000000000 +0200
+@@ -5,7 +5,7 @@
+ pkgindexdir = $(libdir)/@PACKAGE@
  pkgindex_DATA = pkgIndex.tcl
  
- # cdt must be built first to create ast_common.h which agraph uses
 -SUBDIRS = cdt agraph agutil dag doc pathplan graph gd dotneato \
 +SUBDIRS = cdt agraph agutil dag doc pathplan graph dotneato \
  	dotty fdp geo graphs grid incr @X_SUBDIRS@ lneato ns shape \

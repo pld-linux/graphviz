@@ -2,14 +2,15 @@
 # Conditional build:
 # _with_dynagraph - with dynagraph program (they say it requires gcc 3.1;
 #	it builds with 2.95.4, but doesn't seem to work - fstream problems)
+#	-- doesn't build now anyway in 1.9 (missing file?)
 # _without_system_gd - use included libgd instead of system-wide one
 #                      (needed if your libgd doesn't support GIF format)
 #
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	1.8.9
-Release:	2
+Version:	1.9
+Release:	1
 License:	custom (AT&T)
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/%{name}-%{version}.tar.gz
@@ -24,16 +25,15 @@ BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
-%{!?_without_system_gd:BuildRequires:	gd-devel(gif) >= 2.0.1}
+%{!?_without_system_gd:BuildRequires:	gd-devel(gif) >= 2.0.9}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	zlib-devel
-%{!?_without_system_gd:Requires:	gd(gif) >= 2.0.1}
+%{!?_without_system_gd:Requires:	gd(gif) >= 2.0.9}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
-
 
 %description
 A collection of tools and tcl packages for the manipulation and layout
@@ -83,7 +83,7 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 
 %prep
 %setup -q
-if grep -q '^VERSION=1\.4d$' /usr/bin/libtool ; then
+if grep -q '^VERSION=1\.\(4[de]\|5\)$' /usr/bin/libtool ; then
 %patch0 -p1
 fi
 %{!?_without_system_gd:%patch1 -p1}
