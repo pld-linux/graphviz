@@ -1,11 +1,11 @@
-#
-# Conditional build:
-# _without_dynagraph - without dynagraph program (they say it requires gcc 3.1)
-# _without_system_gd - use included libgd instead of system-wide one
-#                      (needed if your libgd doesn't support GIF format)
-#
 # TODO:
 # - linking (duplicate code, somewhere linked dynamically, somewhere statically)
+#
+# Conditional build:
+%bcond_without	dynagraph	# without dynagraph program (they say it requires gcc 3.1)
+%bcond_without	system_gd	# use included libgd instead of system-wide one
+#                      		(needed if your libgd doesn't support GIF format)
+#
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
@@ -26,8 +26,8 @@ BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
-%{!?_without_dynagraph:BuildRequires:	gcc-c++ >= 5:3.1}
-%{!?_without_system_gd:BuildRequires:	gd-devel(gif) >= 2.0.9}
+%{?with_dynagraph:BuildRequires:	gcc-c++ >= 5:3.1}
+%{?with_system_gd:BuildRequires:	gd-devel(gif) >= 2.0.9}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
@@ -35,7 +35,7 @@ BuildRequires:	libtool
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
 BuildRequires:	zlib-devel
-%{!?_without_system_gd:Requires:	gd(gif) >= 2.0.9}
+%{?with_system_gd:Requires:	gd(gif) >= 2.0.9}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -89,7 +89,7 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 if grep -q '^VERSION=1\.\(4[de]\|5\)$' /usr/bin/libtool ; then
 %patch0 -p1
 fi
-%{!?_without_system_gd:%patch1 -p1}
+%{?with_system_gd:%patch1 -p1}
 %patch2 -p1
 
 %build
@@ -99,7 +99,7 @@ rm -f missing
 %{__autoconf}
 %{__automake}
 %configure \
-	%{!?_without_dynagraph:--with-dynagraph}
+	%{?with_dynagraph:--with-dynagraph}
 
 %{__make}
 
