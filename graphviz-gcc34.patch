@@ -13,6 +13,63 @@
  		}
  	};
  	// workaround for circular typing problems w/ friend decl: do not call!
+--- graphviz-1.10/dynagraph/common/StringDict.cpp.orig	2002-08-01 23:53:34.000000000 +0200
++++ graphviz-1.10/dynagraph/common/StringDict.cpp	2004-02-23 12:31:17.732839880 +0100
+@@ -26,7 +26,7 @@
+ } refstr_t;
+ 
+ static Dtdisc_t Refstrdisc = {
+-	offsetof(refstr_t,s[0]),
++	((refstr_t *)0)->s[0],
+ 	0,
+ 	0,
+ 	((Dtmake_f)0),
+@@ -63,7 +63,7 @@
+ 
+ 	if (s == NULL) return s;
+ 
+-	key = (refstr_t*)(s - offsetof(refstr_t,s[0]));
++	key = (refstr_t*)(s - ((refstr_t *)0)->s[0]);
+ 	r = (refstr_t*) dtsearch(dict,key);
+ 	if (r) r->refcnt++;
+ 	else {
+@@ -80,7 +80,7 @@
+ 	refstr_t		*key,*r;
+ 
+ 	if ((dict == NULL) || (s == NULL)) return;
+-	key = (refstr_t*)(s - offsetof(refstr_t,s[0]));
++	key = (refstr_t*)(s - ((refstr_t *)0)->s[0]);
+ 	r = (refstr_t*) dtsearch(dict,key);
+ 
+ 	if (r) {
+@@ -95,6 +95,6 @@
+ void StringDict::ref(const char *s) {
+ 	if(!s)
+ 		return;
+-	refstr_t *key = (refstr_t*)(s - offsetof(refstr_t,s[0]));
++	refstr_t *key = (refstr_t*)(s - ((refstr_t *)0)->s[0]);
+ 	key->refcnt++;
+ }
+--- graphviz-1.10/dynagraph/common/emitGraph.h.orig	2003-01-31 06:46:44.000000000 +0100
++++ graphviz-1.10/dynagraph/common/emitGraph.h	2004-02-23 12:34:46.289134504 +0100
+@@ -18,7 +18,7 @@
+ template<typename G>
+ void emitGraph(std::ostream &os,G *g) {
+   os << "digraph " << mquote(gd<Name>(g));
+-  os << " {" << endl << "\tgraph ";
++  os << " {" << std::endl << "\tgraph ";
+   emitAttrs(os,gd<StrAttrs>(g));
+   for(typename G::node_iter ni = g->nodes().begin(); ni!=g->nodes().end(); ++ni) {
+     os << '\t' << mquote(gd<Name>(*ni)) << ' ';
+@@ -44,7 +44,7 @@
+ 	Name &gname = (ati!=gd<StrAttrs>(g).end())?ati->second:gd<Name>(g);
+ 
+ 	os << "digraph " << mquote(gname);
+-	os << " {" << endl << "\tgraph ";
++	os << " {" << std::endl << "\tgraph ";
+ 	emitAttrs(os,gd<StrAttrs>(g));
+ 	for(typename G::node_iter ni = g->nodes().begin(); ni!=g->nodes().end(); ++ni) {
+ 		StrAttrs::iterator ati = gd<StrAttrs>(*ni).find("label");
 --- graphviz-1.10/dynagraph/common/traversal.h.orig	2002-12-19 23:30:25.000000000 +0100
 +++ graphviz-1.10/dynagraph/common/traversal.h	2004-02-23 10:33:01.743594216 +0100
 @@ -78,10 +78,10 @@
