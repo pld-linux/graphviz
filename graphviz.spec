@@ -18,6 +18,7 @@ Source0:	http://www.graphviz.org/pub/graphviz/%{name}-%{version}.tar.gz
 Patch0:		%{name}-lt14d.patch
 Patch1:		%{name}-system-gd.patch
 Patch2:		%{name}-fontpath.patch
+Patch3:		%{name}-sort.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
@@ -91,6 +92,7 @@ if grep -q '^VERSION=1\.\(4[de]\|5\)$' /usr/bin/libtool ; then
 fi
 %{?with_system_gd:%patch1 -p1}
 %patch2 -p1
+%patch3 -p1
 
 %build
 rm -f missing

@@ -1,0 +1,12 @@
+diff -ruN graphviz-1.10./dotneato/common/Makefile.in graphviz-1.10/dotneato/common/Makefile.in
+--- graphviz-1.10./dotneato/common/Makefile.in	2003-07-10 00:00:22.000000000 +0200
++++ graphviz-1.10/dotneato/common/Makefile.in	2004-02-19 21:40:12.265686584 +0100
+@@ -530,7 +530,7 @@
+ 	$(AWK) -f $(top_srcdir)/dotneato/awk/colortbl.awk color_lib > colortbl.h
+ 
+ color_lib : color_names
+-	$(SED) s/_//g color_names | $(SORT) +0 -1 > color_lib
++	$(SED) s/_//g color_names | $(SORT) --key=1,2 > color_lib
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:
