@@ -9,17 +9,15 @@
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	1.10
-Release:	2
+Version:	1.12
+Release:	1
 License:	custom (AT&T)
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/%{name}-%{version}.tar.gz
-# Source0-md5:	e1402531abff68d146bf94e72b44dc2a
-Patch0:		%{name}-lt14d.patch
-Patch1:		%{name}-system-gd.patch
-Patch2:		%{name}-fontpath.patch
-Patch3:		%{name}-sort.patch
-Patch4:		%{name}-gcc34.patch
+# Source0-md5:	84910caae072c714d107ca9f3e54ace0
+Patch0:		%{name}-system-gd.patch
+Patch1:		%{name}-fontpath.patch
+Patch2:		%{name}-gcc34.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
@@ -92,8 +90,6 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 %patch0 -p1
 %{?with_system_gd:%patch1 -p1}
 %patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 %build
 rm -f missing
@@ -146,11 +142,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/graphviz/demo
 %{_datadir}/graphviz/demo/pathplan_data
 %{_datadir}/graphviz/demo/*.*
-%attr(755,root,root) %{_datadir}/graphviz/demo/dge
 %attr(755,root,root) %{_datadir}/graphviz/demo/doted
 %attr(755,root,root) %{_datadir}/graphviz/demo/entities
 %attr(755,root,root) %{_datadir}/graphviz/demo/gcat
-%attr(755,root,root) %{_datadir}/graphviz/demo/ihi
 %attr(755,root,root) %{_datadir}/graphviz/demo/pathplan
 %attr(755,root,root) %{_datadir}/graphviz/demo/spline
 
