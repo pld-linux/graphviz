@@ -31,6 +31,7 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	zlib-devel
+%{!?_without_system_gd:Requires:	gd(gif) >= 2.0.1}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_prefix		/usr/X11R6
