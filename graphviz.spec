@@ -34,8 +34,6 @@ BuildRequires:	zlib-devel
 %{!?_without_system_gd:Requires:	gd(gif) >= 2.0.1}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_prefix		/usr/X11R6
-%define		_mandir		%{_prefix}/man
 
 %description
 A collection of tools and tcl packages for the manipulation and layout
