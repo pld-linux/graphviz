@@ -2,18 +2,20 @@
 # Conditional build:
 # _with_dynagraph - with dynagraph program (they say it requires gcc 3.1;
 #	it builds with 2.95.4, but doesn't seem to work - fstream problems)
+# _without_system_gd - use included libgd instead of system-wide one
+#                      (needed if your libgd doesn't support GIF format)
 #
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	1.8.9
-Release:	1
+Release:	2
 License:	custom (AT&T)
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/%{name}-%{version}.tar.gz
 Patch0:		%{name}-lt14d.patch
-# must wait
-#Patch1:	%{name}-system-gd.patch
+Patch1:		%{name}-system-gd.patch
+Patch2:		%{name}-fontpath.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
@@ -22,7 +24,7 @@ BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
-#BuildRequires:	gd-devel(gif) >= 2.0.1
+%{!?_without_system_gd:BuildRequires:	gd-devel(gif) >= 2.0.1}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
@@ -79,13 +81,14 @@ This package contains the header files for graphviz libraries.
 
 %description devel -l pl
 Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
+
 %prep
 %setup -q
 if grep -q '^VERSION=1\.4d$' /usr/bin/libtool ; then
 %patch0 -p1
 fi
-# requires gd with GIF support - must wait for patched gd...
-#%patch1 -p1
+%{!?_without_system_gd:%patch1 -p1}
+%patch2 -p1
 
 %build
 rm -f missing

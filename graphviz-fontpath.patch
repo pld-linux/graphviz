@@ -1,0 +1,11 @@
+--- graphviz-1.8.9/configure.in.orig	Fri Aug  2 22:55:20 2002
++++ graphviz-1.8.9/configure.in	Sat Aug 10 18:06:08 2002
+@@ -48,7 +48,7 @@
+ PATHSEPARATOR=";"
+ else
+ # This sucks!  Whatever happened to standards for file system layout?
+-DEFAULT_FONTPATH="/usr/X11R6/lib/X11/fonts/TrueType:/usr/X11R6/lib/X11/fonts/truetype:/usr/X11R6/lib/X11/fonts/TTF:/usr/share/fonts/TrueType:/usr/share/fonts/truetype:/usr/openwin/lib/X11/fonts/TrueType:/usr/X11R6/lib/X11/fonts/Type1"
++DEFAULT_FONTPATH="/usr/share/fonts/TTF:/usr/share/fonts/Type1"
+ PATHSEPARATOR=":"
+ fi
+ fi
