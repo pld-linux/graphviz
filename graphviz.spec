@@ -10,7 +10,7 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	1.12
-Release:	1
+Release:	2
 License:	custom (AT&T)
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/%{name}-%{version}.tar.gz
@@ -123,12 +123,14 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING ChangeLog FAQ.txt NEWS doc/*.pdf
 %attr(755,root,root) %{_bindir}/*
+%exclude %{_bindir}/dotneato-config
 %dir %{_libdir}/graphviz
 # *.so links are needed here for tcl
 %attr(755,root,root) %{_libdir}/graphviz/lib*.so*
 %dir %{_datadir}/graphviz
 %{_datadir}/graphviz/lefty
 %{_mandir}/man1/*
+%exclude %{_mandir}/man1/dotneato-config.1*
 
 %files graphs
 %defattr(644,root,root,755)
@@ -150,6 +152,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/dotneato-config
 %{_libdir}/graphviz/lib*.la
 %{_includedir}/graphviz
+%{_mandir}/man1/dotneato-config.1*
 %{_mandir}/man3/*
