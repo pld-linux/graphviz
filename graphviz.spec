@@ -7,24 +7,26 @@
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	1.16
-Release:	2
-License:	custom (AT&T)
+Version:	2.2
+Release:	1
+License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	a2a3bd1b9fe807c46e676fb9a3f0ba22
+# Source0-md5:	9275d30695a5c22f360acbef7b85acd3
 Patch0:		%{name}-fontpath.patch
-Patch1:		%{name}-gcc34.patch
+Patch1:		%{name}-cairo.patch
+Patch2:		%{name}-fixes.patch
+Patch3:		%{name}-gcc34.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
-BuildRequires:	autoconf
+BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
 %{?with_dynagraph:BuildRequires:	gcc-c++ >= 5:3.1}
-BuildRequires:	gd-devel >= 2.0.29
+BuildRequires:	gd-devel >= 2.0.33
 BuildRequires:	gettext-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
@@ -35,7 +37,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
 BuildRequires:	zlib-devel
-Requires:	gd >= 2.0.29
+Requires:	gd >= 2.0.33
 Requires:	libsvg-cairo >= 0.1.3
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -89,11 +91,15 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
+# needs update
+#%patch3 -p1
 
 %build
 %{__libtoolize}
 %{__aclocal}
 %{__autoconf}
+%{__autoheader}
 %{__automake}
 %configure \
 	%{?with_dynagraph:--enable-dynagraph} \
@@ -122,7 +128,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING ChangeLog FAQ.txt NEWS doc/*.pdf
+%doc AUTHORS COPYING ChangeLog NEWS doc/*.pdf
 %attr(755,root,root) %{_bindir}/*
 %exclude %{_bindir}/dotneato-config
 %dir %{_libdir}/graphviz
