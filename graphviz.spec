@@ -33,6 +33,7 @@ BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool
 BuildRequires:	tcl-devel >= 8.3.0
+BuildRequires:	tk-devel >= 8.3.0
 BuildRequires:	zlib-devel
 %{!?_without_system_gd:Requires:	gd(gif) >= 2.0.9}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -148,7 +149,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_datadir}/graphviz/demo/gcat
 %attr(755,root,root) %{_datadir}/graphviz/demo/ihi
 %attr(755,root,root) %{_datadir}/graphviz/demo/pathplan
-#%attr(755,root,root) %{_datadir}/graphviz/demo/spline
+%attr(755,root,root) %{_datadir}/graphviz/demo/spline
 
 %files devel
 %defattr(644,root,root,755)
