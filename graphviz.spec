@@ -10,7 +10,7 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	1.10
-Release:	1
+Release:	2
 License:	custom (AT&T)
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/%{name}-%{version}.tar.gz
@@ -19,7 +19,6 @@ Patch0:		%{name}-lt14d.patch
 Patch1:		%{name}-system-gd.patch
 Patch2:		%{name}-fontpath.patch
 Patch3:		%{name}-sort.patch
-Patch4:		%{name}-stubs.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
@@ -53,7 +52,7 @@ rozmieszczania grafów.
 Summary:	Demo graphs for graphviz
 Summary(pl):	Przyk³adowe grafy dla graphviza
 Group:		X11/Applications/Graphics
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 
 %description graphs
 This package provides some example graphs.
@@ -65,7 +64,7 @@ Ten pakiet zawiera trochê przyk³adowych grafów.
 Summary:	Tcl extension tools for graphviz
 Summary(pl):	Rozszerzenia Tcl dla graphviza
 Group:		X11/Applications/Graphics
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 
 %description tcl
 This package contains the various tcl packages (extensions) using
@@ -79,7 +78,7 @@ graphviza.
 Summary:	Header files for graphviz libraries
 Summary(pl):	Pliki nag³ówkowe do bibliotek graphviz
 Group:		X11/Development/Libraries
-Requires:	%{name} = %{version}
+Requires:	%{name} = %{version}-%{release}
 
 %description devel
 This package contains the header files for graphviz libraries.
@@ -89,13 +88,10 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 
 %prep
 %setup -q
-if grep -q '^VERSION=1\.\(4[de]\|5\)$' /usr/bin/libtool ; then
 %patch0 -p1
-fi
 %{?with_system_gd:%patch1 -p1}
 %patch2 -p1
 %patch3 -p1
-%patch4 -p1
 
 %build
 rm -f missing
