@@ -3,21 +3,21 @@
 #
 # Conditional build:
 %bcond_without	dynagraph	# without dynagraph program (they say it requires gcc 3.1)
-%bcond_without	system_gd	# use included libgd instead of system-wide one
+%bcond_with	system_gd	# use included libgd instead of system-wide one
 #                      		(needed if your libgd doesn't support GIF format)
+#                               (need cvs version 2.0.29 libgd)
 #
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	1.12
-Release:	2
+Version:	1.16
+Release:	1
 License:	custom (AT&T)
 Group:		X11/Applications/Graphics
-Source0:	http://www.graphviz.org/pub/graphviz/%{name}-%{version}.tar.gz
-# Source0-md5:	84910caae072c714d107ca9f3e54ace0
-Patch0:		%{name}-system-gd.patch
-Patch1:		%{name}-fontpath.patch
-Patch2:		%{name}-gcc34.patch
+Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
+# Source0-md5:	a2a3bd1b9fe807c46e676fb9a3f0ba22
+Patch0:		%{name}-fontpath.patch
+Patch1:		%{name}-gcc34.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
@@ -27,7 +27,7 @@ BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
 %{?with_dynagraph:BuildRequires:	gcc-c++ >= 5:3.1}
-%{?with_system_gd:BuildRequires:	gd-devel(gif) >= 2.0.9}
+%{?with_system_gd:BuildRequires:	gd-devel(gif) >= 2.0.29}
 BuildRequires:	gettext-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
@@ -88,8 +88,7 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 %prep
 %setup -q
 %patch0 -p1
-%{?with_system_gd:%patch1 -p1}
-%patch2 -p1
+%patch1 -p1
 
 %build
 rm -f missing
@@ -98,7 +97,9 @@ rm -f missing
 %{__autoconf}
 %{__automake}
 %configure \
-	%{?with_dynagraph:--with-dynagraph}
+	%{?with_dynagraph:--with-dynagraph} \
+	%{?without_system_gd:--with-mylibgd} \
+	--enable-gvrender
 
 %{__make}
 
@@ -109,9 +110,11 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 # tcl doesn't find pkgIndex.tcl outside /usr/lib...
-install -d $RPM_BUILD_ROOT/usr/lib/graphviz
+install -d $RPM_BUILD_ROOT{/usr/lib/graphviz,%{_pkgconfigdir}}
 sed -e "s@\$dir @%{_libdir}/graphviz/@" $RPM_BUILD_ROOT%{_libdir}/graphviz/pkgIndex.tcl \
 	> $RPM_BUILD_ROOT/usr/lib/graphviz/pkgIndex.tcl
+
+mv $RPM_BUILD_ROOT%{_libdir}/%{name}/pkgconfig/*.pc $RPM_BUILD_ROOT%{_pkgconfigdir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -154,6 +157,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/dotneato-config
 %{_libdir}/graphviz/lib*.la
+%{_pkgconfigdir}/*.pc
 %{_includedir}/graphviz
 %{_mandir}/man1/dotneato-config.1*
 %{_mandir}/man3/*
