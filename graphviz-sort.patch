@@ -1,6 +1,18 @@
+diff -ruN graphviz-1.10./dotneato/common/Makefile.am graphviz-1.10/dotneato/common/Makefile.am
+--- graphviz-1.10./dotneato/common/Makefile.am	2003-06-04 16:51:33.000000000 +0200
++++ graphviz-1.10/dotneato/common/Makefile.am	2004-02-19 22:03:03.632207184 +0100
+@@ -37,7 +37,7 @@
+ 	$(AWK) -f $(top_srcdir)/dotneato/awk/colortbl.awk color_lib > colortbl.h
+ 
+ color_lib : color_names
+-	$(SED) s/_//g color_names | $(SORT) +0 -1 > color_lib
++	$(SED) s/_//g color_names | $(SORT) --key=1,2 > color_lib
+ 
+ DISTCLEANFILES = color_lib colortbl.h
+ 
 diff -ruN graphviz-1.10./dotneato/common/Makefile.in graphviz-1.10/dotneato/common/Makefile.in
 --- graphviz-1.10./dotneato/common/Makefile.in	2003-07-10 00:00:22.000000000 +0200
-+++ graphviz-1.10/dotneato/common/Makefile.in	2004-02-19 21:40:12.265686584 +0100
++++ graphviz-1.10/dotneato/common/Makefile.in	2004-02-19 22:01:33.831858912 +0100
 @@ -530,7 +530,7 @@
  	$(AWK) -f $(top_srcdir)/dotneato/awk/colortbl.awk color_lib > colortbl.h
  
