@@ -19,6 +19,7 @@ Patch0:		%{name}-lt14d.patch
 Patch1:		%{name}-system-gd.patch
 Patch2:		%{name}-fontpath.patch
 Patch3:		%{name}-sort.patch
+Patch4:		%{name}-stubs.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf
@@ -94,6 +95,7 @@ fi
 %{?with_system_gd:%patch1 -p1}
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 %build
 rm -f missing
