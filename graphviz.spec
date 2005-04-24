@@ -7,16 +7,15 @@
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.2
+Version:	2.2.1
 Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	9275d30695a5c22f360acbef7b85acd3
+# Source0-md5:	bb46d8ada39436cb672922f0c8b1339c
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-cairo.patch
-Patch2:		%{name}-fixes.patch
-Patch3:		%{name}-gcc34.patch
+Patch2:		%{name}-gcc34.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf >= 2.50
@@ -91,9 +90,8 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 # needs update
-#%patch3 -p1
+#%patch2 -p1
 
 %build
 %{__libtoolize}
