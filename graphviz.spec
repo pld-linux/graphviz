@@ -15,7 +15,7 @@ Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
 # Source0-md5:	bb46d8ada39436cb672922f0c8b1339c
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-cairo.patch
-Patch2:		%{name}-gcc34.patch
+Patch2:		%{name}-gcc4.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf >= 2.50
@@ -90,8 +90,7 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-# needs update
-#%patch2 -p1
+%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -117,6 +116,13 @@ sed -e "s@\$dir @%{_libdir}/graphviz/@" $RPM_BUILD_ROOT%{_libdir}/graphviz/pkgIn
 	> $RPM_BUILD_ROOT/usr/lib/graphviz/pkgIndex.tcl
 
 mv $RPM_BUILD_ROOT%{_libdir}/%{name}/pkgconfig/*.pc $RPM_BUILD_ROOT%{_pkgconfigdir}
+
+# replace dead (after compression) softlinks by groff redirections
+rm -f $RPM_BUILD_ROOT%{_mandir}/man1/{circo,fdp,neato,twopi}.1
+echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/circo.1
+echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/fdp.1
+echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/neato.1
+echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/twopi.1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
