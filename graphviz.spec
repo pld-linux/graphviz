@@ -8,7 +8,7 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.2.1
-Release:	1
+Release:	2
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -118,11 +118,12 @@ sed -e "s@\$dir @%{_libdir}/graphviz/@" $RPM_BUILD_ROOT%{_libdir}/graphviz/pkgIn
 mv $RPM_BUILD_ROOT%{_libdir}/%{name}/pkgconfig/*.pc $RPM_BUILD_ROOT%{_pkgconfigdir}
 
 # replace dead (after compression) softlinks by groff redirections
-rm -f $RPM_BUILD_ROOT%{_mandir}/man1/{circo,fdp,neato,twopi}.1
+rm -f $RPM_BUILD_ROOT%{_mandir}/man1/{circo,dot2gxl,fdp,neato,twopi}.1
 echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/circo.1
 echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/fdp.1
 echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/neato.1
 echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/twopi.1
+echo ".so gxl2dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/dot2gxl.1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
