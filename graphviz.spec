@@ -79,6 +79,7 @@ Summary:	Header files for graphviz libraries
 Summary(pl):	Pliki nag³ówkowe do bibliotek graphviz
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	libsvg-cairo-devel >= 0.1.3
 
 %description devel
 This package contains the header files for graphviz libraries.
