@@ -7,15 +7,13 @@
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.2.1
-Release:	2
+Version:	2.4
+Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	bb46d8ada39436cb672922f0c8b1339c
+# Source0-md5:	f1074d38a7eeb5e5b2ebfdb643aebf8a
 Patch0:		%{name}-fontpath.patch
-Patch1:		%{name}-cairo.patch
-Patch2:		%{name}-gcc4.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf >= 2.50
@@ -30,14 +28,12 @@ BuildRequires:	gettext-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
-BuildRequires:	libsvg-cairo-devel >= 0.1.3
 BuildRequires:	libtool
 BuildRequires:	pkgconfig
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
 BuildRequires:	zlib-devel
-Requires:	gd >= 2.0.33
-Requires:	libsvg-cairo >= 0.1.3
+Requires:	gd >= 2.0.34
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -79,7 +75,6 @@ Summary:	Header files for graphviz libraries
 Summary(pl):	Pliki nag³ówkowe do bibliotek graphviz
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	libsvg-cairo-devel >= 0.1.3
 
 %description devel
 This package contains the header files for graphviz libraries.
@@ -90,8 +85,6 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
-%patch2 -p1
 
 %build
 %{__libtoolize}
@@ -116,8 +109,6 @@ install -d $RPM_BUILD_ROOT{/usr/lib/graphviz,%{_pkgconfigdir}}
 sed -e "s@\$dir @%{_libdir}/graphviz/@" $RPM_BUILD_ROOT%{_libdir}/graphviz/pkgIndex.tcl \
 	> $RPM_BUILD_ROOT/usr/lib/graphviz/pkgIndex.tcl
 
-mv $RPM_BUILD_ROOT%{_libdir}/%{name}/pkgconfig/*.pc $RPM_BUILD_ROOT%{_pkgconfigdir}
-
 # replace dead (after compression) softlinks by groff redirections
 rm -f $RPM_BUILD_ROOT%{_mandir}/man1/{circo,fdp,neato,twopi}.1
 echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/circo.1
@@ -135,14 +126,12 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING ChangeLog NEWS doc/*.pdf
 %attr(755,root,root) %{_bindir}/*
-%exclude %{_bindir}/dotneato-config
 %dir %{_libdir}/graphviz
 # *.so links are needed here for tcl
 %attr(755,root,root) %{_libdir}/graphviz/lib*.so*
 %dir %{_datadir}/graphviz
 %{_datadir}/graphviz/lefty
 %{_mandir}/man1/*
-%exclude %{_mandir}/man1/dotneato-config.1*
 
 %files graphs
 %defattr(644,root,root,755)
@@ -164,9 +153,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/dotneato-config
 %{_libdir}/graphviz/lib*.la
 %{_pkgconfigdir}/*.pc
 %{_includedir}/graphviz
-%{_mandir}/man1/dotneato-config.1*
 %{_mandir}/man3/*
