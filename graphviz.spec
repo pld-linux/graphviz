@@ -1,9 +1,4 @@
-# TODO:
-# - linking (duplicate code, somewhere linked dynamically, somewhere statically)
-#
-# Conditional build:
-%bcond_without	dynagraph	# without dynagraph program (they say it requires gcc 3.1)
-#
+# TODO: separate bindings (libgv_{guile,java,perl,php,python,ruby,tcl}.so*)
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
@@ -14,22 +9,27 @@ Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
 # Source0-md5:	f1074d38a7eeb5e5b2ebfdb643aebf8a
 Patch0:		%{name}-fontpath.patch
+Patch1:		%{name}-php.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
 BuildRequires:	bison
+BuildRequires:	expat-devel
 BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
-%{?with_dynagraph:BuildRequires:	gcc-c++ >= 5:3.1}
 BuildRequires:	gd-devel >= 2.0.33
 BuildRequires:	gettext-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool
+BuildRequires:	perl-devel
+BuildRequires:	php-devel
 BuildRequires:	pkgconfig
+BuildRequires:	python-devel
+BuildRequires:	ruby-devel
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
 BuildRequires:	zlib-devel
@@ -85,6 +85,7 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 %{__libtoolize}
@@ -92,9 +93,7 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 %{__autoconf}
 %{__autoheader}
 %{__automake}
-%configure \
-	%{?with_dynagraph:--enable-dynagraph} \
-	--enable-gvrender
+%configure
 
 %{__make}
 
