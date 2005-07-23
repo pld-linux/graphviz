@@ -1,0 +1,11 @@
+--- graphviz-2.4/tclpkg/gv/gv_php.cpp.orig	2005-07-20 22:45:14.000000000 +0200
++++ graphviz-2.4/tclpkg/gv/gv_php.cpp	2005-07-23 10:43:25.023342416 +0200
+@@ -697,7 +697,7 @@
+   p = value->ptr;
+   if (type==-1) return -1;
+ 
+-  type_name=zend_rsrc_list_get_rsrc_type(z->value.lval);
++  type_name=zend_rsrc_list_get_rsrc_type(z->value.lval TSRMLS_CC);
+ 
+   return SWIG_ZTS_ConvertResourceData(p,type,type_name,ptr,ty TSRMLS_CC);
+ }
