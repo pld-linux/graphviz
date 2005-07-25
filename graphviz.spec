@@ -33,6 +33,7 @@ BuildRequires:	ruby-devel
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
 BuildRequires:	zlib-devel
+Requires(post,postun):	/sbin/ldconfig
 Requires:	gd >= 2.0.34
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -120,10 +121,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/ldconfig
+umask 022
 [ ! -x %{_bindir}/dot ] || %{_bindir}/dot -V > /dev/null 2>&1
 
 %postun
 /sbin/ldconfig
+umask 022
 [ ! -x %{_bindir}/dot ] || %{_bindir}/dot -V > /dev/null 2>&1
 
 %files
