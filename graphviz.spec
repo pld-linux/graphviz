@@ -118,8 +118,13 @@ echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/twopi.1
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post   -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post
+/sbin/ldconfig
+[ ! -x %{_bindir}/dot ] || %{_bindir}/dot -V > /dev/null 2>&1
+
+%postun
+/sbin/ldconfig
+[ ! -x %{_bindir}/dot ] || %{_bindir}/dot -V > /dev/null 2>&1
 
 %files
 %defattr(644,root,root,755)
