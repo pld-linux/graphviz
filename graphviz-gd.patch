@@ -1,0 +1,16 @@
+diff -urN graphviz-2.4.org/configure.ac graphviz-2.4/configure.ac
+--- graphviz-2.4.org/configure.ac	2005-07-20 22:29:26.000000000 +0200
++++ graphviz-2.4/configure.ac	2005-08-15 18:00:29.687493872 +0200
+@@ -879,10 +879,10 @@
+                 AC_DEFINE_UNQUOTED(HAVE_$f,1,[Define if the GD library has the $f feature])
+         done
+ 
+-        # GD version check >= 2.0.34  else revert to --with-mylibgd
++        # GD version check >= 2.0.33  else revert to --with-mylibgd
+         REQ_GD_MAJORVERSION=2
+         REQ_GD_MINORVERSION=0
+-        REQ_GD_REVISION=34
++        REQ_GD_REVISION=33
+         if test $GD_MAJORVERSION -lt $REQ_GD_MAJORVERSION; then
+ 	    with_mylibgd=yes
+         else
