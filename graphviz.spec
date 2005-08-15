@@ -3,13 +3,14 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.4
-Release:	1
+Release:	2
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
 # Source0-md5:	f1074d38a7eeb5e5b2ebfdb643aebf8a
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-php.patch
+Patch2:		%{name}-gd.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
 BuildRequires:	autoconf >= 2.50
@@ -19,7 +20,7 @@ BuildRequires:	expat-devel
 BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
-BuildRequires:	gd-devel >= 2.0.33
+BuildRequires:	gd-devel >= 2.0.33-5
 BuildRequires:	gettext-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
@@ -34,7 +35,7 @@ BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
 BuildRequires:	zlib-devel
 Requires(post,postun):	/sbin/ldconfig
-Requires:	gd >= 2.0.33
+Requires:	gd >= 2.0.33-5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -87,6 +88,7 @@ Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch2 -p1
 
 %build
 %{__libtoolize}
