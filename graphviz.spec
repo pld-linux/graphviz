@@ -16,8 +16,6 @@ Patch1:		%{name}-php.patch
 Patch2:		%{name}-gd.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	XFree86-devel
-BuildRequires:	autoconf >= 2.50
-BuildRequires:	automake
 BuildRequires:	bison
 BuildRequires:	expat-devel
 BuildRequires:	flex
