@@ -6,7 +6,7 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.6
-Release:	1
+Release:	2
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -31,7 +31,8 @@ BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool
 BuildRequires:	perl-devel
-BuildRequires:	php-devel
+BuildRequires:	php-devel >= 3:5.0.0
+BuildRequires:	php-cli >= 3:5.0.0
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel
 BuildRequires:	ruby-devel
@@ -103,6 +104,7 @@ Summary:	PHP binding for graphviz
 Summary(pl):	Wi±zania PHP dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+%{?requires_php_extension}
 
 %description php
 PHP binding for graphviz.
