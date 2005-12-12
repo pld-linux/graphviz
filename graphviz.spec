@@ -6,7 +6,7 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.6
-Release:	3
+Release:	4
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -32,9 +32,10 @@ BuildRequires:	libstdc++-devel
 BuildRequires:	libtool
 BuildRequires:	perl-devel
 BuildRequires:	php-devel >= 3:5.0.0
-BuildRequires:	php-cli >= 3:5.0.0
+BuildRequires:	php-program >= 3:5.0.0
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel
+BuildRequires:	rpm-pythonprov
 BuildRequires:	ruby-devel
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
@@ -57,6 +58,8 @@ Summary:	Header files for graphviz libraries
 Summary(pl):	Pliki nag³ówkowe do bibliotek graphviz
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
+Requires:	gd-devel >= 2.0.33-5
+Requires:	libltdl-devel
 
 %description devel
 This package contains the header files for graphviz libraries.
@@ -188,6 +191,9 @@ echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/fdp.1
 echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/neato.1
 echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/twopi.1
 
+# created by %{_bindir}/dot -c
+touch $RPM_BUILD_ROOT%{_libdir}/graphviz/config
+
 rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/libgv_{java,perl,php,python,ruby,tcl}.la
 
 %clean
@@ -198,16 +204,14 @@ rm -rf $RPM_BUILD_ROOT
 umask 022
 [ ! -x %{_bindir}/dot ] || %{_bindir}/dot -c > /dev/null 2>&1
 
-%postun
-/sbin/ldconfig
-umask 022
-[ ! -x %{_bindir}/dot ] || %{_bindir}/dot -c > /dev/null 2>&1
+%postun	-p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING ChangeLog NEWS doc/*.pdf
 %attr(755,root,root) %{_bindir}/*
 %dir %{_libdir}/graphviz
+%{_libdir}/graphviz/config
 # linkable libs
 %attr(755,root,root) %{_libdir}/graphviz/libagraph.so.*
 %attr(755,root,root) %{_libdir}/graphviz/libcdt.so.*
