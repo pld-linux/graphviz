@@ -6,7 +6,7 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.6
-Release:	3
+Release:	4
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -177,11 +177,11 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-%if "%{_libdir}" != "/usr/lib"
+%if "%{_lib}" != "lib"
 # tcl doesn't find pkgIndex.tcl outside /usr/lib...
-install -d $RPM_BUILD_ROOT/usr/lib/graphviz
+install -d $RPM_BUILD_ROOT%{_prefix}/lib/graphviz
 sed -e "s@\$dir @%{_libdir}/graphviz/@" $RPM_BUILD_ROOT%{_libdir}/graphviz/pkgIndex.tcl \
-	> $RPM_BUILD_ROOT/usr/lib/graphviz/pkgIndex.tcl
+> $RPM_BUILD_ROOT%{_prefix}/lib/graphviz/pkgIndex.tcl
 %endif
 
 # replace dead (after compression) softlinks by groff redirections
@@ -284,10 +284,10 @@ umask 022
 %files tcl
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/graphviz/libgv_tcl.so*
-%if "%{_libdir}" != "/usr/lib"
-%dir /usr/lib/graphviz
+%if "%{_lib}" != "lib"
+%dir %{_prefix}/lib/graphviz
 %endif
-/usr/lib/graphviz/pkgIndex.tcl
+%{_prefix}/lib/graphviz/pkgIndex.tcl
 %{_mandir}/mann/*
 %dir %{_datadir}/graphviz/demo
 %{_datadir}/graphviz/demo/pathplan_data
