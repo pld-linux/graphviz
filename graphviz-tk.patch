@@ -1,0 +1,10 @@
+--- graphviz-2.6/tclpkg/tkspline/Makefile.am.orig	2005-12-28 02:06:54.111995848 +0000
++++ graphviz-2.6/tclpkg/tkspline/Makefile.am	2005-12-28 02:06:56.691603688 +0000
+@@ -9,6 +9,7 @@
+ 
+ AM_CPPFLAGS = \
+ 	-I@TK_SRC_DIR@/generic \
++	-I@TK_SRC_DIR@/unix \
+ 	-I@TCL_SRC_DIR@/generic \
+ 	@TCL_INCLUDES@ @TCLINT_INCLUDES@ \
+ 	@TK_INCLUDES@ @TKINT_INCLUDES@
