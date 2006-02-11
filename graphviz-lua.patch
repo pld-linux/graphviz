@@ -1,0 +1,22 @@
+--- graphviz-2.8/configure.ac.orig	2006-02-11 21:23:23.595611000 +0100
++++ graphviz-2.8/configure.ac	2006-02-11 22:08:14.259767250 +0100
+@@ -414,7 +414,7 @@
+   [AC_HELP_STRING([--disable-lua], [don't support lua language bindings])])
+ if test "x$enable_lua" != "xno"; then
+ AC_CHECK_PROG(LUA,lua,lua)
+-LUA_INCLUDES=
++LUA_INCLUDES="-I/usr/include/lua50"
+ LUA_LIBS=
+ AC_SUBST(LUA_INCLUDES)
+ AC_SUBST(LUA_LIBS)
+--- graphviz-2.8/tclpkg/gv/Makefile.am.orig	2006-01-10 15:39:21.000000000 +0100
++++ graphviz-2.8/tclpkg/gv/Makefile.am	2006-02-11 22:07:48.414152000 +0100
+@@ -6,7 +6,7 @@
+ 	-I$(top_srcdir)/lib/common \
+ 	-I$(top_srcdir)/lib/graph \
+ 	-I$(top_srcdir)/lib/cdt \
+-	-I$(top_srcdir)/lib/pathplan $(PERL_INCLUDES) $(OCAML_INCLUDES) $(PHP_INCLUDES) $(PYTHON_INCLUDES) $(RUBY_INCLUDES) $(TCL_INCLUDES) 
++	-I$(top_srcdir)/lib/pathplan $(PERL_INCLUDES) $(OCAML_INCLUDES) $(PHP_INCLUDES) $(PYTHON_INCLUDES) $(RUBY_INCLUDES) $(TCL_INCLUDES) $(LUA_INCLUDES)
+ 
+ LIBS =  @LIBS@ -lc
+ 
