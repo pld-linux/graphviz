@@ -10,7 +10,7 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.8
-Release:	1
+Release:	2
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -21,7 +21,7 @@ Patch2:		%{name}-gd.patch
 Patch3:		%{name}-tk.patch
 Patch4:		%{name}-lua.patch
 URL:		http://www.graphviz.org/
-BuildRequires:	XFree86-devel
+BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
 BuildRequires:	bison
