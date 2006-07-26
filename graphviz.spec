@@ -21,7 +21,6 @@ Patch2:		%{name}-gd.patch
 Patch3:		%{name}-tk.patch
 Patch4:		%{name}-lua.patch
 URL:		http://www.graphviz.org/
-BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
 BuildRequires:	bison
@@ -45,11 +44,12 @@ BuildRequires:	php-devel >= 3:5.0.0
 BuildRequires:	php-program >= 3:5.0.0
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel
-BuildRequires:	rpmbuild(macros) >= 1.277
 BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.277
 BuildRequires:	ruby-devel
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
+BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	zlib-devel
 Requires(post,postun):	/sbin/ldconfig
 Requires:	gd >= 2.0.33-5
@@ -347,7 +347,7 @@ umask 022
 
 %files ocaml
 %defattr(644,root,root,755)
-%dir %attr(755,root,root) %{_libdir}/graphviz/ocaml
+%dir %{_libdir}/graphviz/ocaml
 %attr(755,root,root) %{_libdir}/graphviz/ocaml/libgv_ocaml.so*
 %{_libdir}/graphviz/ocaml/gv.ml*
 %{_mandir}/man3/gv_ocaml.3*
