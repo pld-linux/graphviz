@@ -45,7 +45,7 @@ BuildRequires:	php-program >= 3:5.0.0
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.277
+BuildRequires:	rpmbuild(macros) >= 1.322
 BuildRequires:	ruby-devel
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
