@@ -10,7 +10,7 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.8
-Release:	2
+Release:	3
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -20,6 +20,7 @@ Patch1:		%{name}-php.patch
 Patch2:		%{name}-gd.patch
 Patch3:		%{name}-tk.patch
 Patch4:		%{name}-lua.patch
+Patch5:		%{name}-python.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
@@ -220,6 +221,7 @@ graphviza.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 %{__libtoolize}
