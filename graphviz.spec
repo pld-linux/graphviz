@@ -10,7 +10,7 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.8
-Release:	3
+Release:	5
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -22,6 +22,7 @@ Patch3:		%{name}-tk.patch
 Patch4:		%{name}-lua.patch
 Patch5:		%{name}-python.patch
 URL:		http://www.graphviz.org/
+BuildRequires:	XFree86-devel
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
 BuildRequires:	bison
@@ -42,7 +43,7 @@ BuildRequires:	lua50-devel
 BuildRequires:	ocaml
 BuildRequires:	perl-devel
 BuildRequires:	php-devel >= 3:5.0.0
-BuildRequires:	php-program >= 3:5.0.0
+BuildRequires:	php-program >= 4:5.0
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
@@ -50,7 +51,6 @@ BuildRequires:	rpmbuild(macros) >= 1.322
 BuildRequires:	ruby-devel
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
-BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	zlib-devel
 Requires(post,postun):	/sbin/ldconfig
 Requires:	gd >= 2.0.33-5
