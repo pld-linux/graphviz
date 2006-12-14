@@ -1,3 +1,7 @@
+# TODO
+# - update to lua 5.1
+# - php-graphwiz and php-graphwiz-devel:
+#   php glue should be installed to %{php_extensiondir} without solib name, gv.php dropped, and .h to php-graphviz-devel
 #
 # Conditional build:
 %bcond_without	dotnet	# don't build C# binding
@@ -10,7 +14,7 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.8
-Release:	4
+Release:	6
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
