@@ -26,6 +26,7 @@ Patch3:		%{name}-tk.patch
 Patch4:		%{name}-lua.patch
 Patch5:		%{name}-python.patch
 URL:		http://www.graphviz.org/
+BuildRequires:	XFree86-devel
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake
 BuildRequires:	bison
@@ -54,7 +55,6 @@ BuildRequires:	rpmbuild(macros) >= 1.322
 BuildRequires:	ruby-devel
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
-BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	zlib-devel
 Requires(post,postun):	/sbin/ldconfig
 Requires:	gd >= 2.0.33-5
