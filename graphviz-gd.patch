@@ -14,3 +14,14 @@ diff -urN graphviz-2.4.org/configure.ac graphviz-2.4/configure.ac
          if test $GD_MAJORVERSION -lt $REQ_GD_MAJORVERSION; then
  	    with_mylibgd=yes
          else
+--- graphviz-2.12/contrib/diffimg/Makefile.am.orig	2006-06-27 14:29:56.000000000 +0200
++++ graphviz-2.12/contrib/diffimg/Makefile.am	2006-12-27 15:04:39.139148270 +0100
+@@ -11,7 +11,7 @@
+ 
+ diffimg_SOURCES = diffimg.c
+ 
+-if WITH_LIBGD
++if WITH_MYLIBGD
+ diffimg_LDADD = $(top_builddir)/lib/gd/libgvgd_C.la \
+ 	@FC_LIBS@ @FT_LIBS@ @JPEG_LIBS@ @PNG_LIBS@ @Z_LIBS@ @MATH_LIBS@
+ else
