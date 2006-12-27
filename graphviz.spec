@@ -1,49 +1,57 @@
 # TODO
-# - update to lua 5.1
 # - php-graphwiz and php-graphwiz-devel:
 #   php glue should be installed to %{php_extensiondir} without solib name, gv.php dropped, and .h to php-graphviz-devel
 #
 # Conditional build:
 %bcond_without	dotnet	# don't build C# binding
-%bcond_with	java	# build Java binding
+%bcond_without	java	# don't build Java binding
 #
 %ifarch i386 alpha sparc sparc64
 %undefine with_dotnet
 %endif
+%ifnarch %{ix86} %{x8664}
+%undefine with_java
+%endif
+%ifarch i386 i486
+%undefine with_java
+%endif
 Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.8
-Release:	7
+Version:	2.12
+Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	ca921b4a9bcd86da4a1092bb17a57d83
+# Source0-md5:	e5547bc0ec47943c72f5c3e2b5dff58f
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-php.patch
 Patch2:		%{name}-gd.patch
 Patch3:		%{name}-tk.patch
 Patch4:		%{name}-lua.patch
-Patch5:		%{name}-python.patch
 URL:		http://www.graphviz.org/
-BuildRequires:	autoconf >= 2.50
+BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 BuildRequires:	bison
-BuildRequires:	expat-devel
+BuildRequires:	expat-devel >= 1.95
 BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
 BuildRequires:	gd-devel >= 2.0.33-5
 BuildRequires:	gettext-devel
+BuildRequires:	gtk+2-devel >= 2:2.8.0
 BuildRequires:	guile-devel >= 1.4
+#BuildRequires:	io
 %{?with_java:BuildRequires:	jdk}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool
-BuildRequires:	lua50-devel
+BuildRequires:	lua51-devel >= 5.1
+BuildRequires:	ming-devel
 %{?with_dotnet:BuildRequires:	mono-csharp}
 BuildRequires:	ocaml
+BuildRequires:	pango-devel >= 1.10
 BuildRequires:	perl-devel
 BuildRequires:	php-devel >= 3:5.0.0
 BuildRequires:	php-program >= 4:5.0
@@ -52,9 +60,20 @@ BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.322
 BuildRequires:	ruby-devel
+# swig-csharp,swig-java,swig-lua,swig-ocaml in main swig
+# swig-io ???
+BuildRequires:	swig
+BuildRequires:	swig-guile
+BuildRequires:	swig-perl
+BuildRequires:	swig-php >= 1.3.30
+BuildRequires:	swig-python
+BuildRequires:	swig-ruby
+BuildRequires:	swig-tcl
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
 BuildRequires:	xorg-lib-libX11-devel
+BuildRequires:	xorg-lib-libXaw-devel
+BuildRequires:	xorg-lib-libXpm-devel
 BuildRequires:	zlib-devel
 Requires(post,postun):	/sbin/ldconfig
 Requires:	gd >= 2.0.33-5
@@ -225,7 +244,9 @@ graphviza.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
+
+# not used for anything
+sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
 
 %build
 %{__libtoolize}
@@ -234,7 +255,7 @@ graphviza.
 %{__autoheader}
 %{__automake}
 %configure \
-	LUA=/usr/bin/lua50 \
+	LUA=/usr/bin/lua51 \
 	%{!?with_java:--disable-java} \
 	%{!?with_dotnet:--disable-sharp} \
 	--disable-static
@@ -285,21 +306,22 @@ umask 022
 %defattr(644,root,root,755)
 %doc AUTHORS COPYING ChangeLog NEWS doc/*.pdf
 %attr(755,root,root) %{_bindir}/*
+%attr(755,root,root) %{_libdir}/libagraph.so.*.*.*
+%attr(755,root,root) %{_libdir}/libcdt.so.*.*.*
+%attr(755,root,root) %{_libdir}/libexpr.so.*.*.*
+%attr(755,root,root) %{_libdir}/libgraph.so.*.*.*
+%attr(755,root,root) %{_libdir}/libgvc.so.*.*.*
+%attr(755,root,root) %{_libdir}/libgvc_builtins.so.*.*.*
+%attr(755,root,root) %{_libdir}/libpathplan.so.*.*.*
 %dir %{_libdir}/graphviz
 %ghost %{_libdir}/graphviz/config
-# linkable libs
-%attr(755,root,root) %{_libdir}/graphviz/libagraph.so.*
-%attr(755,root,root) %{_libdir}/graphviz/libcdt.so.*
-%attr(755,root,root) %{_libdir}/graphviz/libexpr.so.*
-%attr(755,root,root) %{_libdir}/graphviz/libgraph.so.*
-%attr(755,root,root) %{_libdir}/graphviz/libgvc.so.*
-%attr(755,root,root) %{_libdir}/graphviz/libpack.so.*
-%attr(755,root,root) %{_libdir}/graphviz/libpathplan.so.*
-# plugins
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_core.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_dot_layout.so*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gd.so*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gtk.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_neato_layout.so*
-%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_usershape_gd.so*
-%attr(755,root,root) %{_libdir}/graphviz/libgvc_builtins.so*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_pango.so*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_xlib.so*
 # what about the rest of *.la?
 %dir %{_datadir}/graphviz
 %{_datadir}/graphviz/lefty
@@ -307,27 +329,41 @@ umask 022
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/graphviz/libagraph.so
-%attr(755,root,root) %{_libdir}/graphviz/libcdt.so
-%attr(755,root,root) %{_libdir}/graphviz/libexpr.so
-%attr(755,root,root) %{_libdir}/graphviz/libgraph.so
-%attr(755,root,root) %{_libdir}/graphviz/libgvc.so
-%attr(755,root,root) %{_libdir}/graphviz/libpack.so
-%attr(755,root,root) %{_libdir}/graphviz/libpathplan.so
-%{_libdir}/graphviz/libagraph.la
-%{_libdir}/graphviz/libcdt.la
-%{_libdir}/graphviz/libexpr.la
-%{_libdir}/graphviz/libgraph.la
-%{_libdir}/graphviz/libgvc.la
-%{_libdir}/graphviz/libpack.la
-%{_libdir}/graphviz/libpathplan.la
-%{_pkgconfigdir}/*.pc
+%attr(755,root,root) %{_libdir}/libagraph.so
+%attr(755,root,root) %{_libdir}/libcdt.so
+%attr(755,root,root) %{_libdir}/libexpr.so
+%attr(755,root,root) %{_libdir}/libgraph.so
+%attr(755,root,root) %{_libdir}/libgvc.so
+%attr(755,root,root) %{_libdir}/libgvc_builtins.so
+%attr(755,root,root) %{_libdir}/libpathplan.so
+%{_libdir}/libagraph.la
+%{_libdir}/libcdt.la
+%{_libdir}/libexpr.la
+%{_libdir}/libgraph.la
+%{_libdir}/libgvc.la
+%{_libdir}/libgvc_builtins.la
+%{_libdir}/libpathplan.la
+%{_pkgconfigdir}/libagraph.pc
+%{_pkgconfigdir}/libcdt.pc
+%{_pkgconfigdir}/libexpr.pc
+%{_pkgconfigdir}/libgraph.pc
+%{_pkgconfigdir}/libgvc.pc
+%{_pkgconfigdir}/libgvc_builtins.pc
+%{_pkgconfigdir}/libpathplan.pc
 %{_includedir}/graphviz
 %{_mandir}/man3/*
 
 %files graphs
 %defattr(644,root,root,755)
 %{_datadir}/graphviz/graphs
+
+%if 0
+%files io
+%defattr(644,root,root,755)
+%dir %{_libdir}/graphviz/io
+%attr(755,root,root) %{_libdir}/graphviz/io/libgv_io.so*
+%{_mandir}/man3/gv_io.3*
+%endif
 
 %files guile
 %defattr(644,root,root,755)
@@ -404,6 +440,7 @@ umask 022
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libgdtclft.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libgv_tcl.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtcldot.so*
+%attr(755,root,root) %{_libdir}/graphviz/tcl/libtcldot_builtin.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtclplan.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtkspline.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/gv.so
