@@ -19,7 +19,7 @@ Summary:	Graph Visualization Tools
 Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.12
-Release:	1
+Release:	2
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -42,7 +42,10 @@ BuildRequires:	gettext-devel
 BuildRequires:	gtk+2-devel >= 2:2.8.0
 BuildRequires:	guile-devel >= 1.4
 #BuildRequires:	io
-%{?with_java:BuildRequires:	jdk}
+%if %{with java}
+BuildRequires:	jdk
+BuildRequires:	jpackage-utils
+%endif
 BuildRequires:	libjpeg-devel
 BuildRequires:	libpng-devel
 BuildRequires:	libstdc++-devel
@@ -254,6 +257,14 @@ sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
 %{__autoconf}
 %{__autoheader}
 %{__automake}
+
+%if %{with java}
+JAVA_HOME=%{java_home}
+export JAVA_HOME
+CPPFLAGS="-I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
+export CPPFLAGS
+%endif
+
 %configure \
 	LUA=/usr/bin/lua51 \
 	%{!?with_java:--disable-java} \
