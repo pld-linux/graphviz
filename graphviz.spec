@@ -16,7 +16,7 @@
 %undefine with_java
 %endif
 Summary:	Graph Visualization Tools
-Summary(pl):	Narzêdzie do wizualizacji w postaci grafów
+Summary(pl.UTF-8):   NarzÄ™dzie do wizualizacji w postaci grafÃ³w
 Name:		graphviz
 Version:	2.12
 Release:	3
@@ -87,13 +87,13 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 A collection of tools and tcl packages for the manipulation and layout
 of graphs (as in nodes and edges, not as in barcharts).
 
-%description -l pl
-Kolekcja narzêdzi oraz pakietów tcl s³u¿±cych do manipulacji i
-rozmieszczania grafów.
+%description -l pl.UTF-8
+Kolekcja narzÄ™dzi oraz pakietÃ³w tcl sÅ‚uÅ¼Ä…cych do manipulacji i
+rozmieszczania grafÃ³w.
 
 %package devel
 Summary:	Header files for graphviz libraries
-Summary(pl):	Pliki nag³ówkowe do bibliotek graphviz
+Summary(pl.UTF-8):   Pliki nagÅ‚Ã³wkowe do bibliotek graphviz
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	gd-devel >= 2.0.33-5
@@ -102,84 +102,84 @@ Requires:	libltdl-devel
 %description devel
 This package contains the header files for graphviz libraries.
 
-%description devel -l pl
-Ten pakiet zawiera pliki nag³ówkowe do bibliotek graphviz.
+%description devel -l pl.UTF-8
+Ten pakiet zawiera pliki nagÅ‚Ã³wkowe do bibliotek graphviz.
 
 %package graphs
 Summary:	Demo graphs for graphviz
-Summary(pl):	Przyk³adowe grafy dla graphviza
+Summary(pl.UTF-8):   PrzykÅ‚adowe grafy dla graphviza
 Group:		X11/Applications/Graphics
 Requires:	%{name} = %{version}-%{release}
 
 %description graphs
 This package provides some example graphs.
 
-%description graphs -l pl
-Ten pakiet zawiera trochê przyk³adowych grafów.
+%description graphs -l pl.UTF-8
+Ten pakiet zawiera trochÄ™ przykÅ‚adowych grafÃ³w.
 
 %package guile
 Summary:	Guile binding for graphviz
-Summary(pl):	Wi±zania Guile dla graphviza
+Summary(pl.UTF-8):   WiÄ…zania Guile dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description guile
 Guile binding for graphviz.
 
-%description guile -l pl
-Wi±zania Guile dla graphviza.
+%description guile -l pl.UTF-8
+WiÄ…zania Guile dla graphviza.
 
 %package java
 Summary:	Java binding for graphviz
-Summary(pl):	Wi±zania Javy dla graphviza
+Summary(pl.UTF-8):   WiÄ…zania Javy dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description java
 Java binding for graphviz.
 
-%description java -l pl
-Wi±zania Javy dla graphviza.
+%description java -l pl.UTF-8
+WiÄ…zania Javy dla graphviza.
 
 %package lua
 Summary:	LUA binding for graphviz
-Summary(pl):	Wi±zania LUA dla graphviza
+Summary(pl.UTF-8):   WiÄ…zania LUA dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description lua
 LUA binding for graphviz.
 
-%description lua -l pl
-Wi±zania LUA dla graphviza.
+%description lua -l pl.UTF-8
+WiÄ…zania LUA dla graphviza.
 
 %package ocaml
 Summary:	OCaml binding for graphviz
-Summary(pl):	Wi±zania OCamla dla graphviza
+Summary(pl.UTF-8):   WiÄ…zania OCamla dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description ocaml
 OCaml binding for graphviz.
 
-%description ocaml -l pl
-Wi±zania OCamla dla graphviza.
+%description ocaml -l pl.UTF-8
+WiÄ…zania OCamla dla graphviza.
 
 %package perl
 Summary:	Perl binding for graphviz
-Summary(pl):	Wi±zania Perla dla graphviza
+Summary(pl.UTF-8):   WiÄ…zania Perla dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description perl
 Perl binding for graphviz.
 
-%description perl -l pl
-Wi±zania Perla dla graphviza.
+%description perl -l pl.UTF-8
+WiÄ…zania Perla dla graphviza.
 
 %package php
 Summary:	PHP binding for graphviz
-Summary(pl):	Wi±zania PHP dla graphviza
+Summary(pl.UTF-8):   WiÄ…zania PHP dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 %{?requires_php_extension}
@@ -187,48 +187,48 @@ Requires:	%{name} = %{version}-%{release}
 %description php
 PHP binding for graphviz.
 
-%description php -l pl
-Wi±zania PHP dla graphviza.
+%description php -l pl.UTF-8
+WiÄ…zania PHP dla graphviza.
 
 %package python
 Summary:	Python binding for graphviz
-Summary(pl):	Wi±zania Pythona dla graphviza
+Summary(pl.UTF-8):   WiÄ…zania Pythona dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description python
 Python binding for graphviz.
 
-%description python -l pl
-Wi±zania Pythona dla graphviza.
+%description python -l pl.UTF-8
+WiÄ…zania Pythona dla graphviza.
 
 %package ruby
 Summary:	Ruby binding for graphviz
-Summary(pl):	Wi±zania Ruby'ego dla graphviza
+Summary(pl.UTF-8):   WiÄ…zania Ruby'ego dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description ruby
 Ruby binding for graphviz.
 
-%description ruby -l pl
-Wi±zania Ruby'ego dla graphviza.
+%description ruby -l pl.UTF-8
+WiÄ…zania Ruby'ego dla graphviza.
 
 %package sharp
 Summary:	C# binding for graphviz
-Summary(pl):	Wi±zania C# dla graphviza
+Summary(pl.UTF-8):   WiÄ…zania C# dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description sharp
 C# binding for graphviz.
 
-%description sharp -l pl
-Wi±zania C# dla graphviza.
+%description sharp -l pl.UTF-8
+WiÄ…zania C# dla graphviza.
 
 %package tcl
 Summary:	Tcl extension tools for graphviz
-Summary(pl):	Rozszerzenia Tcl dla graphviza
+Summary(pl.UTF-8):   Rozszerzenia Tcl dla graphviza
 Group:		X11/Applications/Graphics
 Requires:	%{name} = %{version}-%{release}
 
@@ -236,8 +236,8 @@ Requires:	%{name} = %{version}-%{release}
 This package contains the various Tcl packages (extensions) using
 graphviz.
 
-%description tcl -l pl
-Ten pakiet zawiera ró¿ne pakiety (rozszerzenia) Tcl u¿ywaj±ce
+%description tcl -l pl.UTF-8
+Ten pakiet zawiera rÃ³Å¼ne pakiety (rozszerzenia) Tcl uÅ¼ywajÄ…ce
 graphviza.
 
 %prep
