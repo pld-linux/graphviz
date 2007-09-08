@@ -1,12 +1,12 @@
 # TODO
-# - php-graphwiz and php-graphwiz-devel:
+# - php-graphviz and php-graphviz-devel:
 #   php glue should be installed to %{php_extensiondir} without solib name, gv.php dropped, and .h to php-graphviz-devel
 #
 # Conditional build:
 %bcond_without	dotnet	# don't build C# binding
 %bcond_without	java	# don't build Java binding
 #
-%ifarch i386 alpha sparc sparc64
+%ifarch i386
 %undefine with_dotnet
 %endif
 %ifnarch %{ix86} %{x8664}
@@ -18,17 +18,14 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.12
-Release:	3
+Version:	2.14.1
+Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	e5547bc0ec47943c72f5c3e2b5dff58f
+# Source0-md5:	0c56ba28d4e24f3ddd5e8fdb58deba70
 Patch0:		%{name}-fontpath.patch
-Patch1:		%{name}-php.patch
-Patch2:		%{name}-gd.patch
-Patch3:		%{name}-tk.patch
-Patch4:		%{name}-lua.patch
+Patch1:		%{name}-tk.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -37,7 +34,7 @@ BuildRequires:	expat-devel >= 1.95
 BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
-BuildRequires:	gd-devel >= 2.0.33-5
+BuildRequires:	gd-devel >= 2.0.34
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+2-devel >= 2:2.8.0
 BuildRequires:	guile-devel >= 1.4
@@ -96,7 +93,7 @@ Summary:	Header files for graphviz libraries
 Summary(pl.UTF-8):	Pliki nagłówkowe do bibliotek graphviz
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	gd-devel >= 2.0.33-5
+Requires:	gd-devel >= 2.0.34
 Requires:	libltdl-devel
 
 %description devel
@@ -244,16 +241,13 @@ graphviza.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
 
 # not used for anything
 sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
 
 %build
 %{__libtoolize}
-%{__aclocal}
+%{__aclocal} -I m4
 %{__autoconf}
 %{__autoheader}
 %{__automake}
@@ -266,7 +260,7 @@ export CPPFLAGS
 %endif
 
 %configure \
-	LUA=/usr/bin/lua51 \
+	lua_suffix=51 \
 	%{!?with_java:--disable-java} \
 	%{!?with_dotnet:--disable-sharp} \
 	--disable-static
@@ -294,15 +288,11 @@ echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/neato.1
 echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/twopi.1
 echo ".so gxl2dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/dot2gxl.1
 
-install -d $RPM_BUILD_ROOT%{_mandir}/man3
-for f in $RPM_BUILD_ROOT%{_libdir}/graphviz/*/gv_*.man ; do
-	mv $f $RPM_BUILD_ROOT%{_mandir}/man3/`basename $f .man`.3
-done
-
 # created by %{_bindir}/dot -c
 touch $RPM_BUILD_ROOT%{_libdir}/graphviz/config
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/*/libgv_*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/*/lib*.la
+rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/libgvplugin_*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -338,6 +328,7 @@ umask 022
 %dir %{_datadir}/graphviz
 %{_datadir}/graphviz/lefty
 %{_mandir}/man1/*
+%{_mandir}/man7/graphviz.7*
 
 %files devel
 %defattr(644,root,root,755)
@@ -363,7 +354,7 @@ umask 022
 %{_pkgconfigdir}/libgvc_builtins.pc
 %{_pkgconfigdir}/libpathplan.pc
 %{_includedir}/graphviz
-%{_mandir}/man3/*
+%{_mandir}/man3/*.3*
 
 %files graphs
 %defattr(644,root,root,755)
@@ -374,14 +365,14 @@ umask 022
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/io
 %attr(755,root,root) %{_libdir}/graphviz/io/libgv_io.so*
-%{_mandir}/man3/gv_io.3*
+%{_mandir}/mann/gv_io.n*
 %endif
 
 %files guile
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/guile
 %attr(755,root,root) %{_libdir}/graphviz/guile/libgv_guile.so*
-%{_mandir}/man3/gv_guile.3*
+%{_mandir}/mann/gv_guile.n*
 
 %if %{with java}
 %files java
@@ -389,7 +380,7 @@ umask 022
 %dir %{_libdir}/graphviz/java
 %attr(755,root,root) %{_libdir}/graphviz/java/libgv_java.so*
 %{_libdir}/graphviz/java/*.java
-%{_mandir}/man3/gv_java.3*
+%{_mandir}/mann/gv_java.n*
 %endif
 
 %files lua
@@ -397,14 +388,14 @@ umask 022
 %dir %{_libdir}/graphviz/lua
 %attr(755,root,root) %{_libdir}/graphviz/lua/libgv_lua.so*
 %attr(755,root,root) %{_libdir}/graphviz/lua/gv.so
-%{_mandir}/man3/gv_lua.3*
+%{_mandir}/mann/gv_lua.n*
 
 %files ocaml
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/ocaml
 %attr(755,root,root) %{_libdir}/graphviz/ocaml/libgv_ocaml.so*
 %{_libdir}/graphviz/ocaml/gv.ml*
-%{_mandir}/man3/gv_ocaml.3*
+%{_mandir}/mann/gv_ocaml.n*
 
 %files perl
 %defattr(644,root,root,755)
@@ -412,7 +403,7 @@ umask 022
 %attr(755,root,root) %{_libdir}/graphviz/perl/libgv_perl.so*
 %attr(755,root,root) %{_libdir}/graphviz/perl/gv.so
 %{_libdir}/graphviz/perl/gv.pm
-%{_mandir}/man3/gv_perl.3*
+%{_mandir}/mann/gv_perl.n*
 
 %files php
 %defattr(644,root,root,755)
@@ -420,7 +411,7 @@ umask 022
 %attr(755,root,root) %{_libdir}/graphviz/php/libgv_php.so*
 %{_libdir}/graphviz/php/gv.php
 %{_libdir}/graphviz/php/php_gv.h
-%{_mandir}/man3/gv_php.3*
+%{_mandir}/mann/gv_php.n*
 
 %files python
 %defattr(644,root,root,755)
@@ -428,14 +419,14 @@ umask 022
 %attr(755,root,root) %{_libdir}/graphviz/python/libgv_python.so*
 %attr(755,root,root) %{_libdir}/graphviz/python/_gv.so
 %{_libdir}/graphviz/python/gv.py
-%{_mandir}/man3/gv_python.3*
+%{_mandir}/mann/gv_python.n*
 
 %files ruby
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/ruby
 %attr(755,root,root) %{_libdir}/graphviz/ruby/libgv_ruby.so*
 %attr(755,root,root) %{_libdir}/graphviz/ruby/gv.so
-%{_mandir}/man3/gv_ruby.3*
+%{_mandir}/mann/gv_ruby.n*
 
 %if %{with dotnet}
 %files sharp
@@ -443,7 +434,7 @@ umask 022
 %dir %{_libdir}/graphviz/sharp
 %attr(755,root,root) %{_libdir}/graphviz/sharp/libgv_sharp.so*
 %{_libdir}/graphviz/sharp/*.cs
-%{_mandir}/man3/gv_sharp.3*
+%{_mandir}/mann/gv_sharp.n*
 %endif
 
 %files tcl
@@ -460,7 +451,10 @@ umask 022
 %dir %{_prefix}/lib/graphviz
 %endif
 %{_prefix}/lib/graphviz/pkgIndex.tcl
-%{_mandir}/mann/*
+%{_mandir}/mann/gdtclft.n*
+%{_mandir}/mann/gv_tcl.n*
+%{_mandir}/mann/tcldot.n*
+%{_mandir}/mann/tkspline.n*
 %dir %{_datadir}/graphviz/demo
 %{_datadir}/graphviz/demo/pathplan_data
 %{_datadir}/graphviz/demo/*.*
