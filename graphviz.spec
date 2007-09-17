@@ -19,13 +19,14 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.14.1
-Release:	1
+Release:	2
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
 # Source0-md5:	0c56ba28d4e24f3ddd5e8fdb58deba70
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
+Patch2:		%{name}-bad-header.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -293,6 +294,10 @@ touch $RPM_BUILD_ROOT%{_libdir}/graphviz/config
 
 rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/*/lib*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/libgvplugin_*.la
+
+# fix stupid ifdef in geom.h
+cd $RPM_BUILD_ROOT
+patch -p1 < %{PATCH2}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
