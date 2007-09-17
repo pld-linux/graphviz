@@ -1,0 +1,20 @@
+--- graphviz-2.14.1-root-baggins/usr/include/graphviz/geom.h.orig	2006-12-07 23:49:35.000000000 +0100
++++ graphviz-2.14.1-root-baggins/usr/include/graphviz/geom.h	2007-09-17 18:21:46.689653136 +0200
+@@ -20,7 +20,7 @@
+ #ifndef GV_GEOM_H
+ #define GV_GEOM_H
+ 
+-#ifdef HAVE_CONFIG_H
++#if 0
+ #include "arith.h"
+ #endif
+ 
+@@ -39,7 +39,7 @@
+ 
+ typedef struct { pointf LL, UR; } boxf;
+ 
+-#ifdef HAVE_CONFIG_H
++#if 0
+ /* true if point p is inside box b */
+ #define INSIDE(p,b)	(BETWEEN((b).LL.x,(p).x,(b).UR.x) && BETWEEN((b).LL.y,(p).y,(b).UR.y))
+ /* true if boxes b0 and b1 overlap */
