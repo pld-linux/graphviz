@@ -5,6 +5,7 @@
 # Conditional build:
 %bcond_without	dotnet	# don't build C# binding
 %bcond_without	java	# don't build Java binding
+%bcond_without	ocaml	# don't build ocaml binding
 #
 %ifarch i386
 %undefine with_dotnet
@@ -51,7 +52,7 @@ BuildRequires:	libtool
 BuildRequires:	lua51-devel >= 5.1
 BuildRequires:	ming-devel
 %{?with_dotnet:BuildRequires:	mono-csharp}
-BuildRequires:	ocaml
+%{?with_ocaml:BuildRequires:	ocaml}
 BuildRequires:	pango-devel >= 1.10
 BuildRequires:	perl-devel
 BuildRequires:	php-devel >= 3:5.0.0
@@ -264,6 +265,7 @@ export CPPFLAGS
 	lua_suffix=51 \
 	%{!?with_java:--disable-java} \
 	%{!?with_dotnet:--disable-sharp} \
+	%{!?with_ocaml:--disable-ocaml} \
 	--disable-static
 
 %{__make}
@@ -395,12 +397,14 @@ umask 022
 %attr(755,root,root) %{_libdir}/graphviz/lua/gv.so
 %{_mandir}/mann/gv_lua.n*
 
+%if %{with ocaml}
 %files ocaml
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/ocaml
 %attr(755,root,root) %{_libdir}/graphviz/ocaml/libgv_ocaml.so*
 %{_libdir}/graphviz/ocaml/gv.ml*
 %{_mandir}/mann/gv_ocaml.n*
+%endif
 
 %files perl
 %defattr(644,root,root,755)
