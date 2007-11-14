@@ -79,7 +79,7 @@ BuildRequires:	xorg-lib-libXpm-devel
 BuildRequires:	zlib-devel
 Requires(post,postun):	/sbin/ldconfig
 Requires:	gd >= 2.0.33-5
-Requires:	ghostscript-fonts-std
+Requires:	fonts-Type1-urw
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
