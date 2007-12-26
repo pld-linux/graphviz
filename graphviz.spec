@@ -78,8 +78,8 @@ BuildRequires:	xorg-lib-libXaw-devel
 BuildRequires:	xorg-lib-libXpm-devel
 BuildRequires:	zlib-devel
 Requires(post,postun):	/sbin/ldconfig
-Requires:	gd >= 2.0.33-5
 Requires:	fonts-Type1-urw
+Requires:	gd >= 2.0.33-5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
