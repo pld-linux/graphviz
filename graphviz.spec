@@ -20,7 +20,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.14.1
-Release:	4
+Release:	5
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -28,6 +28,7 @@ Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
 Patch2:		%{name}-bad-header.patch
+Patch3:		%{name}-lt.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -243,6 +244,7 @@ graphviza.
 %setup -q
 %patch0 -p1
 %patch1 -p1
+%patch3 -p1
 
 # not used for anything
 sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
