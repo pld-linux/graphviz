@@ -20,7 +20,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.18
-Release:	1
+Release:	2
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -479,7 +479,7 @@ umask 022
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtclplan.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtkspline.so*
 %{_libdir}/graphviz/tcl/pkgIndex.tcl
-%{_libdir}/tcl*/%{name}-%{version}
+%{_libdir}/tcl*/*
 %{_mandir}/mann/gdtclft.n*
 %{_mandir}/mann/gv_tcl.n*
 %{_mandir}/mann/tcldot.n*
