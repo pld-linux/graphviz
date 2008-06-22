@@ -20,7 +20,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.18
-Release:	2
+Release:	3
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -33,6 +33,7 @@ URL:		http://www.graphviz.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 BuildRequires:	bison
+BuildRequires:	DevIL-devel
 BuildRequires:	expat-devel >= 1.95
 BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
@@ -330,6 +331,7 @@ umask 022
 %dir %{_libdir}/graphviz
 %ghost %{_libdir}/graphviz/config
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_core.so*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_devil.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_dot_layout.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gd.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gdk_pixbuf.so*
