@@ -19,12 +19,12 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.18
-Release:	4
+Version:	2.20.2
+Release:	0.1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	7df2705482c86fc7a9ee5f0446ed0b9e
+# Source0-md5:	8129b4682efbf0cf321c2ec8f7994003
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
 Patch2:		%{name}-bad-header.patch
@@ -280,6 +280,7 @@ export CPPFLAGS
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
+	PHP_INSTALL_DIR=%{_libdir}/php \
 	DESTDIR=$RPM_BUILD_ROOT
 
 # replace dead (after compression) softlinks by groff redirections
@@ -440,7 +441,7 @@ umask 022
 %attr(755,root,root) %{_libdir}/graphviz/php/gv.so
 %{_libdir}/graphviz/php/gv.php
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.php
-%attr(755,root,root) %{_libdir}/php/modules/gv.so
+%attr(755,root,root) %{_libdir}/php/gv.so
 %{_datadir}/php/gv.php
 %{_mandir}/mann/gv_php.n*
 
