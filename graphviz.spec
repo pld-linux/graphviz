@@ -29,6 +29,7 @@ Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
 Patch2:		%{name}-bad-header.patch
 Patch3:		%{name}-php.patch
+Patch4:		%{name}-no_version_magick.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -248,6 +249,7 @@ graphviza.
 %patch0 -p1
 %patch1 -p1
 %patch3 -p1
+%patch4 -p0
 
 # not used for anything
 sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
