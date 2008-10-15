@@ -31,6 +31,7 @@ Patch2:		%{name}-bad-header.patch
 Patch3:		%{name}-php.patch
 Patch4:		%{name}-no_version_magick.patch
 Patch5:		%{name}-lua51.patch
+Patch6:		%{name}-php_modules_dir.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -252,6 +253,7 @@ graphviza.
 %patch3 -p1
 %patch4 -p0
 %patch5 -p1
+%patch6 -p1
 
 # not used for anything
 sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
@@ -331,8 +333,6 @@ umask 022
 %attr(755,root,root) %ghost %{_libdir}/libgraph.so.4
 %attr(755,root,root) %{_libdir}/libgvc.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgvc.so.4
-%attr(755,root,root) %{_libdir}/libgvc_builtins.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgvc_builtins.so.4
 %attr(755,root,root) %{_libdir}/libpathplan.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libpathplan.so.4
 %dir %{_libdir}/graphviz
@@ -361,21 +361,18 @@ umask 022
 %attr(755,root,root) %{_libdir}/libcgraph.so
 %attr(755,root,root) %{_libdir}/libgraph.so
 %attr(755,root,root) %{_libdir}/libgvc.so
-%attr(755,root,root) %{_libdir}/libgvc_builtins.so
 %attr(755,root,root) %{_libdir}/libpathplan.so
 %{_libdir}/libagraph.la
 %{_libdir}/libcdt.la
 %{_libdir}/libcgraph.la
 %{_libdir}/libgraph.la
 %{_libdir}/libgvc.la
-%{_libdir}/libgvc_builtins.la
 %{_libdir}/libpathplan.la
 %{_pkgconfigdir}/libagraph.pc
 %{_pkgconfigdir}/libcdt.pc
 %{_pkgconfigdir}/libcgraph.pc
 %{_pkgconfigdir}/libgraph.pc
 %{_pkgconfigdir}/libgvc.pc
-%{_pkgconfigdir}/libgvc_builtins.pc
 %{_pkgconfigdir}/libpathplan.pc
 %{_includedir}/graphviz
 %{_mandir}/man3/*.3*
