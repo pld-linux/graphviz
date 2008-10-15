@@ -1,0 +1,11 @@
+--- graphviz-2.18/configure.ac.orig	2008-07-22 12:52:49.739734376 +0200
++++ graphviz-2.18/configure.ac	2008-07-22 12:53:04.738703532 +0200
+@@ -822,7 +822,7 @@
+         else
+           PHP_INCLUDES="-I/usr/include/php -I/usr/include/php/main -I/usr/include/php/Zend -I/usr/include/php/TSRM"
+         fi
+-        PHP_INSTALL_DIR="/usr/lib${LIBPOSTFIX}/php/modules"
++        PHP_INSTALL_DIR="/usr/lib${LIBPOSTFIX}/php"
+         PHP_INSTALL_DATADIR="/usr/share/php"
+         PHP_LIBS=
+         save_CPPFLAGS=$CPPFLAGS
