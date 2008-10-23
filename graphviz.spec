@@ -410,6 +410,7 @@ umask 022
 %attr(755,root,root) %{_libdir}/graphviz/lua/libgv_lua.so
 %attr(755,root,root) %{_libdir}/graphviz/lua/gv.so
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.lua
+%attr(755,root,root) %{_libdir}/lua/gv.so
 %{_mandir}/mann/gv_lua.n*
 
 %if %{with ocaml}
