@@ -55,6 +55,8 @@ BuildRequires:	libpng-devel
 BuildRequires:	librsvg-devel >= 2.0
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool
+# for lua51 binary
+BuildRequires:	lua51
 BuildRequires:	lua51-devel >= 5.1
 BuildRequires:	ming-devel
 %{?with_dotnet:BuildRequires:	mono-csharp}
@@ -259,7 +261,7 @@ graphviza.
 sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
 
 %build
-rm -f m4/*.m4 config/*
+rm -f m4/*.m4
 touch config/config.rpath
 %{__libtoolize} --ltdl
 %{__aclocal} -I m4
