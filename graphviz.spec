@@ -20,7 +20,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.20.3
-Release:	1
+Release:	2
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -310,6 +310,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/libgvplugin_*.la
 # fix stupid ifdef in geom.h
 cd $RPM_BUILD_ROOT
 patch -p1 < %{PATCH2} || exit 1
+
+%{__sed} 's@/usr/bin/lua@/usr/bin/lua51@' -i $RPM_BUILD_ROOT%{_datadir}/%{name}/demo/*lua
 
 %clean
 rm -rf $RPM_BUILD_ROOT
