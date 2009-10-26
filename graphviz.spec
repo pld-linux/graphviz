@@ -32,6 +32,7 @@ Patch3:		%{name}-php.patch
 Patch4:		%{name}-no_version_magick.patch
 Patch5:		%{name}-lua51.patch
 Patch6:		%{name}-php_modules_dir.patch
+Patch7:		gv.i.patch
 URL:		http://www.graphviz.org/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -256,6 +257,7 @@ graphviza.
 %patch4 -p0
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 # not used for anything
 sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
