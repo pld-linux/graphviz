@@ -1,0 +1,13 @@
+--- graphviz-2.20.3/configure.ac.orig	2009-10-26 06:02:58.449902489 +0100
++++ graphviz-2.20.3/configure.ac	2009-10-26 06:03:21.448321860 +0100
+@@ -948,8 +948,8 @@
+   if test "x$use_swig" != "xYes"; then
+     use_php="No (swig not available)"
+   else
+-    if test `$SWIG -help 2>&1 | $GREP -c '\-php5 *- Generate'` = 0; then
+-      use_php="No (swig does not support -php5 option)"
++    if test `$SWIG -help 2>&1 | $GREP -c '\-php *- Generate'` = 0; then
++      use_php="No (swig does not support -php option)"
+     else
+       AC_CHECK_PROG(PHP,php,php)
+       if test "x$PHP" = "x"; then
