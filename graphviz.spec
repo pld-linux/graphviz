@@ -35,10 +35,11 @@ Patch6:		%{name}-php_modules_dir.patch
 Patch7:		gv.i.patch
 Patch8:		swig_php5.patch
 URL:		http://www.graphviz.org/
+BuildRequires:	DevIL-devel
+BuildRequires:	R
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 BuildRequires:	bison
-BuildRequires:	DevIL-devel
 BuildRequires:	expat-devel >= 1.95
 BuildRequires:	flex
 BuildRequires:	freetype-devel >= 2.0.0
@@ -273,12 +274,16 @@ touch config/config.rpath
 %{__autoheader}
 %{__automake}
 
+CPPFLAGS="%{rpmcppflags}"
+CPPFLAGS="$CPPFLAGS -I%{_includedir}/ruby-1.9 -I%{_includedir}/ruby-1.9/%{_target}"
+
 %if %{with java}
 JAVA_HOME=%{java_home}
 export JAVA_HOME
-CPPFLAGS="-I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
-export CPPFLAGS
+CPPFLAGS="$CPPFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
 %endif
+
+export CPPFLAGS
 
 %configure \
 	lua_suffix=51 \
