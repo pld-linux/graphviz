@@ -2,9 +2,16 @@
 # - modules for: R, io
 #
 # Conditional build:
-%bcond_without	dotnet	# don't build C# binding
-%bcond_without	java	# don't build Java binding
-%bcond_without	ocaml	# don't build ocaml binding
+%bcond_without	dotnet	# don't build C# bindings
+%bcond_without	java	# don't build Java bindings
+%bcond_without	ocaml	# don't build ocaml bindings
+%bcond_without	php		# don't build php bindings
+%bcond_without	perl	# don't build perl bindings
+%bcond_without	ruby	# don't build ruby bindings
+%bcond_without	tcl		# don't build tcl bindings
+%bcond_without	lua		# don't build lua bindings
+%bcond_without	ming	# don't build ming support
+%bcond_without	guile	# don't build guile bindings
 #
 %ifarch i386
 %undefine with_dotnet
@@ -19,17 +26,16 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.20.3
-Release:	9
+Version:	2.26.3
+Release:	0.1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	4d94c4b809a5c095acfc973d8d207fa9
+# Source0-md5:	6f45946fa622770c45609778c0a982ee
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
 Patch2:		%{name}-bad-header.patch
 Patch3:		%{name}-php.patch
-Patch4:		%{name}-no_version_magick.patch
 Patch5:		%{name}-lua51.patch
 Patch6:		%{name}-php_modules_dir.patch
 Patch7:		gv.i.patch
@@ -47,7 +53,7 @@ BuildRequires:	gawk
 BuildRequires:	gd-devel >= 2.0.34
 BuildRequires:	gettext-devel
 BuildRequires:	gtk+2-devel >= 2:2.8.0
-BuildRequires:	guile-devel >= 1.4
+%{?with_guile:BuildRequires:	guile-devel >= 1.4}
 #BuildRequires:	io
 %if %{with java}
 BuildRequires:	jdk
@@ -59,32 +65,38 @@ BuildRequires:	librsvg-devel >= 2.0
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool
 # for lua51 binary
+%if %{with lua}
 BuildRequires:	lua51
 BuildRequires:	lua51-devel >= 5.1
-BuildRequires:	ming-devel
+%endif
+%{?with_ming:BuildRequires:	ming-devel}
 %{?with_dotnet:BuildRequires:	mono-csharp}
 %{?with_ocaml:BuildRequires:	ocaml}
 BuildRequires:	pango-devel >= 1.10
 BuildRequires:	perl-devel
+%if %{with php}
 BuildRequires:	php-devel >= 3:5.0.0
 BuildRequires:	php-program >= 4:5.0
+%endif
 BuildRequires:	pkgconfig
 BuildRequires:	python-devel
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.322
-BuildRequires:	ruby-devel
+%{?with_ruby:BuildRequires:	ruby-devel}
 # swig-csharp,swig-java,swig-lua,swig-ocaml in main swig
 # swig-io ???
 BuildRequires:	swig
-BuildRequires:	swig-guile
-BuildRequires:	swig-perl
-BuildRequires:	swig-php >= 1.3.40
+%{?with_guile:BuildRequires:	swig-guile}
+%{?with_perl:BuildRequires:	swig-perl}
+%{?with_php:BuildRequires:	swig-php >= 1.3.40}
 BuildRequires:	swig-python
-BuildRequires:	swig-ruby
+%{?with_ruby:BuildRequires:	swig-ruby}
+%if %{with tcl}
 BuildRequires:	swig-tcl
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
+%endif
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXaw-devel
 BuildRequires:	xorg-lib-libXpm-devel
@@ -255,12 +267,11 @@ graphviza.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch3 -p1
-%patch4 -p0
+#%patch3 -p1
 %patch5 -p1
 %patch6 -p1
-%patch7 -p1
-%patch8 -p1
+#%patch7 -p1
+#%patch8 -p1
 
 # not used for anything
 sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
@@ -291,6 +302,12 @@ export CPPFLAGS
 	%{!?with_java:--disable-java} \
 	%{!?with_ocaml:--disable-ocaml} \
 	%{!?with_dotnet:--disable-sharp} \
+	%{!?with_perl:--disable-perl} \
+	%{!?with_php:--disable-php} \
+	%{!?with_ruby:--disable-ruby} \
+	%{!?with_tcl:--disable-tcl} \
+	%{!?with_ming:--disable-ming} \
+	%{!?with_lua:--disable-lua} \
 	--disable-static
 
 %{__make}
@@ -402,11 +419,13 @@ umask 022
 %{_mandir}/mann/gv_io.n*
 %endif
 
+%if %{with guile}
 %files guile
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/guile
 %attr(755,root,root) %{_libdir}/graphviz/guile/libgv_guile.so
 %{_mandir}/mann/gv_guile.n*
+%endif
 
 %if %{with java}
 %files java
@@ -417,6 +436,7 @@ umask 022
 %{_mandir}/mann/gv_java.n*
 %endif
 
+%if %{with lua}
 %files lua
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/lua
@@ -425,6 +445,7 @@ umask 022
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.lua
 %attr(755,root,root) %{_libdir}/lua/gv.so
 %{_mandir}/mann/gv_lua.n*
+%endif
 
 %if %{with ocaml}
 %files ocaml
@@ -438,6 +459,7 @@ umask 022
 %{_mandir}/mann/gv_ocaml.n*
 %endif
 
+%if %{with perl}
 %files perl
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/perl
@@ -448,7 +470,9 @@ umask 022
 %attr(755,root,root) %{perl_vendorarch}/gv.so
 %{perl_vendorarch}/gv.pm
 %{_mandir}/mann/gv_perl.n*
+%endif
 
+%if %{with php}
 %files php
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/php
@@ -459,6 +483,7 @@ umask 022
 %attr(755,root,root) %{_libdir}/php/gv.so
 %{_datadir}/php/gv.php
 %{_mandir}/mann/gv_php.n*
+%endif
 
 %files python
 %defattr(644,root,root,755)
@@ -471,6 +496,7 @@ umask 022
 %{py_sitedir}/gv.py
 %{_mandir}/mann/gv_python.n*
 
+%if %{with ruby}
 %files ruby
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/ruby
@@ -479,6 +505,7 @@ umask 022
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.rb
 %{ruby_sitearchdir}/gv.so
 %{_mandir}/mann/gv_ruby.n*
+%endif
 
 %if %{with dotnet}
 %files sharp
@@ -489,6 +516,7 @@ umask 022
 %{_mandir}/mann/gv_sharp.n*
 %endif
 
+%if %{with tcl}
 %files tcl
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/tcl
@@ -513,3 +541,4 @@ umask 022
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.tcl
 %attr(755,root,root) %{_datadir}/graphviz/demo/pathplan.tcl
 %attr(755,root,root) %{_datadir}/graphviz/demo/spline.tcl
+%endif
