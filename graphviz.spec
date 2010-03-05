@@ -12,6 +12,7 @@
 %bcond_without	lua		# don't build lua bindings
 %bcond_without	ming	# don't build ming support
 %bcond_without	guile	# don't build guile bindings
+%bcond_without	devil	# don't build devil plugin
 #
 %ifarch i386
 %undefine with_dotnet
@@ -41,7 +42,7 @@ Patch6:		%{name}-php_modules_dir.patch
 Patch7:		gv.i.patch
 Patch8:		swig_php5.patch
 URL:		http://www.graphviz.org/
-BuildRequires:	DevIL-devel
+%{?with_devil:BuildRequires:	DevIL-devel}
 BuildRequires:	R
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -307,6 +308,7 @@ export CPPFLAGS
 	%{!?with_ruby:--disable-ruby} \
 	%{!?with_tcl:--disable-tcl} \
 	%{!?with_ming:--disable-ming} \
+	%{!?with_devil:--disable-devil} \
 	%{!?with_lua:--disable-lua} \
 	--disable-static
 
@@ -333,11 +335,9 @@ touch $RPM_BUILD_ROOT%{_libdir}/graphviz/config
 rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/*/lib*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/libgvplugin_*.la
 
-# fix stupid ifdef in geom.h
-cd $RPM_BUILD_ROOT
-patch -p1 < %{PATCH2} || exit 1
+#patch -p1 < %{PATCH2} || exit 1
 
-%{__sed} 's@/usr/bin/lua@/usr/bin/lua51@' -i $RPM_BUILD_ROOT%{_datadir}/%{name}/demo/*lua
+#%{__sed} 's@/usr/bin/lua@/usr/bin/lua51@' -i $RPM_BUILD_ROOT%{_datadir}/%{name}/demo/*lua
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -351,24 +351,30 @@ umask 022
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING ChangeLog NEWS doc/*.pdf
+#%doc AUTHORS COPYING ChangeLog NEWS doc/*.pdf
 %attr(755,root,root) %{_bindir}/*
-%attr(755,root,root) %{_libdir}/libagraph.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libagraph.so.4
+#%attr(755,root,root) %{_libdir}/libagraph.so.*.*.*
+#%attr(755,root,root) %ghost %{_libdir}/libagraph.so.4
 %attr(755,root,root) %{_libdir}/libcdt.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libcdt.so.4
 %attr(755,root,root) %{_libdir}/libcgraph.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcgraph.so.4
+%attr(755,root,root) %ghost %{_libdir}/libcgraph.so.5
 %attr(755,root,root) %{_libdir}/libgraph.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgraph.so.4
 %attr(755,root,root) %{_libdir}/libgvc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgvc.so.4
+%attr(755,root,root) %ghost %{_libdir}/libgvc.so.5
+%attr(755,root,root) %{_libdir}/libgvpr.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgvpr.so.1
 %attr(755,root,root) %{_libdir}/libpathplan.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libpathplan.so.4
+%attr(755,root,root) %{_libdir}/libxdot.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libxdot.so.4
 %dir %{_libdir}/graphviz
 %ghost %{_libdir}/graphviz/config
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_core.so*
+%if %{with devil}
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_devil.so*
+%endif
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_dot_layout.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gd.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gdk_pixbuf.so*
@@ -386,24 +392,30 @@ umask 022
 
 %files devel
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/libagraph.so
+#%attr(755,root,root) %{_libdir}/libagraph.so
 %attr(755,root,root) %{_libdir}/libcdt.so
 %attr(755,root,root) %{_libdir}/libcgraph.so
 %attr(755,root,root) %{_libdir}/libgraph.so
 %attr(755,root,root) %{_libdir}/libgvc.so
+%attr(755,root,root) %{_libdir}/libgvpr.so
 %attr(755,root,root) %{_libdir}/libpathplan.so
-%{_libdir}/libagraph.la
+%attr(755,root,root) %{_libdir}/libxdot.so
+#%{_libdir}/libagraph.la
 %{_libdir}/libcdt.la
 %{_libdir}/libcgraph.la
 %{_libdir}/libgraph.la
 %{_libdir}/libgvc.la
+%{_libdir}/libgvpr.la
 %{_libdir}/libpathplan.la
-%{_pkgconfigdir}/libagraph.pc
+%{_libdir}/libxdot.la
+#%{_pkgconfigdir}/libagraph.pc
 %{_pkgconfigdir}/libcdt.pc
 %{_pkgconfigdir}/libcgraph.pc
 %{_pkgconfigdir}/libgraph.pc
 %{_pkgconfigdir}/libgvc.pc
+%{_pkgconfigdir}/libgvpr.pc
 %{_pkgconfigdir}/libpathplan.pc
+%{_pkgconfigdir}/libxdot.pc
 %{_includedir}/graphviz
 %{_mandir}/man3/*.3*
 
@@ -494,7 +506,7 @@ umask 022
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.py
 %attr(755,root,root) %{py_sitedir}/_gv.so
 %{py_sitedir}/gv.py
-%{_mandir}/mann/gv_python.n*
+#%{_mandir}/mann/gv_python.n*
 
 %if %{with ruby}
 %files ruby
