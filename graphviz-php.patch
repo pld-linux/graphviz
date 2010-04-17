@@ -1,10 +1,16 @@
---- graphviz-2.18/tclpkg/gv/gv_php_init.cpp.orig	2007-11-16 21:20:49.000000000 +0100
-+++ graphviz-2.18/tclpkg/gv/gv_php_init.cpp	2008-05-31 21:48:43.663241115 +0200
-@@ -6,6 +6,7 @@
+--- graphviz-2.18/tclpkg/gv/gv_php_init.c.orig	2007-11-16 21:20:49.000000000 +0100
++++ graphviz-2.18/tclpkg/gv/gv_php_init.c	2008-05-31 21:48:43.663241115 +0200
+@@ -22,11 +22,13 @@
  
- static size_t gv_php_writer (const char *s, int len)
+ static size_t gv_string_writer (GVJ_t *job, const char *s, size_t len)
  {
-+	TSRMLS_FETCH();
- 	return PHPWRITE(s, len);
++    TSRMLS_FETCH();
+     return PHPWRITE(s, len);
+ }
+ 
+ static size_t gv_channel_writer (GVJ_t *job, const char *s, size_t len)
+ {
++    TSRMLS_FETCH();
+     return PHPWRITE(s, len);
  }
  
