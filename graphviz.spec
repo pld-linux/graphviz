@@ -277,6 +277,8 @@ graphviza.
 # not used for anything
 sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
 
+%{__sed} '1s@/usr/bin/lua$@/usr/bin/lua51@' -i tclpkg/gv/demo/modgraph.lua
+
 %build
 rm -f m4/*.m4
 touch config/config.rpath
@@ -336,8 +338,6 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/*/lib*.la
 rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/libgvplugin_*.la
 
 #patch -p1 < %{PATCH2} || exit 1
-
-#%{__sed} 's@/usr/bin/lua@/usr/bin/lua51@' -i $RPM_BUILD_ROOT%{_datadir}/%{name}/demo/*lua
 
 %clean
 rm -rf $RPM_BUILD_ROOT
