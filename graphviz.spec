@@ -1,11 +1,13 @@
 # TODO
-# - modules for: io
-# - R-graphviz bindings package
+# - io language bindings: io-graphviz
 # - rename bindings to <LANGUAGE>-<FOO> and package them as true language bindings (not subdirs in graphviz)
-# - what are these?
+# - ghostscript subpackage?
 #   /usr/lib64/graphviz/libgvplugin_gs.so
 #   /usr/lib64/graphviz/libgvplugin_gs.so.6
 #   /usr/lib64/graphviz/libgvplugin_gs.so.6.0.0
+# - manuals need rename? these both are "gv" in section 3 of man?
+#   /usr/share/man/man3/gv.3r.gz
+#   /usr/share/man/man3/gv.3ruby.gz
 #
 # Conditional build:
 %bcond_without	dotnet	# don't build C# bindings
@@ -16,6 +18,7 @@
 %bcond_without	ruby	# don't build ruby bindings
 %bcond_without	tcl		# don't build tcl bindings
 %bcond_without	lua		# don't build lua bindings
+%bcond_without	r		# don't build R bindings
 %bcond_without	ming	# don't build ming support
 %bcond_without	guile	# don't build guile bindings
 %bcond_without	devil	# don't build devil plugin
@@ -49,7 +52,7 @@ Patch7:		gv.i.patch
 Patch8:		swig_php5.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
-BuildRequires:	R
+%{?with_r:BuildRequires:	R}
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 BuildRequires:	bison
@@ -285,6 +288,14 @@ graphviz.
 Ten pakiet zawiera różne pakiety (rozszerzenia) Tcl używające
 graphviza.
 
+%package -n R-%{name}
+Summary:	graphviz bindings for R language
+Group:		X11/Applications/Graphics
+Requires:	%{name} = %{version}-%{release}
+
+%description -n R-%{name}
+graphviz bindings for R language.
+
 %prep
 %setup -q
 %patch0 -p1
@@ -333,6 +344,7 @@ export CPPFLAGS
 	%{!?with_ming:--disable-ming} \
 	%{!?with_devil:--disable-devil} \
 	%{!?with_lua:--disable-lua} \
+	%{!?with_r:--disable-r} \
 	--disable-static
 
 %{__make}
@@ -607,4 +619,13 @@ fi
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.tcl
 %attr(755,root,root) %{_datadir}/graphviz/demo/pathplan.tcl
 %attr(755,root,root) %{_datadir}/graphviz/demo/spline.tcl
+%endif
+
+%if %{with r}
+%files -n R-%{name}
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/%{name}/R/gv.so
+%attr(755,root,root) %{_libdir}/%{name}/R/libgv_R.so
+# XXX: keep the dot, or it will match ruby manual!
+%{_mandir}/man3/gv.3r.*
 %endif
