@@ -1,4 +1,5 @@
 # TODO
+# - %{_libdir}/graphviz/config is not FHS friendly path as config
 # - io language bindings: io-graphviz
 # - ghostscript subpackage?
 #   /usr/lib64/graphviz/libgvplugin_gs.so
@@ -33,12 +34,12 @@
 %ifarch i386 i486
 %undefine with_java
 %endif
-%include	/usr/lib/rpm/macros.perl
+%{?with_perl:%include	/usr/lib/rpm/macros.perl}
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.26.3
-Release:	0.1
+Release:	0.3
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -91,8 +92,8 @@ BuildRequires:	php-program >= 4:5.0
 %endif
 BuildRequires:	pkgconfig
 %{?with_python:BuildRequires:	python-devel}
-%{?with_python:BuildRequires:	rpm-pythonprov}
 %{?with_perl:BuildRequires:	rpm-perlprov}
+%{?with_python:BuildRequires:	rpm-pythonprov}
 BuildRequires:	rpmbuild(macros) >= 1.519
 %{?with_ruby:BuildRequires:	ruby-devel}
 # swig-csharp,swig-java,swig-lua,swig-ocaml in main swig
@@ -170,7 +171,7 @@ Summary:	Guile binding for graphviz
 Summary(pl.UTF-8):	Wiązania Guile dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	%{name}-guile
+Obsoletes:	graphviz-guile
 
 %description -n guile-%{name}
 Guile binding for graphviz.
@@ -183,7 +184,7 @@ Summary:	Java binding for graphviz
 Summary(pl.UTF-8):	Wiązania Javy dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	%{name}-java
+Obsoletes:	graphviz-java
 
 %description -n java-%{name}
 Java binding for graphviz.
@@ -196,7 +197,7 @@ Summary:	LUA binding for graphviz
 Summary(pl.UTF-8):	Wiązania LUA dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	%{name}-lua
+Obsoletes:	graphviz-lua
 
 %description -n lua-%{name}
 LUA binding for graphviz.
@@ -209,7 +210,7 @@ Summary:	OCaml binding for graphviz
 Summary(pl.UTF-8):	Wiązania OCamla dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	%{name}-ocaml
+Obsoletes:	graphviz-ocaml
 
 %description -n ocaml-%{name}
 OCaml binding for graphviz.
@@ -248,7 +249,7 @@ Summary:	Python binding for graphviz
 Summary(pl.UTF-8):	Wiązania Pythona dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	%{name}-python
+Obsoletes:	graphviz-python
 
 %description -n python-%{name}
 Python binding for graphviz.
@@ -261,7 +262,7 @@ Summary:	Ruby binding for graphviz
 Summary(pl.UTF-8):	Wiązania Ruby'ego dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	%{name}-ruby
+Obsoletes:	graphviz-ruby
 
 %description -n ruby-%{name}
 Ruby binding for graphviz.
@@ -274,7 +275,7 @@ Summary:	C# binding for graphviz
 Summary(pl.UTF-8):	Wiązania C# dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	%{name}-sharp
+Obsoletes:	graphviz-sharp
 
 %description -n sharp-%{name}
 C# binding for graphviz.
@@ -287,7 +288,7 @@ Summary:	Tcl extension tools for graphviz
 Summary(pl.UTF-8):	Rozszerzenia Tcl dla graphviza
 Group:		X11/Applications/Graphics
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	%{name}-tcl
+Obsoletes:	graphviz-tcl
 
 %description -n tcl-%{name}
 This package contains the various Tcl packages (extensions) using
@@ -379,14 +380,6 @@ mv -f $RPM_BUILD_ROOT{%{_libdir}/%{name}/php/libgv_php.so,%{php_extensiondir}/gv
 rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}/php/gv.so
 mv -f $RPM_BUILD_ROOT{%{_datadir}/%{name}/demo,%{_examplesdir}/php-%{name}-%{version}}/modgraph.php
 %endif
-
-# replace dead (after compression) softlinks by groff redirections
-rm -f $RPM_BUILD_ROOT%{_mandir}/man1/{circo,fdp,neato,twopi,dot2gxl}.1
-echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/circo.1
-echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/fdp.1
-echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/neato.1
-echo ".so dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/twopi.1
-echo ".so gxl2dot.1" >$RPM_BUILD_ROOT%{_mandir}/man1/dot2gxl.1
 
 # created by %{_bindir}/dot -c
 touch $RPM_BUILD_ROOT%{_libdir}/graphviz/config
@@ -635,6 +628,7 @@ fi
 %if %{with r}
 %files -n R-%{name}
 %defattr(644,root,root,755)
+%dir %{_libdir}/%{name}/R
 %attr(755,root,root) %{_libdir}/%{name}/R/gv.so
 %attr(755,root,root) %{_libdir}/%{name}/R/libgv_R.so
 # XXX: keep the dot, or it will match ruby manual!
