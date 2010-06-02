@@ -5,9 +5,6 @@
 #   /usr/lib64/graphviz/libgvplugin_gs.so
 #   /usr/lib64/graphviz/libgvplugin_gs.so.6
 #   /usr/lib64/graphviz/libgvplugin_gs.so.6.0.0
-# - manuals need rename? these both are "gv" in section 3 of man?
-#   /usr/share/man/man3/gv.3r.gz
-#   /usr/share/man/man3/gv.3ruby.gz
 #
 # Conditional build:
 %bcond_without	dotnet	# don't build C# bindings
@@ -39,7 +36,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.26.3
-Release:	0.3
+Release:	0.4
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -381,6 +378,14 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}/php/gv.so
 mv -f $RPM_BUILD_ROOT{%{_datadir}/%{name}/demo,%{_examplesdir}/php-%{name}-%{version}}/modgraph.php
 %endif
 
+# "man3/gv.3r.gz" and "man3/gv.3ruby.gz" are both manual for "gv" in "section 3" of man pages
+# make manual pages unique.
+for a in $RPM_BUILD_ROOT%{_mandir}/man3/gv.*; do
+	m=${a##*/}
+	l=${m#gv.3}
+	mv $a ${a%/*}/gv_$l.3
+done
+
 # created by %{_bindir}/dot -c
 touch $RPM_BUILD_ROOT%{_libdir}/graphviz/config
 
@@ -506,7 +511,7 @@ fi
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/guile
 %attr(755,root,root) %{_libdir}/graphviz/guile/libgv_guile.so
-%{_mandir}/man3/gv.3guile*
+%{_mandir}/man3/gv_guile.*
 %endif
 
 %if %{with java}
@@ -515,7 +520,7 @@ fi
 %dir %{_libdir}/graphviz/java
 %attr(755,root,root) %{_libdir}/graphviz/java/libgv_java.so
 %{_libdir}/graphviz/java/*.java
-%{_mandir}/man3/gv.3java*
+%{_mandir}/man3/gv_java.*
 %endif
 
 %if %{with lua}
@@ -526,7 +531,7 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/lua/gv.so
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.lua
 %attr(755,root,root) %{_libdir}/lua/gv.so
-%{_mandir}/man3/gv.3lua*
+%{_mandir}/man3/gv_lua.*
 %endif
 
 %if %{with ocaml}
@@ -538,7 +543,7 @@ fi
 %{_libdir}/graphviz/ocaml/gv.a
 %{_libdir}/graphviz/ocaml/gv.cm*
 %{_libdir}/graphviz/ocaml/gv.ml*
-%{_mandir}/man3/gv.3ocaml*
+%{_mandir}/man3/gv_ocaml.*
 %endif
 
 %if %{with perl}
@@ -551,7 +556,7 @@ fi
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.pl
 %attr(755,root,root) %{perl_vendorarch}/gv.so
 %{perl_vendorarch}/gv.pm
-%{_mandir}/man3/gv.3perl*
+%{_mandir}/man3/gv_perl.*
 %endif
 
 %if %{with php}
@@ -560,7 +565,7 @@ fi
 %attr(755,root,root) %{php_extensiondir}/gv.so
 %config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/%{name}.ini
 %{php_data_dir}/gv.php
-%{_mandir}/man3/gv.3php*
+%{_mandir}/man3/gv_php.*
 %{_examplesdir}/php-%{name}-%{version}
 %endif
 
@@ -574,7 +579,7 @@ fi
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.py
 %attr(755,root,root) %{py_sitedir}/_gv.so
 %{py_sitedir}/gv.py
-%{_mandir}/man3/gv.3python*
+%{_mandir}/man3/gv_python.*
 %endif
 
 %if %{with ruby}
@@ -585,7 +590,7 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/ruby/gv.so
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.rb
 %{ruby_sitearchdir}/gv.so
-%{_mandir}/man3/gv.3ruby*
+%{_mandir}/man3/gv_ruby.*
 %endif
 
 %if %{with dotnet}
@@ -594,7 +599,7 @@ fi
 %dir %{_libdir}/graphviz/sharp
 %attr(755,root,root) %{_libdir}/graphviz/sharp/libgv_sharp.so
 %{_libdir}/graphviz/sharp/*.cs
-%{_mandir}/man3/gv.3sharp*
+%{_mandir}/man3/gv_sharp.*
 %endif
 
 %if %{with tcl}
@@ -609,11 +614,11 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtkspline.so*
 %{_libdir}/graphviz/tcl/pkgIndex.tcl
 %{_libdir}/tcl*/*
+%{_mandir}/man3/gv_tcl.*
 %{_mandir}/man3/gdtclft.3tcl*
-%{_mandir}/man3/gv.3tcl*
+%{_mandir}/man3/pathplan.3*
 %{_mandir}/man3/tcldot.3tcl*
 %{_mandir}/man3/tkspline.3tk*
-%{_mandir}/man3/pathplan.3*
 %{_datadir}/graphviz/demo/pathplan_data
 %{_datadir}/graphviz/demo/*.README
 %{_datadir}/graphviz/demo/*.html
@@ -631,6 +636,5 @@ fi
 %dir %{_libdir}/%{name}/R
 %attr(755,root,root) %{_libdir}/%{name}/R/gv.so
 %attr(755,root,root) %{_libdir}/%{name}/R/libgv_R.so
-# XXX: keep the dot, or it will match ruby manual!
-%{_mandir}/man3/gv.3r.*
+%{_mandir}/man3/gv_r.*
 %endif
