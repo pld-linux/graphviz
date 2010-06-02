@@ -1,5 +1,7 @@
 # TODO
 # - modules for: R, io
+# - rename bindings to <LANGUAGE>-<FOO> and package them as true language bindings (not subdirs in graphviz)
+# - subpackages for html and pdf docs
 #
 # Conditional build:
 %bcond_without	dotnet	# don't build C# bindings
@@ -13,7 +15,7 @@
 %bcond_without	ming	# don't build ming support
 %bcond_without	guile	# don't build guile bindings
 %bcond_without	devil	# don't build devil plugin
-#
+
 %ifarch i386
 %undefine with_dotnet
 %endif
@@ -83,7 +85,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	python-devel
 BuildRequires:	rpm-perlprov
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.322
+BuildRequires:	rpmbuild(macros) >= 1.519
 %{?with_ruby:BuildRequires:	ruby-devel}
 # swig-csharp,swig-java,swig-lua,swig-ocaml in main swig
 # swig-io ???
@@ -201,17 +203,18 @@ Perl binding for graphviz.
 %description perl -l pl.UTF-8
 Wiązania Perla dla graphviza.
 
-%package php
+%package -n php-%{name}
 Summary:	PHP binding for graphviz
 Summary(pl.UTF-8):	Wiązania PHP dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	graphviz-php
 %{?requires_php_extension}
 
-%description php
+%description -n php-%{name}
 PHP binding for graphviz.
 
-%description php -l pl.UTF-8
+%description -n php-%{name} -l pl.UTF-8
 Wiązania PHP dla graphviza.
 
 %package python
@@ -320,8 +323,23 @@ export CPPFLAGS
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
-	PHP_INSTALL_DIR=%{_libdir}/php \
+	PHP_INSTALL_DIR=%{php_extensiondir} \
 	DESTDIR=$RPM_BUILD_ROOT
+
+%if %{with php}
+install -d $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d
+cat <<'EOF' > $RPM_BUILD_ROOT%{php_sysconfdir}/conf.d/%{name}.ini
+; Enable gv.so extension module
+extension=gv.so
+EOF
+
+# drop the symlinks and install to php dirs directly
+install -d $RPM_BUILD_ROOT%{_examplesdir}/php-%{name}-%{version}
+mv -f $RPM_BUILD_ROOT{%{_libdir}/%{name}/php,%{php_data_dir}}/gv.php
+mv -f $RPM_BUILD_ROOT{%{_libdir}/%{name}/php/libgv_php.so,%{php_extensiondir}/gv.so}
+rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}/php/gv.so
+mv -f $RPM_BUILD_ROOT{%{_datadir}/%{name}/demo,%{_examplesdir}/php-%{name}-%{version}/modgraph.php
+%endif
 
 # replace dead (after compression) softlinks by groff redirections
 rm -f $RPM_BUILD_ROOT%{_mandir}/man1/{circo,fdp,neato,twopi,dot2gxl}.1
@@ -348,6 +366,14 @@ umask 022
 [ ! -x %{_bindir}/dot ] || %{_bindir}/dot -c > /dev/null 2>&1
 
 %postun	-p /sbin/ldconfig
+
+%post -n php-%{name}
+%php_webserver_restart
+
+%postun -n php-%{name}
+if [ "$1" = 0 ]; then
+	%php_webserver_restart
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -417,7 +443,11 @@ umask 022
 %{_pkgconfigdir}/libpathplan.pc
 %{_pkgconfigdir}/libxdot.pc
 %{_includedir}/graphviz
-%{_mandir}/man3/*.3*
+%{_mandir}/man3/cdt.3*
+%{_mandir}/man3/cgraph.3*
+%{_mandir}/man3/graph.3*
+%{_mandir}/man3/gvc.3*
+%{_mandir}/man3/xdot.3*
 
 %files graphs
 %defattr(644,root,root,755)
@@ -436,7 +466,7 @@ umask 022
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/guile
 %attr(755,root,root) %{_libdir}/graphviz/guile/libgv_guile.so
-%{_mandir}/mann/gv_guile.n*
+%{_mandir}/man3/gv.3guile*
 %endif
 
 %if %{with java}
@@ -445,7 +475,7 @@ umask 022
 %dir %{_libdir}/graphviz/java
 %attr(755,root,root) %{_libdir}/graphviz/java/libgv_java.so
 %{_libdir}/graphviz/java/*.java
-%{_mandir}/mann/gv_java.n*
+%{_mandir}/man3/gv.3java*
 %endif
 
 %if %{with lua}
@@ -456,7 +486,7 @@ umask 022
 %attr(755,root,root) %{_libdir}/graphviz/lua/gv.so
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.lua
 %attr(755,root,root) %{_libdir}/lua/gv.so
-%{_mandir}/mann/gv_lua.n*
+%{_mandir}/man3/gv.3lua*
 %endif
 
 %if %{with ocaml}
@@ -468,7 +498,7 @@ umask 022
 %{_libdir}/graphviz/ocaml/gv.a
 %{_libdir}/graphviz/ocaml/gv.cm*
 %{_libdir}/graphviz/ocaml/gv.ml*
-%{_mandir}/mann/gv_ocaml.n*
+%{_mandir}/man3/gv.3ocaml*
 %endif
 
 %if %{with perl}
@@ -481,20 +511,17 @@ umask 022
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.pl
 %attr(755,root,root) %{perl_vendorarch}/gv.so
 %{perl_vendorarch}/gv.pm
-%{_mandir}/mann/gv_perl.n*
+%{_mandir}/man3/gv.3perl*
 %endif
 
 %if %{with php}
-%files php
+%files -n php-%{name}
 %defattr(644,root,root,755)
-%dir %{_libdir}/graphviz/php
-%attr(755,root,root) %{_libdir}/graphviz/php/libgv_php.so
-%attr(755,root,root) %{_libdir}/graphviz/php/gv.so
-%{_libdir}/graphviz/php/gv.php
-%attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.php
-%attr(755,root,root) %{_libdir}/php/gv.so
-%{_datadir}/php/gv.php
-%{_mandir}/mann/gv_php.n*
+%attr(755,root,root) %{php_extensiondir}/gv.so
+%config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/%{name}.ini
+%{php_data_dir}/gv.php
+%{_mandir}/man3/gv.3php*
+%{_examplesdir}/php-%{name}-%{version}
 %endif
 
 %files python
@@ -506,7 +533,7 @@ umask 022
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.py
 %attr(755,root,root) %{py_sitedir}/_gv.so
 %{py_sitedir}/gv.py
-#%{_mandir}/mann/gv_python.n*
+%{_mandir}/man3/gv.3python*
 
 %if %{with ruby}
 %files ruby
@@ -516,7 +543,7 @@ umask 022
 %attr(755,root,root) %{_libdir}/graphviz/ruby/gv.so
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.rb
 %{ruby_sitearchdir}/gv.so
-%{_mandir}/mann/gv_ruby.n*
+%{_mandir}/man3/gv.3ruby*
 %endif
 
 %if %{with dotnet}
@@ -525,8 +552,8 @@ umask 022
 %dir %{_libdir}/graphviz/sharp
 %attr(755,root,root) %{_libdir}/graphviz/sharp/libgv_sharp.so
 %{_libdir}/graphviz/sharp/*.cs
-%{_mandir}/mann/gv_sharp.n*
-%endif
+%{_mandir}/man3/gv.3sharp*
+%endif}
 
 %if %{with tcl}
 %files tcl
@@ -540,10 +567,11 @@ umask 022
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtkspline.so*
 %{_libdir}/graphviz/tcl/pkgIndex.tcl
 %{_libdir}/tcl*/*
-%{_mandir}/mann/gdtclft.n*
-%{_mandir}/mann/gv_tcl.n*
-%{_mandir}/mann/tcldot.n*
-%{_mandir}/mann/tkspline.n*
+%{_mandir}/man3/gdtclft.3tcl*
+%{_mandir}/man3/gv.3tcl*
+%{_mandir}/man3/tcldot.3tcl*
+%{_mandir}/man3/tkspline.3tk*
+%{_mandir}/man3/pathplan.3*
 %{_datadir}/graphviz/demo/pathplan_data
 %{_datadir}/graphviz/demo/*.README
 %{_datadir}/graphviz/demo/*.html
