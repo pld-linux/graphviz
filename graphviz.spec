@@ -1,6 +1,5 @@
 # TODO
 # - io language bindings: io-graphviz
-# - rename bindings to <LANGUAGE>-<FOO> and package them as true language bindings (not subdirs in graphviz)
 # - ghostscript subpackage?
 #   /usr/lib64/graphviz/libgvplugin_gs.so
 #   /usr/lib64/graphviz/libgvplugin_gs.so.6
@@ -19,8 +18,10 @@
 %bcond_without	tcl		# don't build tcl bindings
 %bcond_without	lua		# don't build lua bindings
 %bcond_without	r		# don't build R bindings
-%bcond_without	ming	# don't build ming support
+%bcond_without	python 	# don't build python bindings
+%bcond_with		io		# don't build io language bindings
 %bcond_without	guile	# don't build guile bindings
+%bcond_without	ming	# don't build ming support
 %bcond_without	devil	# don't build devil plugin
 
 %ifarch i386
@@ -89,9 +90,9 @@ BuildRequires:	php-devel >= 3:5.0.0
 BuildRequires:	php-program >= 4:5.0
 %endif
 BuildRequires:	pkgconfig
-BuildRequires:	python-devel
-BuildRequires:	rpm-perlprov
-BuildRequires:	rpm-pythonprov
+%{?with_python:BuildRequires:	python-devel}
+%{?with_python:BuildRequires:	rpm-pythonprov}
+%{?with_perl:BuildRequires:	rpm-perlprov}
 BuildRequires:	rpmbuild(macros) >= 1.519
 %{?with_ruby:BuildRequires:	ruby-devel}
 # swig-csharp,swig-java,swig-lua,swig-ocaml in main swig
@@ -164,64 +165,68 @@ This package provides some example graphs.
 %description graphs -l pl.UTF-8
 Ten pakiet zawiera trochę przykładowych grafów.
 
-%package guile
+%package -n guile-%{name}
 Summary:	Guile binding for graphviz
 Summary(pl.UTF-8):	Wiązania Guile dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	%{name}-guile
 
-%description guile
+%description -n guile-%{name}
 Guile binding for graphviz.
 
-%description guile -l pl.UTF-8
+%description -n guile-%{name} -l pl.UTF-8
 Wiązania Guile dla graphviza.
 
-%package java
+%package -n java-%{name}
 Summary:	Java binding for graphviz
 Summary(pl.UTF-8):	Wiązania Javy dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	%{name}-java
 
-%description java
+%description -n java-%{name}
 Java binding for graphviz.
 
-%description java -l pl.UTF-8
+%description -n java-%{name} -l pl.UTF-8
 Wiązania Javy dla graphviza.
 
-%package lua
+%package -n lua-%{name}
 Summary:	LUA binding for graphviz
 Summary(pl.UTF-8):	Wiązania LUA dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	%{name}-lua
 
-%description lua
+%description -n lua-%{name}
 LUA binding for graphviz.
 
-%description lua -l pl.UTF-8
+%description -n lua-%{name} -l pl.UTF-8
 Wiązania LUA dla graphviza.
 
-%package ocaml
+%package -n ocaml-%{name}
 Summary:	OCaml binding for graphviz
 Summary(pl.UTF-8):	Wiązania OCamla dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	%{name}-ocaml
 
-%description ocaml
+%description -n ocaml-%{name}
 OCaml binding for graphviz.
 
-%description ocaml -l pl.UTF-8
+%description -n ocaml-%{name} -l pl.UTF-8
 Wiązania OCamla dla graphviza.
 
-%package perl
+%package -n perl-%{name}
 Summary:	Perl binding for graphviz
 Summary(pl.UTF-8):	Wiązania Perla dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
-%description perl
+%description -n perl-%{name}
 Perl binding for graphviz.
 
-%description perl -l pl.UTF-8
+%description -n perl-%{name} -l pl.UTF-8
 Wiązania Perla dla graphviza.
 
 %package -n php-%{name}
@@ -238,53 +243,57 @@ PHP binding for graphviz.
 %description -n php-%{name} -l pl.UTF-8
 Wiązania PHP dla graphviza.
 
-%package python
+%package -n python-%{name}
 Summary:	Python binding for graphviz
 Summary(pl.UTF-8):	Wiązania Pythona dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	%{name}-python
 
-%description python
+%description -n python-%{name}
 Python binding for graphviz.
 
-%description python -l pl.UTF-8
+%description -n python-%{name} -l pl.UTF-8
 Wiązania Pythona dla graphviza.
 
-%package ruby
+%package -n ruby-%{name}
 Summary:	Ruby binding for graphviz
 Summary(pl.UTF-8):	Wiązania Ruby'ego dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	%{name}-ruby
 
-%description ruby
+%description -n ruby-%{name}
 Ruby binding for graphviz.
 
-%description ruby -l pl.UTF-8
+%description -n ruby-%{name} -l pl.UTF-8
 Wiązania Ruby'ego dla graphviza.
 
-%package sharp
+%package -n sharp-%{name}
 Summary:	C# binding for graphviz
 Summary(pl.UTF-8):	Wiązania C# dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	%{name}-sharp
 
-%description sharp
+%description -n sharp-%{name}
 C# binding for graphviz.
 
-%description sharp -l pl.UTF-8
+%description -n sharp-%{name} -l pl.UTF-8
 Wiązania C# dla graphviza.
 
-%package tcl
+%package -n tcl-%{name}
 Summary:	Tcl extension tools for graphviz
 Summary(pl.UTF-8):	Rozszerzenia Tcl dla graphviza
 Group:		X11/Applications/Graphics
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	%{name}-tcl
 
-%description tcl
+%description -n tcl-%{name}
 This package contains the various Tcl packages (extensions) using
 graphviz.
 
-%description tcl -l pl.UTF-8
+%description -n tcl-%{name} -l pl.UTF-8
 Ten pakiet zawiera różne pakiety (rozszerzenia) Tcl używające
 graphviza.
 
@@ -492,7 +501,7 @@ fi
 %{_datadir}/graphviz/graphs
 
 %if 0
-%files io
+%files io-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/io
 %attr(755,root,root) %{_libdir}/graphviz/io/libgv_io.so*
@@ -500,7 +509,7 @@ fi
 %endif
 
 %if %{with guile}
-%files guile
+%files -n guile-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/guile
 %attr(755,root,root) %{_libdir}/graphviz/guile/libgv_guile.so
@@ -508,7 +517,7 @@ fi
 %endif
 
 %if %{with java}
-%files java
+%files -n java-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/java
 %attr(755,root,root) %{_libdir}/graphviz/java/libgv_java.so
@@ -517,7 +526,7 @@ fi
 %endif
 
 %if %{with lua}
-%files lua
+%files -n lua-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/lua
 %attr(755,root,root) %{_libdir}/graphviz/lua/libgv_lua.so
@@ -528,7 +537,7 @@ fi
 %endif
 
 %if %{with ocaml}
-%files ocaml
+%files -n ocaml-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/ocaml
 %attr(755,root,root) %{_libdir}/graphviz/ocaml/libgv_ocaml.so
@@ -540,7 +549,7 @@ fi
 %endif
 
 %if %{with perl}
-%files perl
+%files -n perl-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/perl
 %attr(755,root,root) %{_libdir}/graphviz/perl/libgv_perl.so
@@ -562,7 +571,8 @@ fi
 %{_examplesdir}/php-%{name}-%{version}
 %endif
 
-%files python
+%if %{with python}
+%files -n python-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/python
 %attr(755,root,root) %{_libdir}/graphviz/python/libgv_python.so
@@ -572,9 +582,10 @@ fi
 %attr(755,root,root) %{py_sitedir}/_gv.so
 %{py_sitedir}/gv.py
 %{_mandir}/man3/gv.3python*
+%endif
 
 %if %{with ruby}
-%files ruby
+%files -n ruby-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/ruby
 %attr(755,root,root) %{_libdir}/graphviz/ruby/libgv_ruby.so
@@ -585,16 +596,16 @@ fi
 %endif
 
 %if %{with dotnet}
-%files sharp
+%files -n sharp-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/sharp
 %attr(755,root,root) %{_libdir}/graphviz/sharp/libgv_sharp.so
 %{_libdir}/graphviz/sharp/*.cs
 %{_mandir}/man3/gv.3sharp*
-%endif}
+%endif
 
 %if %{with tcl}
-%files tcl
+%files -n tcl-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/tcl
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libgdtclft.so*
