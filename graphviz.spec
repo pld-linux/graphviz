@@ -1,7 +1,11 @@
 # TODO
-# - modules for: R, io
+# - modules for: io
+# - R-graphviz bindings package
 # - rename bindings to <LANGUAGE>-<FOO> and package them as true language bindings (not subdirs in graphviz)
-# - subpackages for html and pdf docs
+# - what are these?
+#   /usr/lib64/graphviz/libgvplugin_gs.so
+#   /usr/lib64/graphviz/libgvplugin_gs.so.6
+#   /usr/lib64/graphviz/libgvplugin_gs.so.6.0.0
 #
 # Conditional build:
 %bcond_without	dotnet	# don't build C# bindings
@@ -130,6 +134,20 @@ This package contains the header files for graphviz libraries.
 
 %description devel -l pl.UTF-8
 Ten pakiet zawiera pliki nagłówkowe do bibliotek graphviz.
+
+%package doc-html
+Summary:	HTML documentation for graphviz
+Group:		Documentation
+
+%description doc-html
+HTML documentation for graphviz.
+
+%package doc-pdf
+Summary:	PDF documentation for graphviz
+Group:		Documentation
+
+%description doc-pdf
+PDF documentation for graphviz.
 
 %package graphs
 Summary:	Demo graphs for graphviz
@@ -338,7 +356,7 @@ install -d $RPM_BUILD_ROOT%{_examplesdir}/php-%{name}-%{version}
 mv -f $RPM_BUILD_ROOT{%{_libdir}/%{name}/php,%{php_data_dir}}/gv.php
 mv -f $RPM_BUILD_ROOT{%{_libdir}/%{name}/php/libgv_php.so,%{php_extensiondir}/gv.so}
 rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}/php/gv.so
-mv -f $RPM_BUILD_ROOT{%{_datadir}/%{name}/demo,%{_examplesdir}/php-%{name}-%{version}/modgraph.php
+mv -f $RPM_BUILD_ROOT{%{_datadir}/%{name}/demo,%{_examplesdir}/php-%{name}-%{version}}/modgraph.php
 %endif
 
 # replace dead (after compression) softlinks by groff redirections
@@ -448,6 +466,14 @@ fi
 %{_mandir}/man3/graph.3*
 %{_mandir}/man3/gvc.3*
 %{_mandir}/man3/xdot.3*
+
+%files doc-html
+%defattr(644,root,root,755)
+%doc %{_datadir}/%{name}/doc/html/*
+
+%files doc-pdf
+%defattr(644,root,root,755)
+%doc %{_datadir}/%{name}/doc/pdf/*
 
 %files graphs
 %defattr(644,root,root,755)
