@@ -36,7 +36,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.26.3
-Release:	1
+Release:	2
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -394,6 +394,10 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/libgvplugin_*.la
 
 #patch -p1 < %{PATCH2} || exit 1
 
+rm -rf doc-html doc-pdf
+mv $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/html doc-html
+mv $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/pdf doc-pdf
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -488,11 +492,11 @@ fi
 
 %files doc-html
 %defattr(644,root,root,755)
-%doc %{_datadir}/%{name}/doc/html/*
+%doc doc-html/*
 
 %files doc-pdf
 %defattr(644,root,root,755)
-%doc %{_datadir}/%{name}/doc/pdf/*
+%doc doc-pdf/*
 
 %files graphs
 %defattr(644,root,root,755)
