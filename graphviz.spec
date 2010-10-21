@@ -47,8 +47,6 @@ Patch2:		%{name}-bad-header.patch
 Patch3:		%{name}-php.patch
 Patch5:		%{name}-lua51.patch
 Patch6:		%{name}-php_modules_dir.patch
-Patch7:		gv.i.patch
-Patch8:		swig_php5.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 %{?with_r:BuildRequires:	R}
@@ -319,8 +317,6 @@ graphviz bindings for R language.
 %patch3 -p1
 %patch5 -p1
 %patch6 -p1
-#%patch7 -p1
-#%patch8 -p1
 
 # not used for anything
 sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
