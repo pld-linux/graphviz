@@ -10,14 +10,14 @@
 %bcond_without	dotnet	# don't build C# bindings
 %bcond_without	java	# don't build Java bindings
 %bcond_without	ocaml	# don't build ocaml bindings
-%bcond_without	php		# don't build php bindings
+%bcond_without	php	# don't build php bindings
 %bcond_without	perl	# don't build perl bindings
 %bcond_without	ruby	# don't build ruby bindings
-%bcond_without	tcl		# don't build tcl bindings
-%bcond_without	lua		# don't build lua bindings
-%bcond_without	r		# don't build R bindings
+%bcond_without	tcl	# don't build tcl bindings
+%bcond_without	lua	# don't build lua bindings
+%bcond_without	r	# don't build R bindings
 %bcond_without	python 	# don't build python bindings
-%bcond_with		io		# don't build io language bindings
+%bcond_with	io	# don't build io language bindings
 %bcond_without	guile	# don't build guile bindings
 %bcond_without	ming	# don't build ming support
 %bcond_without	devil	# don't build devil plugin
@@ -139,17 +139,25 @@ Ten pakiet zawiera pliki nagłówkowe do bibliotek graphviz.
 
 %package doc-html
 Summary:	HTML documentation for graphviz
+Summary(pl.UTF-8):	Dokumentacja do graphviza w formacie HTML
 Group:		Documentation
 
 %description doc-html
 HTML documentation for graphviz.
 
+%description doc-html -l pl.UTF-8
+Dokumentacja do graphviza w formacie HTML.
+
 %package doc-pdf
 Summary:	PDF documentation for graphviz
+Summary(pl.UTF-8):	Dokumentacja do graphviza w formacie PDF
 Group:		Documentation
 
 %description doc-pdf
 PDF documentation for graphviz.
+
+%description doc-pdf -l pl.UTF-8
+Dokumentacja do graphviza w formacie PDF.
 
 %package graphs
 Summary:	Demo graphs for graphviz
@@ -267,17 +275,18 @@ Ruby binding for graphviz.
 %description -n ruby-%{name} -l pl.UTF-8
 Wiązania Ruby'ego dla graphviza.
 
-%package -n sharp-%{name}
+%package -n dotnet-%{name}-sharp
 Summary:	C# binding for graphviz
 Summary(pl.UTF-8):	Wiązania C# dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	graphviz-sharp
+Obsoletes:	sharp-graphviz
 
-%description -n sharp-%{name}
+%description -n dotnet-%{name}-sharp
 C# binding for graphviz.
 
-%description -n sharp-%{name} -l pl.UTF-8
+%description -n dotnet-%{name}-sharp -l pl.UTF-8
 Wiązania C# dla graphviza.
 
 %package -n tcl-%{name}
@@ -598,7 +607,7 @@ fi
 %endif
 
 %if %{with dotnet}
-%files -n sharp-%{name}
+%files -n dotnet-%{name}-sharp
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/sharp
 %attr(755,root,root) %{_libdir}/graphviz/sharp/libgv_sharp.so
