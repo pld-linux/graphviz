@@ -45,6 +45,7 @@ Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
 Patch2:		%{name}-bad-header.patch
 Patch3:		%{name}-php.patch
+Patch4:		%{name}-ltdl.patch
 Patch5:		%{name}-lua51.patch
 Patch6:		%{name}-php_modules_dir.patch
 URL:		http://www.graphviz.org/
@@ -315,6 +316,7 @@ graphviz bindings for R language.
 %patch0 -p1
 %patch1 -p1
 %patch3 -p1
+%patch4 -p1
 %patch5 -p1
 %patch6 -p1
 
@@ -346,6 +348,7 @@ export CPPFLAGS
 %configure \
 	lua_suffix=51 \
 	--disable-ltdl-install \
+	--disable-silent-rules \
 	%{!?with_java:--disable-java} \
 	%{!?with_ocaml:--disable-ocaml} \
 	%{!?with_dotnet:--disable-sharp} \
