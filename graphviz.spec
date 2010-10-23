@@ -48,6 +48,7 @@ Patch3:		%{name}-php.patch
 Patch4:		%{name}-ltdl.patch
 Patch5:		%{name}-lua51.patch
 Patch6:		%{name}-php_modules_dir.patch
+Patch7:		%{name}-ruby.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 %{?with_r:BuildRequires:	R}
@@ -319,6 +320,7 @@ graphviz bindings for R language.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 # not used for anything
 sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
@@ -335,8 +337,6 @@ touch config/config.rpath
 %{__automake}
 
 CPPFLAGS="%{rpmcppflags}"
-CPPFLAGS="$CPPFLAGS -I%{_includedir}/ruby-1.9 -I%{_includedir}/ruby-1.9/%{_target}"
-
 %if %{with java}
 JAVA_HOME=%{java_home}
 export JAVA_HOME
@@ -397,14 +397,15 @@ done
 # created by %{_bindir}/dot -c
 touch $RPM_BUILD_ROOT%{_libdir}/graphviz/config
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/*/lib*.la
-rm -f $RPM_BUILD_ROOT%{_libdir}/graphviz/libgvplugin_*.la
-
-#patch -p1 < %{PATCH2} || exit 1
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/graphviz/*/lib*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/graphviz/libgvplugin_*.la
 
 rm -rf doc-html doc-pdf
 mv $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/html doc-html
 mv $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/pdf doc-pdf
+
+cd $RPM_BUILD_ROOT
+patch -p1 < %{PATCH2} || exit 1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -426,10 +427,39 @@ fi
 
 %files
 %defattr(644,root,root,755)
-#%doc AUTHORS COPYING ChangeLog NEWS doc/*.pdf
-%attr(755,root,root) %{_bindir}/*
-#%attr(755,root,root) %{_libdir}/libagraph.so.*.*.*
-#%attr(755,root,root) %ghost %{_libdir}/libagraph.so.4
+%doc AUTHORS COPYING ChangeLog NEWS README
+%attr(755,root,root) %{_bindir}/acyclic
+%attr(755,root,root) %{_bindir}/bcomps
+%attr(755,root,root) %{_bindir}/ccomps
+%attr(755,root,root) %{_bindir}/circo
+%attr(755,root,root) %{_bindir}/diffimg
+%attr(755,root,root) %{_bindir}/dijkstra
+%attr(755,root,root) %{_bindir}/dot
+%attr(755,root,root) %{_bindir}/dot2gxl
+%attr(755,root,root) %{_bindir}/dotty
+%attr(755,root,root) %{_bindir}/fdp
+%attr(755,root,root) %{_bindir}/gc
+%attr(755,root,root) %{_bindir}/gml2gv
+%attr(755,root,root) %{_bindir}/gv2gxl
+%attr(755,root,root) %{_bindir}/gvcolor
+%attr(755,root,root) %{_bindir}/gvgen
+%attr(755,root,root) %{_bindir}/gvpack
+%attr(755,root,root) %{_bindir}/gvpr
+%attr(755,root,root) %{_bindir}/gxl2dot
+%attr(755,root,root) %{_bindir}/gxl2gv
+%attr(755,root,root) %{_bindir}/lefty
+%attr(755,root,root) %{_bindir}/lneato
+%attr(755,root,root) %{_bindir}/mm2gv
+%attr(755,root,root) %{_bindir}/neato
+%attr(755,root,root) %{_bindir}/nop
+%attr(755,root,root) %{_bindir}/osage
+%attr(755,root,root) %{_bindir}/prune
+%attr(755,root,root) %{_bindir}/sccmap
+%attr(755,root,root) %{_bindir}/sfdp
+%attr(755,root,root) %{_bindir}/tred
+%attr(755,root,root) %{_bindir}/twopi
+%attr(755,root,root) %{_bindir}/unflatten
+%attr(755,root,root) %{_bindir}/vimdot
 %attr(755,root,root) %{_libdir}/libcdt.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libcdt.so.4
 %attr(755,root,root) %{_libdir}/libcgraph.so.*.*.*
@@ -453,21 +483,48 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_dot_layout.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gd.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gdk_pixbuf.so*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gs.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gtk.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_neato_layout.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_pango.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_rsvg.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_xlib.so*
-# what about the rest of *.la?
 %dir %{_datadir}/graphviz
 %dir %{_datadir}/graphviz/demo
 %{_datadir}/graphviz/lefty
-%{_mandir}/man1/*
+%{_mandir}/man1/acyclic.1*
+%{_mandir}/man1/bcomps.1*
+%{_mandir}/man1/ccomps.1*
+%{_mandir}/man1/circo.1*
+%{_mandir}/man1/dijkstra.1*
+%{_mandir}/man1/dot.1*
+%{_mandir}/man1/dotty.1*
+%{_mandir}/man1/fdp.1*
+%{_mandir}/man1/gc.1*
+%{_mandir}/man1/gml2gv.1*
+%{_mandir}/man1/gv2gxl.1*
+%{_mandir}/man1/gvcolor.1*
+%{_mandir}/man1/gvgen.1*
+%{_mandir}/man1/gvpack.1*
+%{_mandir}/man1/gvpr.1*
+%{_mandir}/man1/gxl2gv.1*
+%{_mandir}/man1/lefty.1*
+%{_mandir}/man1/lneato.1*
+%{_mandir}/man1/mm2gv.1*
+%{_mandir}/man1/neato.1*
+%{_mandir}/man1/nop.1*
+%{_mandir}/man1/osage.1*
+%{_mandir}/man1/prune.1*
+%{_mandir}/man1/sccmap.1*
+%{_mandir}/man1/sfdp.1*
+%{_mandir}/man1/smyrna.1*
+%{_mandir}/man1/tred.1*
+%{_mandir}/man1/twopi.1*
+%{_mandir}/man1/unflatten.1*
 %{_mandir}/man7/graphviz.7*
 
 %files devel
 %defattr(644,root,root,755)
-#%attr(755,root,root) %{_libdir}/libagraph.so
 %attr(755,root,root) %{_libdir}/libcdt.so
 %attr(755,root,root) %{_libdir}/libcgraph.so
 %attr(755,root,root) %{_libdir}/libgraph.so
@@ -475,7 +532,6 @@ fi
 %attr(755,root,root) %{_libdir}/libgvpr.so
 %attr(755,root,root) %{_libdir}/libpathplan.so
 %attr(755,root,root) %{_libdir}/libxdot.so
-#%{_libdir}/libagraph.la
 %{_libdir}/libcdt.la
 %{_libdir}/libcgraph.la
 %{_libdir}/libgraph.la
@@ -483,7 +539,6 @@ fi
 %{_libdir}/libgvpr.la
 %{_libdir}/libpathplan.la
 %{_libdir}/libxdot.la
-#%{_pkgconfigdir}/libagraph.pc
 %{_pkgconfigdir}/libcdt.pc
 %{_pkgconfigdir}/libcgraph.pc
 %{_pkgconfigdir}/libgraph.pc
@@ -523,7 +578,7 @@ fi
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/guile
 %attr(755,root,root) %{_libdir}/graphviz/guile/libgv_guile.so
-%{_mandir}/man3/gv_guile.*
+%{_mandir}/man3/gv_guile.3*
 %endif
 
 %if %{with java}
@@ -532,7 +587,7 @@ fi
 %dir %{_libdir}/graphviz/java
 %attr(755,root,root) %{_libdir}/graphviz/java/libgv_java.so
 %{_libdir}/graphviz/java/*.java
-%{_mandir}/man3/gv_java.*
+%{_mandir}/man3/gv_java.3*
 %endif
 
 %if %{with lua}
@@ -543,7 +598,7 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/lua/gv.so
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.lua
 %attr(755,root,root) %{_libdir}/lua/gv.so
-%{_mandir}/man3/gv_lua.*
+%{_mandir}/man3/gv_lua.3*
 %endif
 
 %if %{with ocaml}
@@ -555,7 +610,7 @@ fi
 %{_libdir}/graphviz/ocaml/gv.a
 %{_libdir}/graphviz/ocaml/gv.cm*
 %{_libdir}/graphviz/ocaml/gv.ml*
-%{_mandir}/man3/gv_ocaml.*
+%{_mandir}/man3/gv_ocaml.3*
 %endif
 
 %if %{with perl}
@@ -568,7 +623,7 @@ fi
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.pl
 %attr(755,root,root) %{perl_vendorarch}/gv.so
 %{perl_vendorarch}/gv.pm
-%{_mandir}/man3/gv_perl.*
+%{_mandir}/man3/gv_perl.3*
 %endif
 
 %if %{with php}
@@ -577,7 +632,7 @@ fi
 %attr(755,root,root) %{php_extensiondir}/gv.so
 %config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/%{name}.ini
 %{php_data_dir}/gv.php
-%{_mandir}/man3/gv_php.*
+%{_mandir}/man3/gv_php.3*
 %{_examplesdir}/php-%{name}-%{version}
 %endif
 
@@ -591,7 +646,7 @@ fi
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.py
 %attr(755,root,root) %{py_sitedir}/_gv.so
 %{py_sitedir}/gv.py
-%{_mandir}/man3/gv_python.*
+%{_mandir}/man3/gv_python.3*
 %endif
 
 %if %{with ruby}
@@ -602,7 +657,7 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/ruby/gv.so
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.rb
 %{ruby_sitearchdir}/gv.so
-%{_mandir}/man3/gv_ruby.*
+%{_mandir}/man3/gv_ruby.3*
 %endif
 
 %if %{with dotnet}
@@ -611,7 +666,7 @@ fi
 %dir %{_libdir}/graphviz/sharp
 %attr(755,root,root) %{_libdir}/graphviz/sharp/libgv_sharp.so
 %{_libdir}/graphviz/sharp/*.cs
-%{_mandir}/man3/gv_sharp.*
+%{_mandir}/man3/gv_sharp.3*
 %endif
 
 %if %{with tcl}
@@ -625,8 +680,8 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtclplan.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtkspline.so*
 %{_libdir}/graphviz/tcl/pkgIndex.tcl
-%{_libdir}/tcl*/*
-%{_mandir}/man3/gv_tcl.*
+%{_libdir}/tcl*/graphviz
+%{_mandir}/man3/gv_tcl.3*
 %{_mandir}/man3/gdtclft.3tcl*
 %{_mandir}/man3/pathplan.3*
 %{_mandir}/man3/tcldot.3tcl*
@@ -648,5 +703,5 @@ fi
 %dir %{_libdir}/%{name}/R
 %attr(755,root,root) %{_libdir}/%{name}/R/gv.so
 %attr(755,root,root) %{_libdir}/%{name}/R/libgv_R.so
-%{_mandir}/man3/gv_r.*
+%{_mandir}/man3/gv_r.3*
 %endif

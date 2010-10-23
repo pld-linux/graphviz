@@ -15,17 +15,6 @@
  
 -#ifdef HAVE_CONFIG_H
 +#if 0
+ 
  /* true if point p is inside box b */
  #define INSIDE(p,b)	(BETWEEN((b).LL.x,(p).x,(b).UR.x) && BETWEEN((b).LL.y,(p).y,(b).UR.y))
- /* true if boxes b0 and b1 overlap */
---- graphviz-2.14.1-root-baggins/usr/include/graphviz/dot_builtins.c.orig	2007-09-17 18:25:45.000000000 +0200
-+++ graphviz-2.14.1-root-baggins/usr/include/graphviz/dot_builtins.c	2007-09-17 18:26:48.858885737 +0200
-@@ -14,7 +14,7 @@
- *              AT&T Research, Florham Park NJ             *
- **********************************************************/
- 
--#ifdef HAVE_CONFIG_H
-+#if 0
- #include "config.h"
- #endif
- 
