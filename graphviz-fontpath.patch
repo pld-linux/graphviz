@@ -1,11 +1,11 @@
---- graphviz-2.12/configure.ac.orig	2006-12-04 22:11:58.000000000 +0100
-+++ graphviz-2.12/configure.ac	2006-12-27 14:22:16.682261909 +0100
-@@ -79,7 +79,7 @@
+--- graphviz-2.28.0/configure.ac.orig	2011-05-07 05:25:24.000000000 +0200
++++ graphviz-2.28.0/configure.ac	2011-05-17 20:24:39.344723227 +0200
+@@ -161,7 +161,7 @@
  	AC_DEFINE_UNQUOTED(DARWIN_DYLIB,"$DARWIN_DYLIB",[Define for Darwin-style shared library names.])
  	;;
-   * ) # This sucks!  Whatever happened to standards for file system layout?
--	DEFAULT_FONTPATH="/usr/share/fonts/default/Type1:/usr/X11R6/lib/X11/fonts/TrueType:/usr/X11R6/lib/X11/fonts/truetype:/usr/X11R6/lib/X11/fonts/TTF:/usr/share/fonts/TrueType:/usr/share/fonts/truetype:/usr/openwin/lib/X11/fonts/TrueType:/usr/X11R6/lib/X11/fonts/Type1:/usr/common/share/fonts/ttf";
+   * ) # This sucks!  Whatever happened to standards for file system layout?   (Good job its no longer used unless fontconfig is unavailable.)
+-	DEFAULT_FONTPATH="/usr/share/fonts/sun/TrueType:/usr/share/fonts/TrueType:/usr/X11/lib/X11/fonts/TrueType:/usr/share/fonts/sun/Type1:/usr/openwin/lib/X11/fonts/Type1:/usr/share/fonts/X11/Type1:/usr/share/fonts/default/Type1:/usr/X11R6/lib/X11/fonts/TrueType:/usr/X11R6/lib/X11/fonts/truetype:/usr/X11R6/lib/X11/fonts/TTF:/usr/share/fonts/truetype:/usr/openwin/lib/X11/fonts/TrueType:/usr/X11R6/lib/X11/fonts/Type1:/usr/common/share/fonts/ttf";
 +	DEFAULT_FONTPATH="/usr/share/fonts/TTF:/usr/share/fonts/Type1";
  	PATHSEPARATOR=":"
- 	;;
- esac
+         NO_POSTSCRIPT_ALIAS=0
+ 	BROWSER="xdg-open"

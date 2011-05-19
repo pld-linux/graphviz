@@ -35,12 +35,12 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.26.3
-Release:	7
+Version:	2.28.0
+Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	6f45946fa622770c45609778c0a982ee
+# Source0-md5:	8d26c1171f30ca3b1dc1b429f7937e58
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
 Patch2:		%{name}-bad-header.patch
@@ -49,6 +49,7 @@ Patch4:		%{name}-ltdl.patch
 Patch5:		%{name}-lua51.patch
 Patch6:		%{name}-php_modules_dir.patch
 Patch7:		%{name}-ruby.patch
+Patch8:		%{name}-guile.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 %{?with_r:BuildRequires:	R}
@@ -61,6 +62,7 @@ BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
 BuildRequires:	gd-devel >= 2.0.34
 BuildRequires:	gettext-devel
+BuildRequires:	ghostscript-devel
 BuildRequires:	gtk+2-devel >= 2:2.8.0
 %{?with_guile:BuildRequires:	guile-devel >= 1.4}
 #BuildRequires:	io
@@ -321,14 +323,13 @@ graphviz bindings for R language.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-
-# not used for anything
-sed -i -e 's/libgnomeui-2.0/libgnomeui-disabled/' configure.ac
+%patch8 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua51@' -i tclpkg/gv/demo/modgraph.lua
 
+%{__rm} m4/*.m4
+
 %build
-rm -f m4/*.m4
 touch config/config.rpath
 %{__libtoolize} --ltdl
 %{__aclocal} -I m4
@@ -432,10 +433,12 @@ fi
 %attr(755,root,root) %{_bindir}/bcomps
 %attr(755,root,root) %{_bindir}/ccomps
 %attr(755,root,root) %{_bindir}/circo
+%attr(755,root,root) %{_bindir}/cluster
 %attr(755,root,root) %{_bindir}/diffimg
 %attr(755,root,root) %{_bindir}/dijkstra
 %attr(755,root,root) %{_bindir}/dot
 %attr(755,root,root) %{_bindir}/dot2gxl
+%attr(755,root,root) %{_bindir}/dot_builtins
 %attr(755,root,root) %{_bindir}/dotty
 %attr(755,root,root) %{_bindir}/fdp
 %attr(755,root,root) %{_bindir}/gc
@@ -443,6 +446,8 @@ fi
 %attr(755,root,root) %{_bindir}/gv2gxl
 %attr(755,root,root) %{_bindir}/gvcolor
 %attr(755,root,root) %{_bindir}/gvgen
+%attr(755,root,root) %{_bindir}/gvmap
+%attr(755,root,root) %{_bindir}/gvmap.sh
 %attr(755,root,root) %{_bindir}/gvpack
 %attr(755,root,root) %{_bindir}/gvpr
 %attr(755,root,root) %{_bindir}/gxl2dot
@@ -453,6 +458,7 @@ fi
 %attr(755,root,root) %{_bindir}/neato
 %attr(755,root,root) %{_bindir}/nop
 %attr(755,root,root) %{_bindir}/osage
+%attr(755,root,root) %{_bindir}/patchwork
 %attr(755,root,root) %{_bindir}/prune
 %attr(755,root,root) %{_bindir}/sccmap
 %attr(755,root,root) %{_bindir}/sfdp
@@ -461,15 +467,15 @@ fi
 %attr(755,root,root) %{_bindir}/unflatten
 %attr(755,root,root) %{_bindir}/vimdot
 %attr(755,root,root) %{_libdir}/libcdt.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcdt.so.4
+%attr(755,root,root) %ghost %{_libdir}/libcdt.so.5
 %attr(755,root,root) %{_libdir}/libcgraph.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcgraph.so.5
+%attr(755,root,root) %ghost %{_libdir}/libcgraph.so.6
 %attr(755,root,root) %{_libdir}/libgraph.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgraph.so.4
+%attr(755,root,root) %ghost %{_libdir}/libgraph.so.5
 %attr(755,root,root) %{_libdir}/libgvc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgvc.so.5
+%attr(755,root,root) %ghost %{_libdir}/libgvc.so.6
 %attr(755,root,root) %{_libdir}/libgvpr.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgvpr.so.1
+%attr(755,root,root) %ghost %{_libdir}/libgvpr.so.2
 %attr(755,root,root) %{_libdir}/libpathplan.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libpathplan.so.4
 %attr(755,root,root) %{_libdir}/libxdot.so.*.*.*
@@ -496,6 +502,8 @@ fi
 %{_mandir}/man1/bcomps.1*
 %{_mandir}/man1/ccomps.1*
 %{_mandir}/man1/circo.1*
+%{_mandir}/man1/cluster.1*
+%{_mandir}/man1/diffimg.1*
 %{_mandir}/man1/dijkstra.1*
 %{_mandir}/man1/dot.1*
 %{_mandir}/man1/dotty.1*
@@ -504,7 +512,10 @@ fi
 %{_mandir}/man1/gml2gv.1*
 %{_mandir}/man1/gv2gxl.1*
 %{_mandir}/man1/gvcolor.1*
+%{_mandir}/man1/gvedit.1*
 %{_mandir}/man1/gvgen.1*
+%{_mandir}/man1/gvmap.1*
+%{_mandir}/man1/gvmap.sh.1*
 %{_mandir}/man1/gvpack.1*
 %{_mandir}/man1/gvpr.1*
 %{_mandir}/man1/gxl2gv.1*
@@ -514,6 +525,7 @@ fi
 %{_mandir}/man1/neato.1*
 %{_mandir}/man1/nop.1*
 %{_mandir}/man1/osage.1*
+%{_mandir}/man1/patchwork.1*
 %{_mandir}/man1/prune.1*
 %{_mandir}/man1/sccmap.1*
 %{_mandir}/man1/sfdp.1*
@@ -521,6 +533,7 @@ fi
 %{_mandir}/man1/tred.1*
 %{_mandir}/man1/twopi.1*
 %{_mandir}/man1/unflatten.1*
+%{_mandir}/man1/vimdot.1*
 %{_mandir}/man7/graphviz.7*
 
 %files devel
@@ -549,8 +562,10 @@ fi
 %{_includedir}/graphviz
 %{_mandir}/man3/cdt.3*
 %{_mandir}/man3/cgraph.3*
+%{_mandir}/man3/expr.3*
 %{_mandir}/man3/graph.3*
 %{_mandir}/man3/gvc.3*
+%{_mandir}/man3/pack.3*
 %{_mandir}/man3/xdot.3*
 
 %files doc-html

@@ -1,13 +1,15 @@
---- graphviz-2.26.3/configure.ac.orig	2010-10-22 09:01:47.799741043 +0200
-+++ graphviz-2.26.3/configure.ac	2010-10-22 23:17:41.319743558 +0200
-@@ -1404,10 +1404,10 @@
+--- graphviz-2.28.0/configure.ac.orig	2011-05-17 20:25:19.000000000 +0200
++++ graphviz-2.28.0/configure.ac	2011-05-17 20:35:15.828077871 +0200
+@@ -1510,12 +1510,12 @@
        if test "x$RUBY" = "x"; then
  	use_ruby="No (ruby not available)"
        else
 -        RUBY_INCLUDES="-I`$RUBY $srcdir/config/config_ruby.rb INCLUDES`"
 +        RUBY_INCLUDES="-I`$RUBY $srcdir/config/config_ruby.rb INCLUDES` -I`$RUBY $srcdir/config/config_ruby.rb archincludes`"
  	# hack for powerpc-darwin8 (10.4)
- 	RUBY_INCLUDES=`echo $RUBY_INCLUDES | sed 's/powerpc/universal/'`
+ 	if test "x$DARWIN" = "xyes"; then
+ 	  RUBY_INCLUDES=`echo $RUBY_INCLUDES | sed 's/powerpc/universal/'`
+ 	fi
 -        RUBY_LIBS="-L`$RUBY $srcdir/config/config_ruby.rb lib` `$RUBY -rrbconfig -e \"puts Config::CONFIG[['LIBRUBYARG_SHARED']]\"`"
 +        RUBY_LIBS="-L`$RUBY $srcdir/config/config_ruby.rb lib` $($RUBY -rrbconfig -e "puts Config::CONFIG[['LIBRUBYARG_SHARED']]")"
          RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb archsitelib`"
