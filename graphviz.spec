@@ -22,6 +22,7 @@
 %bcond_without	ming	# don't build ming support
 %bcond_without	devil	# don't build devil plugin
 
+%define		tclver	8.5
 %ifarch i386
 %undefine with_dotnet
 %endif
@@ -95,6 +96,7 @@ BuildRequires:	pkgconfig
 %{?with_python:BuildRequires:	rpm-pythonprov}
 BuildRequires:	rpmbuild(macros) >= 1.519
 %{?with_ruby:BuildRequires:	ruby-devel}
+BuildRequires:	sed >= 4.0
 # swig-csharp,swig-java,swig-lua,swig-ocaml in main swig
 # swig-io ???
 BuildRequires:	swig
@@ -695,7 +697,7 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtclplan.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtkspline.so*
 %{_libdir}/graphviz/tcl/pkgIndex.tcl
-%{_libdir}/tcl*/graphviz
+%{_libdir}/tcl%{tclver}/graphviz
 %{_mandir}/man3/gv_tcl.3*
 %{_mandir}/man3/gdtclft.3tcl*
 %{_mandir}/man3/pathplan.3*
