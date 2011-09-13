@@ -408,7 +408,7 @@ mv $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/html doc-html
 mv $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/pdf doc-pdf
 
 cd $RPM_BUILD_ROOT
-patch -p1 < %{PATCH2} || exit 1
+patch -p1 --no-backup-if-mismatch < %{PATCH2} || exit 1
 
 %clean
 rm -rf $RPM_BUILD_ROOT
