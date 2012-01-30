@@ -100,7 +100,7 @@ BuildRequires:	sed >= 4.0
 # swig-csharp,swig-java,swig-lua,swig-ocaml in main swig
 # swig-io ???
 BuildRequires:	swig
-%{?with_guile:BuildRequires:	swig-guile}
+%{?with_guile:BuildRequires:	swig-guile >= 2.0.3}
 %{?with_perl:BuildRequires:	swig-perl}
 %{?with_php:BuildRequires:	swig-php >= 1.3.40}
 BuildRequires:	swig-python
