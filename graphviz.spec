@@ -54,6 +54,14 @@ BuildRequires:	python-devel
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.322
 BuildRequires:	ruby-devel
+# swig-csharp,swig-java,swig-lua,swig-ocaml in main swig
+# swig-io ???
+BuildRequires:	swig
+BuildRequires:	swig-guile
+BuildRequires:	swig-perl
+BuildRequires:	swig-php
+BuildRequires:	swig-python
+BuildRequires:	swig-ruby
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
 BuildRequires:	zlib-devel
