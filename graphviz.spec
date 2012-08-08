@@ -51,6 +51,7 @@ Patch5:		%{name}-lua51.patch
 Patch6:		%{name}-php_modules_dir.patch
 Patch7:		%{name}-ruby.patch
 Patch8:		%{name}-guile.patch
+Patch9:		%{name}-am.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 %{?with_r:BuildRequires:	R}
@@ -326,6 +327,7 @@ graphviz bindings for R language.
 %patch6 -p1
 %patch7 -p1
 %patch8 -p1
+%patch9 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua51@' -i tclpkg/gv/demo/modgraph.lua
 
