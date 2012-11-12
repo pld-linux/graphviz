@@ -55,6 +55,8 @@ Patch9:		%{name}-am.patch
 Patch10:	%{name}-format-security.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
+BuildRequires:	QtCore-devel
+BuildRequires:	QtGui-devel
 %{?with_r:BuildRequires:	R}
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -94,6 +96,7 @@ BuildRequires:	php-program >= 4:5.0
 %endif
 BuildRequires:	pkgconfig
 %{?with_python:BuildRequires:	python-devel}
+BuildRequires:	qt4-qmake
 %{?with_perl:BuildRequires:	rpm-perlprov}
 %{?with_python:BuildRequires:	rpm-pythonprov}
 BuildRequires:	rpmbuild(macros) >= 1.519
