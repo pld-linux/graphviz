@@ -86,3 +86,14 @@
      exit(v);
  }
  
+--- graphviz-2.28.0/cmd/gvedit/main.cpp~	2011-05-06 17:15:33.000000000 +0200
++++ graphviz-2.28.0/cmd/gvedit/main.cpp	2012-11-12 13:49:35.409707616 +0100
+@@ -65,7 +65,7 @@
+ 
+ static void usage(int v)
+ {
+-    printf(useString);
++    printf("%s", useString);
+     exit(v);
+ }
+ 
