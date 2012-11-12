@@ -1,0 +1,88 @@
+--- graphviz-2.28.0/lib/ortho/ortho.c~	2011-01-28 17:24:29.000000000 +0100
++++ graphviz-2.28.0/lib/ortho/ortho.c	2012-11-12 12:25:17.990615453 +0100
+@@ -1520,7 +1520,7 @@
+     absbb.LL.x = absbb.LL.y = MAXDOUBLE;
+     absbb.UR.x = absbb.UR.y = -MAXDOUBLE;
+ 
+-    fprintf (fp, prolog2);
++    fprintf (fp, "%s", prolog2);
+     fprintf (fp, "%d %d translate\n", TRANS, TRANS);
+ 
+     fputs ("0 0 1 setrgbcolor\n", fp);
+--- graphviz-2.28.0/cmd/tools/gc.c~	2011-01-25 17:30:47.000000000 +0100
++++ graphviz-2.28.0/cmd/tools/gc.c	2012-11-12 12:26:27.693946328 +0100
+@@ -91,7 +91,7 @@
+ 
+ static void usage(int v)
+ {
+-    printf(useString);
++    printf("%s", useString);
+     exit(v);
+ }
+ 
+--- graphviz-2.28.0/cmd/tools/gvcolor.c~	2011-01-25 17:30:47.000000000 +0100
++++ graphviz-2.28.0/cmd/tools/gvcolor.c	2012-11-12 12:26:57.773945267 +0100
+@@ -91,7 +91,7 @@
+ 
+ static void usage(int v)
+ {
+-    printf(useString);
++    printf("%s", useString);
+     exit(v);
+ }
+ 
+--- graphviz-2.28.0/cmd/tools/nop.c~	2011-01-25 17:30:47.000000000 +0100
++++ graphviz-2.28.0/cmd/tools/nop.c	2012-11-12 12:27:16.403944610 +0100
+@@ -44,7 +44,7 @@
+ 
+ static void usage(int v)
+ {
+-    printf(useString);
++    printf("%s", useString);
+     exit(v);
+ }
+ 
+--- graphviz-2.28.0/cmd/tools/ccomps.c~	2011-04-29 20:46:20.000000000 +0200
++++ graphviz-2.28.0/cmd/tools/ccomps.c	2012-11-12 12:27:33.057277356 +0100
+@@ -102,7 +102,7 @@
+ 
+ static void usage(int v)
+ {
+-    printf(useString);
++    printf("%s", useString);
+     exit(v);
+ }
+ 
+--- graphviz-2.28.0/cmd/tools/gvpack.c~	2011-01-25 17:30:47.000000000 +0100
++++ graphviz-2.28.0/cmd/tools/gvpack.c	2012-11-12 12:27:51.010610055 +0100
+@@ -113,7 +113,7 @@
+ 
+ static void usage(int v)
+ {
+-    printf(useString);
++    printf("%s", useString);
+     exit(v);
+ }
+ 
+--- graphviz-2.28.0/cmd/tools/dijkstra.c~	2011-04-18 23:32:17.000000000 +0200
++++ graphviz-2.28.0/cmd/tools/dijkstra.c	2012-11-12 12:28:09.517276069 +0100
+@@ -241,7 +241,7 @@
+ 
+ static void usage(int v)
+ {
+-    printf(useString);
++    printf("%s", useString);
+     exit(v);
+ }
+ 
+--- graphviz-2.28.0/cmd/tools/bcomps.c~	2011-01-25 17:30:47.000000000 +0100
++++ graphviz-2.28.0/cmd/tools/bcomps.c	2012-11-12 12:28:29.150608710 +0100
+@@ -322,7 +322,7 @@
+ 
+ static void usage(int v)
+ {
+-    printf(useString);
++    printf("%s", useString);
+     exit(v);
+ }
+ 

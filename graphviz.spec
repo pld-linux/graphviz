@@ -37,7 +37,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.28.0
-Release:	7
+Release:	8
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -52,6 +52,7 @@ Patch6:		%{name}-php_modules_dir.patch
 Patch7:		%{name}-ruby.patch
 Patch8:		%{name}-guile.patch
 Patch9:		%{name}-am.patch
+Patch10:	%{name}-format-security.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 %{?with_r:BuildRequires:	R}
@@ -328,6 +329,7 @@ graphviz bindings for R language.
 %patch7 -p1
 %patch8 -p1
 %patch9 -p1
+%patch10 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua51@' -i tclpkg/gv/demo/modgraph.lua
 
