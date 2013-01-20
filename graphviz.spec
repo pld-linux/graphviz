@@ -1,26 +1,27 @@
 # TODO
 # - %{_libdir}/graphviz/config is not FHS friendly path as config
-# - io language bindings: io-graphviz
-# - ghostscript subpackage?
-#   /usr/lib64/graphviz/libgvplugin_gs.so
-#   /usr/lib64/graphviz/libgvplugin_gs.so.6
-#   /usr/lib64/graphviz/libgvplugin_gs.so.6.0.0
+# - go language binding [6g, 8g???]
+# - io language binding: io-graphviz
+# - some plugin subpackages? (libgvplugin_*: gs=ghostscript, gtk, lasi, ming, visio, webp)
+# - smyrna subpackage?
 #
 # Conditional build:
-%bcond_without	dotnet	# don't build C# bindings
-%bcond_without	java	# don't build Java bindings
-%bcond_without	ocaml	# don't build ocaml bindings
-%bcond_without	php	# don't build php bindings
-%bcond_without	perl	# don't build perl bindings
-%bcond_without	ruby	# don't build ruby bindings
-%bcond_without	tcl	# don't build tcl bindings
-%bcond_without	lua	# don't build lua bindings
-%bcond_without	r	# don't build R bindings
-%bcond_without	python 	# don't build python bindings
-%bcond_with	io	# don't build io language bindings
-%bcond_without	guile	# don't build guile bindings
-%bcond_without	ming	# don't build ming support
-%bcond_without	devil	# don't build devil plugin
+%bcond_without	dotnet		# don't build C# bindings
+%bcond_without	java		# don't build Java bindings
+%bcond_without	ocaml		# don't build ocaml bindings
+%bcond_without	php		# don't build php bindings
+%bcond_without	perl		# don't build perl bindings
+%bcond_without	ruby		# don't build ruby bindings
+%bcond_without	tcl		# don't build tcl bindings
+%bcond_without	lua		# don't build lua bindings
+%bcond_without	r		# don't build R bindings
+%bcond_without	python 		# don't build python bindings
+%bcond_with	io		# don't build io language bindings
+%bcond_without	guile		# don't build guile bindings
+%bcond_without	ming		# don't build ming support
+%bcond_without	devil		# don't build devil plugin
+%bcond_without	smyrna		# SMYRNA utility (large graph viewer)
+%bcond_without	ipsepcola	# IPSEPCOLA features in neato engine [C++ portability problems]
 
 %define		tclver	8.5
 %ifarch i386
@@ -36,12 +37,12 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.28.0
-Release:	9
+Version:	2.30.0
+Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	8d26c1171f30ca3b1dc1b429f7937e58
+# Source0-md5:	967ad0a3d2bf164082e076c4416ede95
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
 Patch2:		%{name}-bad-header.patch
@@ -51,44 +52,53 @@ Patch5:		%{name}-lua51.patch
 Patch6:		%{name}-php_modules_dir.patch
 Patch7:		%{name}-ruby.patch
 Patch8:		%{name}-guile.patch
-Patch9:		%{name}-am.patch
-Patch10:	%{name}-format-security.patch
+Patch9:		%{name}-libgraph.patch
+Patch10:	%{name}-ming.patch
+Patch11:	%{name}-visio.patch
+Patch12:	%{name}-webp.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
-BuildRequires:	QtCore-devel
-BuildRequires:	QtGui-devel
+BuildRequires:	QtCore-devel >= 4
+BuildRequires:	QtGui-devel >= 4
 %{?with_r:BuildRequires:	R}
-BuildRequires:	autoconf >= 2.59-9
+BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
 BuildRequires:	bison
 BuildRequires:	expat-devel >= 1.95
 BuildRequires:	flex
+BuildRequires:	fontconfig-devel
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
 BuildRequires:	gd-devel >= 2.0.34
+BuildRequires:	gdk-pixbuf2-devel >= 2.0
 BuildRequires:	gettext-devel
 BuildRequires:	ghostscript-devel
 BuildRequires:	gtk+2-devel >= 2:2.8.0
-%{?with_guile:BuildRequires:	guile-devel >= 1.4}
+BuildRequires:	gts-devel
+%{?with_guile:BuildRequires:	guile-devel >= 2.0}
 #BuildRequires:	io
 %if %{with java}
 BuildRequires:	jdk
 BuildRequires:	jpackage-utils
 %endif
+BuildRequires:	libLASi-devel
 BuildRequires:	libjpeg-devel
+BuildRequires:	libltdl-devel >= 2:2
 BuildRequires:	libpng-devel
 BuildRequires:	librsvg-devel >= 2.0
 BuildRequires:	libstdc++-devel
-BuildRequires:	libtool
+BuildRequires:	libtool >= 2:2
+BuildRequires:	libwebp-devel
+BuildRequires:	libvisio-devel
 # for lua51 binary
 %if %{with lua}
 BuildRequires:	lua51
 BuildRequires:	lua51-devel >= 5.1
 %endif
-%{?with_ming:BuildRequires:	ming-devel}
+%{?with_ming:BuildRequires:	ming-devel >= 0.4}
 %{?with_dotnet:BuildRequires:	mono-csharp}
 %{?with_ocaml:BuildRequires:	ocaml}
-BuildRequires:	pango-devel >= 1.10
+BuildRequires:	pango-devel >= 1:1.14.9
 BuildRequires:	perl-devel
 %if %{with php}
 BuildRequires:	php-devel >= 3:5.0.0
@@ -96,32 +106,42 @@ BuildRequires:	php-program >= 4:5.0
 %endif
 BuildRequires:	pkgconfig
 %{?with_python:BuildRequires:	python-devel}
-BuildRequires:	qt4-qmake
+BuildRequires:	qt4-qmake >= 4
 %{?with_perl:BuildRequires:	rpm-perlprov}
 %{?with_python:BuildRequires:	rpm-pythonprov}
 BuildRequires:	rpmbuild(macros) >= 1.519
 %{?with_ruby:BuildRequires:	ruby-devel}
 BuildRequires:	sed >= 4.0
-# swig-csharp,swig-java,swig-lua,swig-ocaml in main swig
+# swig-csharp,swig-go,swig-java,swig-lua,swig-ocaml in main swig
 # swig-io ???
-BuildRequires:	swig
+BuildRequires:	swig >= 1.3
 %{?with_guile:BuildRequires:	swig-guile >= 2.0.3}
-%{?with_perl:BuildRequires:	swig-perl}
+%{?with_perl:BuildRequires:	swig-perl >= 1.3}
 %{?with_php:BuildRequires:	swig-php >= 1.3.40}
-BuildRequires:	swig-python
-%{?with_ruby:BuildRequires:	swig-ruby}
+BuildRequires:	swig-python >= 1.3
+%{?with_ruby:BuildRequires:	swig-ruby >= 1.3}
 %if %{with tcl}
-BuildRequires:	swig-tcl
+BuildRequires:	swig-tcl >= 1.3
 BuildRequires:	tcl-devel >= 8.3.0
 BuildRequires:	tk-devel >= 8.3.0
 %endif
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXaw-devel
 BuildRequires:	xorg-lib-libXpm-devel
+# tested in configure, actually not used
+#BuildRequires:	xorg-lib-libXrender-devel
 BuildRequires:	zlib-devel
+%if %{with smyrna}
+BuildRequires:	OpenGL-glut-devel
+# only tested, actually not used
+#BuildRequires:	gtkglarea-devel >= 2.0
+BuildRequires:	gtkglext-devel >= 1.0
+BuildRequires:	libglade2-devel >= 2.0
+%endif
 Requires(post,postun):	/sbin/ldconfig
 Requires:	fonts-Type1-urw
 Requires:	gd >= 2.0.33-5
+Requires:	pango >= 1:1.14.9
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -138,7 +158,7 @@ Summary(pl.UTF-8):	Pliki nagłówkowe do bibliotek graphviz
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Requires:	gd-devel >= 2.0.34
-Requires:	libltdl-devel
+Requires:	libltdl-devel >= 2:2
 
 %description devel
 This package contains the header files for graphviz libraries.
@@ -333,6 +353,8 @@ graphviz bindings for R language.
 %patch8 -p1
 %patch9 -p1
 %patch10 -p1
+%patch11 -p1
+%patch12 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua51@' -i tclpkg/gv/demo/modgraph.lua
 
@@ -357,20 +379,24 @@ export CPPFLAGS
 
 %configure \
 	lua_suffix=51 \
-	--disable-ltdl-install \
-	--disable-silent-rules \
+	%{!?with_devil:--disable-devil} \
 	%{!?with_java:--disable-java} \
+	--disable-ltdl-install \
+	%{!?with_lua:--disable-lua} \
 	%{!?with_ocaml:--disable-ocaml} \
-	%{!?with_dotnet:--disable-sharp} \
 	%{!?with_perl:--disable-perl} \
 	%{!?with_php:--disable-php} \
-	%{!?with_ruby:--disable-ruby} \
-	%{!?with_tcl:--disable-tcl} \
-	%{!?with_ming:--disable-ming} \
-	%{!?with_devil:--disable-devil} \
-	%{!?with_lua:--disable-lua} \
 	%{!?with_r:--disable-r} \
-	--disable-static
+	%{!?with_ruby:--disable-ruby} \
+	%{!?with_dotnet:--disable-sharp} \
+	%{!?with_tcl:--disable-tcl} \
+	--disable-silent-rules \
+	--disable-static \
+	%{?with_ipsepcola:--with-ipsepcola} \
+	%{?with_ming:--with-ming} \
+	%{?with_smyrna:--with-smyrna} \
+	--with-visio \
+	--with-webp
 
 %{__make}
 
@@ -452,8 +478,11 @@ fi
 %attr(755,root,root) %{_bindir}/fdp
 %attr(755,root,root) %{_bindir}/gc
 %attr(755,root,root) %{_bindir}/gml2gv
+%attr(755,root,root) %{_bindir}/graphml2gv
+%attr(755,root,root) %{_bindir}/gv2gml
 %attr(755,root,root) %{_bindir}/gv2gxl
 %attr(755,root,root) %{_bindir}/gvcolor
+%attr(755,root,root) %{_bindir}/gvedit
 %attr(755,root,root) %{_bindir}/gvgen
 %attr(755,root,root) %{_bindir}/gvmap
 %attr(755,root,root) %{_bindir}/gvmap.sh
@@ -471,6 +500,9 @@ fi
 %attr(755,root,root) %{_bindir}/prune
 %attr(755,root,root) %{_bindir}/sccmap
 %attr(755,root,root) %{_bindir}/sfdp
+%if %{with smyrna}
+%attr(755,root,root) %{_bindir}/smyrna
+%endif
 %attr(755,root,root) %{_bindir}/tred
 %attr(755,root,root) %{_bindir}/twopi
 %attr(755,root,root) %{_bindir}/unflatten
@@ -500,13 +532,28 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gdk_pixbuf.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gs.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gtk.so*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_lasi.so*
+%if %{with ming}
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_ming.so*
+%endif
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_neato_layout.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_pango.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_rsvg.so*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_visio.so*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_webp.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_xlib.so*
 %dir %{_datadir}/graphviz
 %dir %{_datadir}/graphviz/demo
+%if %{with ming}
+# for ming plugin
+%{_datadir}/graphviz/font
+%endif
+%{_datadir}/graphviz/gvedit
+%{_datadir}/graphviz/gvpr
 %{_datadir}/graphviz/lefty
+%if %{with smyrna}
+%{_datadir}/graphviz/smyrna
+%endif
 %{_mandir}/man1/acyclic.1*
 %{_mandir}/man1/bcomps.1*
 %{_mandir}/man1/ccomps.1*
@@ -519,6 +566,8 @@ fi
 %{_mandir}/man1/fdp.1*
 %{_mandir}/man1/gc.1*
 %{_mandir}/man1/gml2gv.1*
+%{_mandir}/man1/graphml2gv.1*
+%{_mandir}/man1/gv2gml.1*
 %{_mandir}/man1/gv2gxl.1*
 %{_mandir}/man1/gvcolor.1*
 %{_mandir}/man1/gvedit.1*
@@ -631,9 +680,10 @@ fi
 %dir %{_libdir}/graphviz/ocaml
 %attr(755,root,root) %{_libdir}/graphviz/ocaml/libgv_ocaml.so
 %{_libdir}/graphviz/ocaml/META.gv
-%{_libdir}/graphviz/ocaml/gv.a
+# ocamlopt temporarily disabled
+#%{_libdir}/graphviz/ocaml/gv.a
 %{_libdir}/graphviz/ocaml/gv.cm*
-%{_libdir}/graphviz/ocaml/gv.ml*
+#%{_libdir}/graphviz/ocaml/gv.ml*
 %{_mandir}/man3/gv_ocaml.3*
 %endif
 
@@ -680,7 +730,7 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/ruby/libgv_ruby.so
 %attr(755,root,root) %{_libdir}/graphviz/ruby/gv.so
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.rb
-%{ruby_sitearchdir}/gv.so
+%{ruby_vendorarchdir}/gv.so
 %{_mandir}/man3/gv_ruby.3*
 %endif
 
