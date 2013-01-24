@@ -3,7 +3,7 @@
 # - go language binding [6g, 8g???]
 # - io language binding: io-graphviz
 # - some plugin subpackages? (libgvplugin_*: gs=ghostscript, gtk, lasi, ming, visio, webp)
-# - smyrna subpackage?
+# - smyrna subpackage? (R: OpenGL, glut, gtk+2, gtkglext, libglade2)
 #
 # Conditional build:
 %bcond_without	dotnet		# don't build C# bindings
@@ -56,6 +56,7 @@ Patch9:		%{name}-libgraph.patch
 Patch10:	%{name}-ming.patch
 Patch11:	%{name}-visio.patch
 Patch12:	%{name}-webp.patch
+Patch13:	%{name}-graphviz.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 BuildRequires:	QtCore-devel >= 4
@@ -355,6 +356,7 @@ graphviz bindings for R language.
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
+%patch13 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua51@' -i tclpkg/gv/demo/modgraph.lua
 
