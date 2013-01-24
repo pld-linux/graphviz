@@ -56,7 +56,7 @@ Patch9:		%{name}-libgraph.patch
 Patch10:	%{name}-ming.patch
 Patch11:	%{name}-visio.patch
 Patch12:	%{name}-webp.patch
-Patch13:	%{name}-graphviz.patch
+Patch13:	%{name}-format.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 BuildRequires:	QtCore-devel >= 4
