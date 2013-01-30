@@ -1,4 +1,5 @@
 # TODO
+# - move Qt/GUI stuff into separate package
 # - %{_libdir}/graphviz/config is not FHS friendly path as config
 # - go language binding [6g, 8g???]
 # - io language binding: io-graphviz
