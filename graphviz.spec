@@ -337,11 +337,15 @@ graphviza.
 
 %package -n R-%{name}
 Summary:	graphviz bindings for R language
+Summary(pl.UTF-8):	Wiązania graphviza dla języka R
 Group:		X11/Applications/Graphics
 Requires:	%{name} = %{version}-%{release}
 
 %description -n R-%{name}
 graphviz bindings for R language.
+
+%description -n R-%{name} -l pl.UTF-8
+Wiązania graphviza dla języka R.
 
 %prep
 %setup -q
