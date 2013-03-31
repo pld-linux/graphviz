@@ -1,9 +1,7 @@
 # TODO
-# - move Qt/GUI stuff into separate package
 # - %{_libdir}/graphviz/config is not FHS friendly path as config
 # - io language binding: io-graphviz
 # - some plugin subpackages? (libgvplugin_*: gs=ghostscript, gtk, lasi, ming, visio, webp)
-# - smyrna subpackage? (R: OpenGL, glut, gtk+2, gtkglext, libglade2)
 #
 # Conditional build:
 %bcond_without	dotnet		# don't build C# bindings
@@ -21,6 +19,7 @@
 %bcond_without	guile		# don't build guile bindings
 %bcond_without	ming		# don't build ming support
 %bcond_without	devil		# don't build devil plugin
+%bcond_without	qt		# Qt features (gvedit utility)
 %bcond_without	smyrna		# SMYRNA utility (large graph viewer)
 %bcond_without	ipsepcola	# IPSEPCOLA features in neato engine [C++ portability problems]
 
@@ -63,8 +62,6 @@ Patch12:	%{name}-webp.patch
 Patch13:	%{name}-format.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
-BuildRequires:	QtCore-devel >= 4
-BuildRequires:	QtGui-devel >= 4
 %{?with_r:BuildRequires:	R}
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
@@ -112,7 +109,6 @@ BuildRequires:	php-program >= 4:5.0
 %endif
 BuildRequires:	pkgconfig
 %{?with_python:BuildRequires:	python-devel}
-BuildRequires:	qt4-qmake >= 4
 %{?with_perl:BuildRequires:	rpm-perlprov}
 %{?with_python:BuildRequires:	rpm-pythonprov}
 BuildRequires:	rpmbuild(macros) >= 1.519
@@ -144,6 +140,11 @@ BuildRequires:	OpenGL-glut-devel
 BuildRequires:	gtkglext-devel >= 1.0
 BuildRequires:	libglade2-devel >= 2.0
 %endif
+%if %{with qt}
+BuildRequires:	QtCore-devel >= 4
+BuildRequires:	QtGui-devel >= 4
+BuildRequires:	qt4-qmake >= 4
+%endif
 Requires(post,postun):	/sbin/ldconfig
 Requires:	fonts-Type1-urw
 Requires:	gd >= 2.0.33-5
@@ -171,6 +172,35 @@ This package contains the header files for graphviz libraries.
 
 %description devel -l pl.UTF-8
 Ten pakiet zawiera pliki nagłówkowe do bibliotek graphviz.
+
+%package gvedit
+Summary:	gvedit - simple graph editor and viewer based on Qt
+Summary(pl.UTF-8):	gvedit - prosty edytor i przeglądarka grafów oparta na Qt
+Group:		X11/Applications/Graphics
+Requires:	%{name} = %{version}-%{release}
+
+%description gvedit
+gvedit provides a simple Qt-based graph editor and viewer.
+
+%description gvedit -l l.UTF-8
+gvedit to prosty edytor i przeglądarka grafów oparta na Qt.
+
+%package smyrna
+Summary:	SMYRNA large graph viewer
+Summary(pl.UTF-8):	SMYRNA - przeglądarka dużych grafów
+Group:		X11/Applications/Graphics
+Requires:	%{name} = %{version}-%{release}
+Requires:	gtkglext >= 1.0
+
+%description smyrna
+SMYRNA is an interactive viewer for graphs in the DOT format. It is
+especially designed to handle large graphs, and allows flat and
+topological fisheye views.
+
+%description smyrna -l pl.UTF-8
+SMYRNA to interaktywna przeglądarka grafów w formacie DOT. Jest
+przeznaczona szczególnie do obsługi dużych grafów, udostępnia widok
+płaski oraz topologiczny typu "rybie oko".
 
 %package doc-html
 Summary:	HTML documentation for graphviz
@@ -420,6 +450,7 @@ export CPPFLAGS
 	--disable-static \
 	%{?with_ipsepcola:--with-ipsepcola} \
 	%{?with_ming:--with-ming} \
+	%{!?with_qt:--without-qt} \
 	%{?with_smyrna:--with-smyrna} \
 	--with-visio \
 	--with-webp
@@ -508,7 +539,6 @@ fi
 %attr(755,root,root) %{_bindir}/gv2gml
 %attr(755,root,root) %{_bindir}/gv2gxl
 %attr(755,root,root) %{_bindir}/gvcolor
-%attr(755,root,root) %{_bindir}/gvedit
 %attr(755,root,root) %{_bindir}/gvgen
 %attr(755,root,root) %{_bindir}/gvmap
 %attr(755,root,root) %{_bindir}/gvmap.sh
@@ -526,9 +556,6 @@ fi
 %attr(755,root,root) %{_bindir}/prune
 %attr(755,root,root) %{_bindir}/sccmap
 %attr(755,root,root) %{_bindir}/sfdp
-%if %{with smyrna}
-%attr(755,root,root) %{_bindir}/smyrna
-%endif
 %attr(755,root,root) %{_bindir}/tred
 %attr(755,root,root) %{_bindir}/twopi
 %attr(755,root,root) %{_bindir}/unflatten
@@ -574,12 +601,8 @@ fi
 # for ming plugin
 %{_datadir}/graphviz/font
 %endif
-%{_datadir}/graphviz/gvedit
 %{_datadir}/graphviz/gvpr
 %{_datadir}/graphviz/lefty
-%if %{with smyrna}
-%{_datadir}/graphviz/smyrna
-%endif
 %{_mandir}/man1/acyclic.1*
 %{_mandir}/man1/bcomps.1*
 %{_mandir}/man1/ccomps.1*
@@ -596,7 +619,6 @@ fi
 %{_mandir}/man1/gv2gml.1*
 %{_mandir}/man1/gv2gxl.1*
 %{_mandir}/man1/gvcolor.1*
-%{_mandir}/man1/gvedit.1*
 %{_mandir}/man1/gvgen.1*
 %{_mandir}/man1/gvmap.1*
 %{_mandir}/man1/gvmap.sh.1*
@@ -613,7 +635,6 @@ fi
 %{_mandir}/man1/prune.1*
 %{_mandir}/man1/sccmap.1*
 %{_mandir}/man1/sfdp.1*
-%{_mandir}/man1/smyrna.1*
 %{_mandir}/man1/tred.1*
 %{_mandir}/man1/twopi.1*
 %{_mandir}/man1/unflatten.1*
@@ -651,6 +672,22 @@ fi
 %{_mandir}/man3/gvc.3*
 %{_mandir}/man3/pack.3*
 %{_mandir}/man3/xdot.3*
+
+%if %{with qt}
+%files gvedit
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/gvedit
+%{_datadir}/graphviz/gvedit
+%{_mandir}/man1/gvedit.1*
+%endif
+
+%if %{with smyrna}
+%files smyrna
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/smyrna
+%{_datadir}/graphviz/smyrna
+%{_mandir}/man1/smyrna.1*
+%endif
 
 %files doc-html
 %defattr(644,root,root,755)
