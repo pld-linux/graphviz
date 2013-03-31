@@ -1,13 +1,13 @@
 # TODO
 # - move Qt/GUI stuff into separate package
 # - %{_libdir}/graphviz/config is not FHS friendly path as config
-# - go language binding [6g, 8g???]
 # - io language binding: io-graphviz
 # - some plugin subpackages? (libgvplugin_*: gs=ghostscript, gtk, lasi, ming, visio, webp)
 # - smyrna subpackage? (R: OpenGL, glut, gtk+2, gtkglext, libglade2)
 #
 # Conditional build:
 %bcond_without	dotnet		# don't build C# bindings
+%bcond_without	golang		# don't build Go bindings
 %bcond_without	java		# don't build Java bindings
 %bcond_without	ocaml		# don't build ocaml bindings
 %bcond_without	php		# don't build php bindings
@@ -34,22 +34,25 @@
 %ifarch i386 i486
 %undefine with_java
 %endif
+%ifnarch %{ix86} %{x8664} %{arm}
+%undefine with_golang
+%endif
 %{?with_perl:%include	/usr/lib/rpm/macros.perl}
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.30.0
-Release:	2
+Version:	2.30.1
+Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	967ad0a3d2bf164082e076c4416ede95
+# Source0-md5:	8130785a8f1fb8a57f6b839b617e85fa
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
 Patch2:		%{name}-bad-header.patch
 Patch3:		%{name}-php.patch
 Patch4:		%{name}-ltdl.patch
-Patch5:		%{name}-lua51.patch
+Patch5:		%{name}-go.patch
 Patch6:		%{name}-php_modules_dir.patch
 Patch7:		%{name}-ruby.patch
 Patch8:		%{name}-guile.patch
@@ -75,6 +78,7 @@ BuildRequires:	gd-devel >= 2.0.34
 BuildRequires:	gdk-pixbuf2-devel >= 2.0
 BuildRequires:	gettext-devel
 BuildRequires:	ghostscript-devel
+%{?with_golang:BuildRequires:	golang}
 BuildRequires:	gtk+2-devel >= 2:2.8.0
 BuildRequires:	gts-devel
 %{?with_guile:BuildRequires:	guile-devel >= 2.0}
@@ -201,6 +205,19 @@ This package provides some example graphs.
 
 %description graphs -l pl.UTF-8
 Ten pakiet zawiera trochę przykładowych grafów.
+
+%package -n golang-%{name}
+Summary:	Go binding for graphviz
+Summary(pl.UTF-8):	Wiązania języka Go dla graphviza
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	golang
+
+%description -n golang-%{name}
+Go binding for graphviz.
+
+%description -n golang-%{name} -l pl.UTF-8
+Wiązania języka Go dla graphviza.
 
 %package -n guile-%{name}
 Summary:	Guile binding for graphviz
@@ -385,8 +402,10 @@ CPPFLAGS="$CPPFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
 export CPPFLAGS
 
 %configure \
+	LUA=/usr/bin/lua51 \
 	lua_suffix=51 \
 	%{!?with_devil:--disable-devil} \
+	%{?with_golang:--enable-go} \
 	%{!?with_java:--disable-java} \
 	--disable-ltdl-install \
 	%{!?with_lua:--disable-lua} \
@@ -645,8 +664,16 @@ fi
 %defattr(644,root,root,755)
 %{_datadir}/graphviz/graphs
 
+%if %{with golang}
+%files -n golang-%{name}
+%defattr(644,root,root,755)
+%dir %{_libdir}/graphviz/go
+%attr(755,root,root) %{_libdir}/graphviz/go/libgv_go.so
+%{_mandir}/man3/gv_go.3*
+%endif
+
 %if 0
-%files io-%{name}
+%files -n io-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/io
 %attr(755,root,root) %{_libdir}/graphviz/io/libgv_io.so*

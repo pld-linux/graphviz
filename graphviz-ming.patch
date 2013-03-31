@@ -1,14 +1,5 @@
 --- graphviz-2.30.0/plugin/ming/Makefile.am.orig	2013-01-14 04:11:21.000000000 +0100
 +++ graphviz-2.30.0/plugin/ming/Makefile.am	2013-01-20 17:23:58.735895674 +0100
-@@ -8,7 +8,7 @@
- 	-I$(top_srcdir)/lib/common \
- 	-I$(top_srcdir)/lib/pathplan \
- 	-I$(top_srcdir)/lib/gvc \
--	-I$(top_srcdir)/lib/graph \
-+	-I$(top_srcdir)/lib/cgraph \
- 	-I$(top_srcdir)/lib/cdt \
- 	$(MING_CFLAGS)
- 
 @@ -28,7 +28,7 @@
  
  libgvplugin_ming_la_LDFLAGS = -version-info @GVPLUGIN_VERSION_INFO@
