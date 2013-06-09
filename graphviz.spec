@@ -5,7 +5,7 @@
 #
 # Conditional build:
 %bcond_without	dotnet		# don't build C# bindings
-%bcond_without	golang		# don't build Go bindings
+%bcond_with	golang		# don't build Go bindings
 %bcond_without	java		# don't build Java bindings
 %bcond_without	ocaml		# don't build ocaml bindings
 %bcond_without	php		# don't build php bindings
@@ -14,7 +14,7 @@
 %bcond_without	tcl		# don't build tcl bindings
 %bcond_without	lua		# don't build lua bindings
 %bcond_without	r		# don't build R bindings
-%bcond_without	python 		# don't build python bindings
+%bcond_without	python		# don't build python bindings
 %bcond_with	io		# don't build io language bindings
 %bcond_without	guile		# don't build guile bindings
 %bcond_without	ming		# don't build ming support
@@ -41,7 +41,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.30.1
-Release:	2
+Release:	3
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
