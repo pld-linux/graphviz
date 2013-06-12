@@ -1,0 +1,14 @@
+--- graphviz-2.30.1/config/config_perl.pl.orig	2013-06-12 19:42:15.968885559 +0200
++++ graphviz-2.30.1/config/config_perl.pl	2013-06-12 19:42:35.045752403 +0200
+@@ -11,10 +11,7 @@
+ 	print "-I$archlib/CORE";
+ }
+ if ($ARGV[0] eq "PERL_INSTALL_DIR") {
+-
+-	my $d;
+-
+-	foreach $d qw(installvendorarch vendorarch installsitearch sitearch) {
++	foreach my $d (qw(installvendorarch vendorarch installsitearch sitearch)) {
+ 		if (exists($Config{$d}) and defined($Config{$d}) and
+ 			($Config{$d} ne '') ) {
+ 			print "$Config{$d}";
