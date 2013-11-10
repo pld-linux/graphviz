@@ -1,14 +1,3 @@
---- graphviz-2.30.0/cmd/smyrna/main.c.orig	2013-01-14 04:11:21.000000000 +0100
-+++ graphviz-2.30.0/cmd/smyrna/main.c	2013-01-24 10:53:20.204392295 +0100
-@@ -94,7 +94,7 @@
- 
- static void usage(int v)
- {
--    printf(useString);
-+    fputs(useString, stdout);
-     exit(v);
- }
- 
 --- graphviz-2.30.0/cmd/smyrna/gui/gui.c.orig	2013-01-14 04:11:21.000000000 +0100
 +++ graphviz-2.30.0/cmd/smyrna/gui/gui.c	2013-01-24 12:31:24.181987670 +0100
 @@ -379,7 +379,7 @@ void show_gui_warning(char *str)

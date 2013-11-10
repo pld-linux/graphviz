@@ -9,16 +9,16 @@
              RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb vendorarchdir`"
  	    if test "x$RUBY_INSTALL_DIR" == "x"; then
  	  	  RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb sitearchdir`"
---- graphviz-2.30.0/config/config_ruby.rb.orig	2013-01-19 19:53:28.134176235 +0100
-+++ graphviz-2.30.0/config/config_ruby.rb	2013-01-19 19:58:10.874170341 +0100
+--- graphviz-2.34.0/config/config_ruby.rb.orig	2013-11-10 15:08:02.653585861 +0100
++++ graphviz-2.34.0/config/config_ruby.rb	2013-11-10 15:08:47.280250638 +0100
 @@ -8,6 +8,10 @@
-     puts Config::expand(CONFIG["archdir"])
+     puts RbConfig::expand(CONFIG["archdir"])
  when "lib"
-     puts Config::expand(CONFIG["libdir"])
+     puts RbConfig::expand(CONFIG["libdir"])
 +when "includes"
 +    puts Config::expand(CONFIG["rubyhdrdir"])
 +when "archincludes"
 +    puts Config::expand(CONFIG["rubyhdrdir"]+"/"+CONFIG["arch"])
  when "vendorarchdir"
-     puts Config::expand(CONFIG["vendorarchdir"])
+     puts RbConfig::expand(CONFIG["vendorarchdir"])
  when "sitearchdir"

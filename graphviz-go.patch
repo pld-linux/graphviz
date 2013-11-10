@@ -1,11 +1,22 @@
---- graphviz-2.30.1/configure.ac.orig	2013-03-30 20:08:59.771231790 +0100
-+++ graphviz-2.30.1/configure.ac	2013-03-31 10:33:14.260226012 +0200
-@@ -643,7 +643,7 @@
-     if test `$SWIG -help 2>&1 | $EGREP -c '\-go* *- Generate'` == 0 ; then
+--- graphviz-2.34.0/configure.ac.orig	2013-11-10 15:05:37.073591970 +0100
++++ graphviz-2.34.0/configure.ac	2013-11-10 15:07:22.393587281 +0100
+@@ -648,7 +648,7 @@
+     if test `$SWIG -help 2>&1 | $EGREP -c '\-go* *- Generate'` = 0 ; then
        use_go="No (swig does not support -go option)"
      else
 -      AC_CHECK_PROG(GO,6g,8g)
 +      AC_CHECK_PROGS(GO,[6g 8g 5g])
-       if test "x$GO" == "x"; then
+       if test "x$GO" = "x"; then
          use_go="No (GO compiler not available)"
        else
+--- graphviz-2.34.0/tclpkg/gv/Makefile.am.orig	2013-09-07 03:07:52.000000000 +0200
++++ graphviz-2.34.0/tclpkg/gv/Makefile.am	2013-11-10 16:08:46.400099613 +0100
+@@ -48,7 +48,7 @@
+ libgv_go_la_CPPFLAGS = $(BASECPPFLAGS) $(GO_INCLUDES)
+ # $(GO_data): gv_go.cpp
+ gv_go.cpp: gv.i
+-	$(SWIG) -c++ -go -o gv_go.cpp $(srcdir)/gv.i
++	$(SWIG) -c++ -go -o gv_go.cpp $(SWIG_GO_OPT) $(srcdir)/gv.i
+ 
+ pkgguiledir = $(pkglibdir)/guile
+ GUILE_data = 

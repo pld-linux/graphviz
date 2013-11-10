@@ -1,11 +1,11 @@
 # TODO
 # - %{_libdir}/graphviz/config is not FHS friendly path as config
-# - io language binding: io-graphviz
-# - some plugin subpackages? (libgvplugin_*: gs=ghostscript, gtk, lasi, ming, visio, webp)
+# - io language binding (waiting for swig support)
+# - some plugin subpackages? (libgvplugin_*: gs=ghostscript, gtk, lasi, ming, poppler, visio, webp)
 #
 # Conditional build:
 %bcond_without	dotnet		# don't build C# bindings
-%bcond_with	golang		# don't build Go bindings
+%bcond_without	golang		# don't build Go bindings
 %bcond_without	java		# don't build Java bindings
 %bcond_without	ocaml		# don't build ocaml bindings
 %bcond_without	php		# don't build php bindings
@@ -15,7 +15,7 @@
 %bcond_without	lua		# don't build lua bindings
 %bcond_without	r		# don't build R bindings
 %bcond_without	python		# don't build python bindings
-%bcond_with	io		# don't build io language bindings
+%bcond_with	io		# build io language bindings (needs swig support)
 %bcond_without	guile		# don't build guile bindings
 %bcond_without	ming		# don't build ming support
 %bcond_without	devil		# don't build devil plugin
@@ -40,12 +40,12 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.30.1
-Release:	5
+Version:	2.34.0
+Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	8130785a8f1fb8a57f6b839b617e85fa
+# Source0-md5:	a8a54f8abac5bcdafd9a568e85a086d6
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
 Patch2:		%{name}-bad-header.patch
@@ -54,16 +54,15 @@ Patch4:		%{name}-ltdl.patch
 Patch5:		%{name}-go.patch
 Patch6:		%{name}-php_modules_dir.patch
 Patch7:		%{name}-ruby.patch
-Patch8:		%{name}-guile.patch
 Patch9:		%{name}-libgraph.patch
 Patch10:	%{name}-ming.patch
 Patch11:	%{name}-visio.patch
 Patch12:	%{name}-webp.patch
 Patch13:	%{name}-format.patch
-Patch14:	%{name}-perl.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 %{?with_r:BuildRequires:	R}
+BuildRequires:	ann-devel
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
 BuildRequires:	bison
@@ -109,11 +108,12 @@ BuildRequires:	php-devel >= 3:5.0.0
 BuildRequires:	php-program >= 4:5.0
 %endif
 BuildRequires:	pkgconfig
+BuildRequires:	poppler-glib-devel
 %{?with_python:BuildRequires:	python-devel}
 %{?with_perl:BuildRequires:	rpm-perlprov}
 %{?with_python:BuildRequires:	rpm-pythonprov}
 BuildRequires:	rpmbuild(macros) >= 1.519
-%{?with_ruby:BuildRequires:	ruby-devel}
+%{?with_ruby:BuildRequires:	ruby-devel >= 1.9}
 BuildRequires:	sed >= 4.0
 # swig-csharp,swig-go,swig-java,swig-lua,swig-ocaml in main swig
 # swig-io ???
@@ -249,6 +249,19 @@ Go binding for graphviz.
 
 %description -n golang-%{name} -l pl.UTF-8
 Wiązania języka Go dla graphviza.
+
+%package -n io-%{name}
+Summary:	Io binding for graphviz
+Summary(pl.UTF-8):	Wiązania języka Io dla graphviza
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+Requires:	io
+
+%description -n io-%{name}
+Io binding for graphviz.
+
+%description -n io-%{name} -l pl.UTF-8
+Wiązania języka Io dla graphviza.
 
 %package -n guile-%{name}
 Summary:	Guile binding for graphviz
@@ -404,13 +417,11 @@ Wiązania graphviza dla języka R.
 %patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch8 -p1
 %patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
 %patch13 -p1
-%patch14 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua51@' -i tclpkg/gv/demo/modgraph.lua
 
@@ -438,6 +449,7 @@ export CPPFLAGS
 	lua_suffix=51 \
 	%{!?with_devil:--disable-devil} \
 	%{?with_golang:--enable-go} \
+	%{?with_io:--enable-io} \
 	%{!?with_java:--disable-java} \
 	--disable-ltdl-install \
 	%{!?with_lua:--disable-lua} \
@@ -457,7 +469,13 @@ export CPPFLAGS
 	--with-visio \
 	--with-webp
 
-%{__make}
+%{__make} \
+%ifarch %{ix86} %{arm}
+	SWIG_GO_OPT="-intgosize 32"
+%endif
+%ifarch %{x8664}
+	SWIG_GO_OPT="-intgosize 64"
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -550,6 +568,7 @@ fi
 %attr(755,root,root) %{_bindir}/gxl2gv
 %attr(755,root,root) %{_bindir}/lefty
 %attr(755,root,root) %{_bindir}/lneato
+%attr(755,root,root) %{_bindir}/mingle
 %attr(755,root,root) %{_bindir}/mm2gv
 %attr(755,root,root) %{_bindir}/neato
 %attr(755,root,root) %{_bindir}/nop
@@ -593,6 +612,7 @@ fi
 %endif
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_neato_layout.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_pango.so*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_poppler.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_rsvg.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_visio.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_webp.so*
@@ -629,6 +649,7 @@ fi
 %{_mandir}/man1/gxl2gv.1*
 %{_mandir}/man1/lefty.1*
 %{_mandir}/man1/lneato.1*
+%{_mandir}/man1/mingle.1*
 %{_mandir}/man1/mm2gv.1*
 %{_mandir}/man1/neato.1*
 %{_mandir}/man1/nop.1*
@@ -711,20 +732,20 @@ fi
 %{_mandir}/man3/gv_go.3*
 %endif
 
-%if 0
-%files -n io-%{name}
-%defattr(644,root,root,755)
-%dir %{_libdir}/graphviz/io
-%attr(755,root,root) %{_libdir}/graphviz/io/libgv_io.so*
-%{_mandir}/mann/gv_io.n*
-%endif
-
 %if %{with guile}
 %files -n guile-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/guile
 %attr(755,root,root) %{_libdir}/graphviz/guile/libgv_guile.so
 %{_mandir}/man3/gv_guile.3*
+%endif
+
+%if %{with io}
+%files -n io-%{name}
+%defattr(644,root,root,755)
+%dir %{_libdir}/graphviz/io
+%attr(755,root,root) %{_libdir}/graphviz/io/libgv_io.so*
+%{_mandir}/mann/gv_io.n*
 %endif
 
 %if %{with java}
