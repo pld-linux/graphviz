@@ -4,21 +4,21 @@
 # - some plugin subpackages? (libgvplugin_*: gs=ghostscript, gtk, lasi, ming, poppler, visio, webp)
 #
 # Conditional build:
-%bcond_without	dotnet		# don't build C# bindings
-%bcond_without	golang		# don't build Go bindings
-%bcond_without	java		# don't build Java bindings
-%bcond_without	ocaml		# don't build ocaml bindings
-%bcond_without	php		# don't build php bindings
-%bcond_without	perl		# don't build perl bindings
-%bcond_without	ruby		# don't build ruby bindings
-%bcond_without	tcl		# don't build tcl bindings
-%bcond_without	lua		# don't build lua bindings
-%bcond_without	r		# don't build R bindings
-%bcond_without	python		# don't build python bindings
-%bcond_with	io		# build io language bindings (needs swig support)
-%bcond_without	guile		# don't build guile bindings
-%bcond_without	ming		# don't build ming support
-%bcond_without	devil		# don't build devil plugin
+%bcond_without	dotnet		# C# bindings
+%bcond_with	golang		# Go bindings
+%bcond_without	java		# Java bindings
+%bcond_without	ocaml		# OCaml bindings
+%bcond_without	php		# PHP bindings
+%bcond_without	perl		# Perl bindings
+%bcond_without	ruby		# Ruby bindings
+%bcond_without	tcl		# Tcl bindings
+%bcond_without	lua		# Lua bindings
+%bcond_without	r		# R bindings
+%bcond_without	python		# Python bindings
+%bcond_with	io		# io language bindings (needs swig support)
+%bcond_without	guile		# guile bindings
+%bcond_without	ming		# ming support
+%bcond_without	devil		# DevIL plugin
 %bcond_without	qt		# Qt features (gvedit utility)
 %bcond_without	smyrna		# SMYRNA utility (large graph viewer)
 %bcond_without	ipsepcola	# IPSEPCOLA features in neato engine [C++ portability problems]
@@ -40,21 +40,19 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.34.0
-Release:	2
+Version:	2.36.0
+Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	a8a54f8abac5bcdafd9a568e85a086d6
+# Source0-md5:	1f41664dba0c93109ac8b71216bf2b57
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
 Patch2:		%{name}-bad-header.patch
 Patch3:		%{name}-php.patch
 Patch4:		%{name}-ltdl.patch
-Patch5:		%{name}-go.patch
 Patch6:		%{name}-php_modules_dir.patch
 Patch7:		%{name}-ruby.patch
-Patch9:		%{name}-libgraph.patch
 Patch10:	%{name}-ming.patch
 Patch11:	%{name}-visio.patch
 Patch12:	%{name}-webp.patch
@@ -92,7 +90,8 @@ BuildRequires:	librsvg-devel >= 2.0
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libwebp-devel
-BuildRequires:	libvisio-devel
+# currently external library is not used
+#BuildRequires:	libvisio-devel
 # for lua51 binary
 %if %{with lua}
 BuildRequires:	lua51
@@ -109,7 +108,7 @@ BuildRequires:	php-program >= 4:5.0
 %endif
 BuildRequires:	pkgconfig
 BuildRequires:	poppler-glib-devel
-%{?with_python:BuildRequires:	python-devel}
+%{?with_python:BuildRequires:	python-devel >= 2.3}
 %{?with_perl:BuildRequires:	rpm-perlprov}
 %{?with_python:BuildRequires:	rpm-pythonprov}
 BuildRequires:	rpmbuild(macros) >= 1.519
@@ -131,8 +130,8 @@ BuildRequires:	tk-devel >= 8.3.0
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXaw-devel
 BuildRequires:	xorg-lib-libXpm-devel
-# tested in configure, actually not used
-#BuildRequires:	xorg-lib-libXrender-devel
+# tested in configure to enable ghostscript plugin build, actually not used
+BuildRequires:	xorg-lib-libXrender-devel
 BuildRequires:	zlib-devel
 %if %{with smyrna}
 BuildRequires:	OpenGL-glut-devel
@@ -150,6 +149,7 @@ Requires(post,postun):	/sbin/ldconfig
 Requires:	fonts-Type1-urw
 Requires:	gd >= 2.0.33-5
 Requires:	pango >= 1:1.14.9
+%{!?with_golang:Obsoletes:	golang-graphviz < %{version}}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -414,10 +414,10 @@ Wiązania graphviza dla języka R.
 %patch1 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
+#patch5 -p1
 %patch6 -p1
 %patch7 -p1
-%patch9 -p1
+#patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
@@ -469,13 +469,7 @@ export CPPFLAGS
 	--with-visio \
 	--with-webp
 
-%{__make} \
-%ifarch %{ix86} %{arm}
-	SWIG_GO_OPT="-intgosize 32"
-%endif
-%ifarch %{x8664}
-	SWIG_GO_OPT="-intgosize 64"
-%endif
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -585,8 +579,6 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libcdt.so.5
 %attr(755,root,root) %{_libdir}/libcgraph.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libcgraph.so.6
-%attr(755,root,root) %{_libdir}/libgraph.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgraph.so.5
 %attr(755,root,root) %{_libdir}/libgvc.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgvc.so.6
 %attr(755,root,root) %{_libdir}/libgvpr.so.*.*.*
@@ -603,7 +595,7 @@ fi
 %endif
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_dot_layout.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gd.so*
-%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gdk_pixbuf.so*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gdk.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gs.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gtk.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_lasi.so*
@@ -668,21 +660,18 @@ fi
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libcdt.so
 %attr(755,root,root) %{_libdir}/libcgraph.so
-%attr(755,root,root) %{_libdir}/libgraph.so
 %attr(755,root,root) %{_libdir}/libgvc.so
 %attr(755,root,root) %{_libdir}/libgvpr.so
 %attr(755,root,root) %{_libdir}/libpathplan.so
 %attr(755,root,root) %{_libdir}/libxdot.so
 %{_libdir}/libcdt.la
 %{_libdir}/libcgraph.la
-%{_libdir}/libgraph.la
 %{_libdir}/libgvc.la
 %{_libdir}/libgvpr.la
 %{_libdir}/libpathplan.la
 %{_libdir}/libxdot.la
 %{_pkgconfigdir}/libcdt.pc
 %{_pkgconfigdir}/libcgraph.pc
-%{_pkgconfigdir}/libgraph.pc
 %{_pkgconfigdir}/libgvc.pc
 %{_pkgconfigdir}/libgvpr.pc
 %{_pkgconfigdir}/libpathplan.pc
@@ -691,8 +680,8 @@ fi
 %{_mandir}/man3/cdt.3*
 %{_mandir}/man3/cgraph.3*
 %{_mandir}/man3/expr.3*
-%{_mandir}/man3/graph.3*
 %{_mandir}/man3/gvc.3*
+%{_mandir}/man3/gvpr.3*
 %{_mandir}/man3/pack.3*
 %{_mandir}/man3/xdot.3*
 
