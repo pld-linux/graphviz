@@ -40,12 +40,12 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.36.0
+Version:	2.38.0
 Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	1f41664dba0c93109ac8b71216bf2b57
+# Source0-md5:	5b6a829b2ac94efcd5fa3c223ed6d3ae
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-tk.patch
 Patch2:		%{name}-bad-header.patch
@@ -414,10 +414,8 @@ Wiązania graphviza dla języka R.
 %patch1 -p1
 %patch3 -p1
 %patch4 -p1
-#patch5 -p1
 %patch6 -p1
 %patch7 -p1
-#patch9 -p1
 %patch10 -p1
 %patch11 -p1
 %patch12 -p1
@@ -504,8 +502,11 @@ done
 # created by %{_bindir}/dot -c
 touch $RPM_BUILD_ROOT%{_libdir}/graphviz/config
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/graphviz/*/lib*.la
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/graphviz/libgvplugin_*.la
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/graphviz/*/lib*.la
+%if %{with java}
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/graphviz/java/org/graphviz/lib*.la
+%endif
 
 rm -rf doc-html doc-pdf
 mv $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/html doc-html
@@ -546,6 +547,7 @@ fi
 %attr(755,root,root) %{_bindir}/dot2gxl
 %attr(755,root,root) %{_bindir}/dot_builtins
 %attr(755,root,root) %{_bindir}/dotty
+%attr(755,root,root) %{_bindir}/edgepaint
 %attr(755,root,root) %{_bindir}/fdp
 %attr(755,root,root) %{_bindir}/gc
 %attr(755,root,root) %{_bindir}/gml2gv
@@ -626,6 +628,7 @@ fi
 %{_mandir}/man1/dijkstra.1*
 %{_mandir}/man1/dot.1*
 %{_mandir}/man1/dotty.1*
+%{_mandir}/man1/edgepaint.1*
 %{_mandir}/man1/fdp.1*
 %{_mandir}/man1/gc.1*
 %{_mandir}/man1/gml2gv.1*
@@ -741,8 +744,12 @@ fi
 %files -n java-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/java
-%attr(755,root,root) %{_libdir}/graphviz/java/libgv_java.so
-%{_libdir}/graphviz/java/*.java
+%attr(755,root,root) %{_libdir}/graphviz/java/libgv.jnilib
+%dir %{_libdir}/graphviz/java/org
+%dir %{_libdir}/graphviz/java/org/graphviz
+%attr(755,root,root) %{_libdir}/graphviz/java/org/graphviz/libgv_java.so
+%{_libdir}/graphviz/java/org/graphviz/*.class
+%{_libdir}/graphviz/java/org/graphviz/*.java
 %{_mandir}/man3/gv_java.3*
 %endif
 
