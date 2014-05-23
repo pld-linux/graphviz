@@ -24,6 +24,7 @@
 %bcond_without	ipsepcola	# IPSEPCOLA features in neato engine [C++ portability problems]
 
 %define		tclver	8.5
+%define		php_name	php55
 %ifarch i386
 %undefine with_dotnet
 %endif
@@ -41,7 +42,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.38.0
-Release:	2
+Release:	3
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -103,8 +104,9 @@ BuildRequires:	lua51-devel >= 5.1
 BuildRequires:	pango-devel >= 1:1.14.9
 BuildRequires:	perl-devel
 %if %{with php}
-BuildRequires:	php-devel >= 3:5.0.0
-BuildRequires:	php-program >= 4:5.0
+BuildRequires:	%{php_name}-devel
+BuildRequires:	%{php_name}-program
+BuildRequires:	swig-php >= 1.3.40
 %endif
 BuildRequires:	pkgconfig
 BuildRequires:	poppler-glib-devel
@@ -119,7 +121,6 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	swig >= 1.3
 %{?with_guile:BuildRequires:	swig-guile >= 2.0.3}
 %{?with_perl:BuildRequires:	swig-perl >= 1.3}
-%{?with_php:BuildRequires:	swig-php >= 1.3.40}
 BuildRequires:	swig-python >= 1.3
 %{?with_ruby:BuildRequires:	swig-ruby >= 1.3}
 %if %{with tcl}
@@ -327,7 +328,7 @@ Perl binding for graphviz.
 %description -n perl-%{name} -l pl.UTF-8
 Wiązania Perla dla graphviza.
 
-%package -n php-%{name}
+%package -n %{php_name}-%{name}
 Summary:	PHP binding for graphviz
 Summary(pl.UTF-8):	Wiązania PHP dla graphviza
 Group:		Libraries
@@ -335,10 +336,10 @@ Requires:	%{name} = %{version}-%{release}
 Obsoletes:	graphviz-php
 %{?requires_php_extension}
 
-%description -n php-%{name}
+%description -n %{php_name}-%{name}
 PHP binding for graphviz.
 
-%description -n php-%{name} -l pl.UTF-8
+%description -n %{php_name}-%{name} -l pl.UTF-8
 Wiązania PHP dla graphviza.
 
 %package -n python-%{name}
@@ -484,11 +485,11 @@ extension=gv.so
 EOF
 
 # drop the symlinks and install to php dirs directly
-install -d $RPM_BUILD_ROOT%{_examplesdir}/php-%{name}-%{version}
-mv -f $RPM_BUILD_ROOT{%{_libdir}/%{name}/php,%{php_data_dir}}/gv.php
-mv -f $RPM_BUILD_ROOT{%{_libdir}/%{name}/php/libgv_php.so,%{php_extensiondir}/gv.so}
-rm -f $RPM_BUILD_ROOT%{_libdir}/%{name}/php/gv.so
-mv -f $RPM_BUILD_ROOT{%{_datadir}/%{name}/demo,%{_examplesdir}/php-%{name}-%{version}}/modgraph.php
+install -d $RPM_BUILD_ROOT{%{php_extensiondir},%{_examplesdir}/%{php_name}-%{name}-%{version}}
+mv $RPM_BUILD_ROOT{%{_libdir}/%{name}/php,%{php_data_dir}}/gv.php
+mv $RPM_BUILD_ROOT{%{_libdir}/%{name}/php/libgv_php.so,%{php_extensiondir}/gv.so}
+rm $RPM_BUILD_ROOT%{_libdir}/%{name}/php/gv.so
+mv $RPM_BUILD_ROOT{%{_datadir}/%{name}/demo,%{_examplesdir}/%{php_name}-%{name}-%{version}}/modgraph.php
 %endif
 
 # "man3/gv.3r.gz" and "man3/gv.3ruby.gz" are both manual for "gv" in "section 3" of man pages
@@ -525,10 +526,10 @@ umask 022
 
 %postun	-p /sbin/ldconfig
 
-%post -n php-%{name}
+%post -n %{php_name}-%{name}
 %php_webserver_restart
 
-%postun -n php-%{name}
+%postun -n %{php_name}-%{name}
 if [ "$1" = 0 ]; then
 	%php_webserver_restart
 fi
@@ -791,13 +792,13 @@ fi
 %endif
 
 %if %{with php}
-%files -n php-%{name}
+%files -n %{php_name}-%{name}
 %defattr(644,root,root,755)
 %attr(755,root,root) %{php_extensiondir}/gv.so
 %config(noreplace) %verify(not md5 mtime size) %{php_sysconfdir}/conf.d/%{name}.ini
 %{php_data_dir}/gv.php
 %{_mandir}/man3/gv_php.3*
-%{_examplesdir}/php-%{name}-%{version}
+%{_examplesdir}/%{php_name}-%{name}-%{version}
 %endif
 
 %if %{with python}
