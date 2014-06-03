@@ -23,7 +23,7 @@
 %bcond_without	smyrna		# SMYRNA utility (large graph viewer)
 %bcond_without	ipsepcola	# IPSEPCOLA features in neato engine [C++ portability problems]
 
-%define		tclver	8.5
+%define		tclver	8.6
 %define		php_name	php55
 %ifarch i386
 %undefine with_dotnet
@@ -42,7 +42,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.38.0
-Release:	4
+Release:	5
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -125,8 +125,8 @@ BuildRequires:	swig-python >= 1.3
 %{?with_ruby:BuildRequires:	swig-ruby >= 1.3}
 %if %{with tcl}
 BuildRequires:	swig-tcl >= 1.3
-BuildRequires:	tcl-devel >= 8.3.0
-BuildRequires:	tk-devel >= 8.3.0
+BuildRequires:	tcl-devel >= %{tcl_ver}
+BuildRequires:	tk-devel >= 8.6.0
 %endif
 BuildRequires:	xorg-lib-libX11-devel
 BuildRequires:	xorg-lib-libXaw-devel
