@@ -42,7 +42,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.38.0
-Release:	5
+Release:	6
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -113,7 +113,7 @@ BuildRequires:	poppler-glib-devel
 %{?with_python:BuildRequires:	python-devel >= 2.3}
 %{?with_perl:BuildRequires:	rpm-perlprov}
 %{?with_python:BuildRequires:	rpm-pythonprov}
-BuildRequires:	rpmbuild(macros) >= 1.519
+BuildRequires:	rpmbuild(macros) >= 1.696
 %{?with_ruby:BuildRequires:	ruby-devel >= 1.9}
 BuildRequires:	sed >= 4.0
 # swig-csharp,swig-go,swig-java,swig-lua,swig-ocaml in main swig
@@ -439,6 +439,10 @@ CPPFLAGS="%{rpmcppflags}"
 JAVA_HOME=%{java_home}
 export JAVA_HOME
 CPPFLAGS="$CPPFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
+%endif
+
+%if %{with ruby}
+CPPFLAGS="$CPPFLAGS -I$(pkg-config ruby-%{ruby_abi} --cflags)"
 %endif
 
 export CPPFLAGS
