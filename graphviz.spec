@@ -42,7 +42,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.38.0
-Release:	8
+Release:	9
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -422,7 +422,7 @@ Wiązania graphviza dla języka R.
 %patch12 -p1
 %patch13 -p1
 
-%{__sed} '1s@/usr/bin/lua$@/usr/bin/lua51@' -i tclpkg/gv/demo/modgraph.lua
+%{__sed} '1s@/usr/bin/lua$@/usr/bin/lua5.1@' -i tclpkg/gv/demo/modgraph.lua
 
 %{__rm} m4/*.m4
 
@@ -448,7 +448,7 @@ CPPFLAGS="$CPPFLAGS -I$(pkg-config ruby-%{ruby_abi} --cflags)"
 export CPPFLAGS
 
 %configure \
-	LUA=/usr/bin/lua51 \
+	LUA=/usr/bin/lua5.1 \
 	lua_suffix=51 \
 	%{!?with_devil:--disable-devil} \
 	%{?with_golang:--enable-go} \
