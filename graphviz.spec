@@ -175,6 +175,17 @@ This package contains the header files for graphviz libraries.
 %description devel -l pl.UTF-8
 Ten pakiet zawiera pliki nagłówkowe do bibliotek graphviz.
 
+%package devil
+Summary:	Graphviz plugin for renderers based on DevIL
+Group:		Applications/Multimedia
+Requires:	%{name} = %{version}-%{release}
+
+%description devil
+Graphviz plugin for renderers based on DevIL. (Unless you absolutely
+have to use BMP, TIF, or TGA, you are recommended to use the PNG
+format instead supported directly by the cairo+pango based renderer in
+the base graphviz rpm.)
+
 %package gvedit
 Summary:	gvedit - simple graph editor and viewer based on Qt
 Summary(pl.UTF-8):	gvedit - prosty edytor i przeglądarka grafów oparta na Qt
@@ -186,6 +197,14 @@ gvedit provides a simple Qt-based graph editor and viewer.
 
 %description gvedit -l l.UTF-8
 gvedit to prosty edytor i przeglądarka grafów oparta na Qt.
+
+%package ming
+Summary:	Graphviz plugin for flash renderer based on ming
+Group:		Applications/Multimedia
+Requires:	%{name} = %{version}-%{release}
+
+%description ming
+Graphviz plugin for -Tswf (flash) renderer based on ming.
 
 %package smyrna
 Summary:	SMYRNA large graph viewer
@@ -597,18 +616,12 @@ fi
 %dir %{_libdir}/graphviz
 %ghost %{_libdir}/graphviz/config
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_core.so*
-%if %{with devil}
-%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_devil.so*
-%endif
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_dot_layout.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gd.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gdk.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gs.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gtk.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_lasi.so*
-%if %{with ming}
-%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_ming.so*
-%endif
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_neato_layout.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_pango.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_poppler.so*
@@ -618,10 +631,6 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_xlib.so*
 %dir %{_datadir}/graphviz
 %dir %{_datadir}/graphviz/demo
-%if %{with ming}
-# for ming plugin
-%{_datadir}/graphviz/font
-%endif
 %{_datadir}/graphviz/gvpr
 %{_datadir}/graphviz/lefty
 %{_mandir}/man1/acyclic.1*
@@ -663,6 +672,17 @@ fi
 %{_mandir}/man1/unflatten.1*
 %{_mandir}/man1/vimdot.1*
 %{_mandir}/man7/graphviz.7*
+
+%if %{with devil}
+%files devil
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_devil.so*
+%endif
+
+%if %{with ming}
+%files ming
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_ming.so*
+%{_datadir}/graphviz/font
+%endif
 
 %files devel
 %defattr(644,root,root,755)
