@@ -1,11 +1,13 @@
 # TODO
 # - %{_libdir}/graphviz/config is not FHS friendly path as config
 # - io language binding (waiting for swig support)
-# - some plugin subpackages? (libgvplugin_*: gs=ghostscript, gtk, lasi, ming, poppler, visio, webp)
+# - some plugin subpackages? (libgvplugin_*: gs=ghostscript, gtk, lasi, poppler, visio, webp)
 #
 # Conditional build:
+# - language bindings
 %bcond_without	dotnet		# C# bindings
 %bcond_with	golang		# Go bindings
+%bcond_without	guile		# guile bindings
 %bcond_without	java		# Java bindings
 %bcond_without	ocaml		# OCaml bindings
 %bcond_without	php		# PHP bindings
@@ -16,7 +18,8 @@
 %bcond_without	r		# R bindings
 %bcond_without	python		# Python bindings
 %bcond_with	io		# io language bindings (needs swig support)
-%bcond_without	guile		# guile bindings
+# - plugins, features
+%bcond_without	gd		# gd plugin and gd support in tcl package
 %bcond_without	ming		# ming support
 %bcond_without	devil		# DevIL plugin
 %bcond_without	qt		# Qt features (gvedit utility)
@@ -70,7 +73,7 @@ BuildRequires:	flex
 BuildRequires:	fontconfig-devel
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
-BuildRequires:	gd-devel >= 2.0.34
+%{?with_gd:BuildRequires:	gd-devel >= 2.0.34}
 BuildRequires:	gdk-pixbuf2-devel >= 2.0
 BuildRequires:	gettext-devel
 BuildRequires:	ghostscript-devel
@@ -148,7 +151,6 @@ BuildRequires:	qt4-qmake >= 4
 %endif
 Requires(post,postun):	/sbin/ldconfig
 Requires:	fonts-Type1-urw
-Requires:	gd >= 2.0.33-5
 Requires:	pango >= 1:1.14.9
 %{!?with_golang:Obsoletes:	golang-graphviz < %{version}}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -166,8 +168,12 @@ Summary:	Header files for graphviz libraries
 Summary(pl.UTF-8):	Pliki nagłówkowe do bibliotek graphviz
 Group:		X11/Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	gd-devel >= 2.0.34
 Requires:	libltdl-devel >= 2:2
+# this is perhaps pointless as gd is plugin not needed for graphviz-devel?
+%if %{with gd}
+Requires:	%{name}-gd = %{version}-%{release}
+Requires:	gd-devel >= 2.0.34
+%endif
 
 %description devel
 This package contains the header files for graphviz libraries.
@@ -185,6 +191,18 @@ Graphviz plugin for renderers based on DevIL. (Unless you absolutely
 have to use BMP, TIF, or TGA, you are recommended to use the PNG
 format instead supported directly by the cairo+pango based renderer in
 the base graphviz rpm.)
+
+%package gd
+Summary:	Graphviz plugin for renderers based on gd
+Group:		Applications/Multimedia
+Requires:	%{name} = %{version}-%{release}
+Requires:	gd >= 2.0.33-5
+
+%description gd
+Graphviz plugin for renderers based on gd. (Unless you absolutely have
+to use GIF, you are recommended to use the PNG format instead because
+of the better quality anti-aliased lines provided by the cairo+pango
+based renderer.)
 
 %package gvedit
 Summary:	gvedit - simple graph editor and viewer based on Qt
@@ -488,6 +506,7 @@ export CPPFLAGS
 	%{?with_ming:--with-ming} \
 	%{!?with_qt:--without-qt} \
 	%{?with_smyrna:--with-smyrna} \
+	%{!?with_gd:--without-libgd} \
 	--with-visio \
 	--with-webp
 
@@ -565,7 +584,6 @@ fi
 %attr(755,root,root) %{_bindir}/ccomps
 %attr(755,root,root) %{_bindir}/circo
 %attr(755,root,root) %{_bindir}/cluster
-%attr(755,root,root) %{_bindir}/diffimg
 %attr(755,root,root) %{_bindir}/dijkstra
 %attr(755,root,root) %{_bindir}/dot
 %attr(755,root,root) %{_bindir}/dot2gxl
@@ -617,7 +635,6 @@ fi
 %ghost %{_libdir}/graphviz/config
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_core.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_dot_layout.so*
-%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gd.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gdk.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gs.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gtk.so*
@@ -638,7 +655,6 @@ fi
 %{_mandir}/man1/ccomps.1*
 %{_mandir}/man1/circo.1*
 %{_mandir}/man1/cluster.1*
-%{_mandir}/man1/diffimg.1*
 %{_mandir}/man1/dijkstra.1*
 %{_mandir}/man1/dot.1*
 %{_mandir}/man1/dotty.1*
@@ -675,11 +691,21 @@ fi
 
 %if %{with devil}
 %files devil
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_devil.so*
+%endif
+
+%if %{with gd}
+%files gd
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/diffimg
+%{_mandir}/man1/diffimg.1*
+%attr(755,root,root) %{_libdir}/graphviz/libgvplugin_gd.so*
 %endif
 
 %if %{with ming}
 %files ming
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_ming.so*
 %{_datadir}/graphviz/font
 %endif
@@ -862,7 +888,6 @@ fi
 %files -n tcl-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/tcl
-%attr(755,root,root) %{_libdir}/graphviz/tcl/libgdtclft.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libgv_tcl.so
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtcldot.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtcldot_builtin.so*
@@ -871,7 +896,6 @@ fi
 %{_libdir}/graphviz/tcl/pkgIndex.tcl
 %{_libdir}/tcl%{tclver}/graphviz
 %{_mandir}/man3/gv_tcl.3*
-%{_mandir}/man3/gdtclft.3tcl*
 %{_mandir}/man3/pathplan.3*
 %{_mandir}/man3/tcldot.3tcl*
 %{_mandir}/man3/tkspline.3tk*
@@ -884,6 +908,10 @@ fi
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.tcl
 %attr(755,root,root) %{_datadir}/graphviz/demo/pathplan.tcl
 %attr(755,root,root) %{_datadir}/graphviz/demo/spline.tcl
+%if %{with gd}
+%attr(755,root,root) %{_libdir}/graphviz/tcl/libgdtclft.so*
+%{_mandir}/man3/gdtclft.3tcl*
+%endif
 %endif
 
 %if %{with r}
