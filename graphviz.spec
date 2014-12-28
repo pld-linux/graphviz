@@ -75,7 +75,7 @@ BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
 %{?with_gd:BuildRequires:	gd-devel >= 2.0.34}
 BuildRequires:	gdk-pixbuf2-devel >= 2.0
-BuildRequires:	gettext-devel
+BuildRequires:	gettext-tools
 BuildRequires:	ghostscript-devel
 %{?with_golang:BuildRequires:	golang}
 BuildRequires:	gtk+2-devel >= 2:2.8.0
