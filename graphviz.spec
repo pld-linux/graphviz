@@ -31,7 +31,7 @@
 %ifarch i386
 %undefine with_dotnet
 %endif
-%ifnarch %{ix86} %{x8664}
+%ifnarch %{ix86} %{x8664} x32
 %undefine with_java
 %endif
 %ifarch i386 i486
@@ -485,6 +485,12 @@ CPPFLAGS="$CPPFLAGS -I$(pkg-config ruby-%{ruby_abi} --cflags)"
 export CPPFLAGS
 
 %configure \
+%ifarch %{x8664}
+	LIBPOSTFIX="64" \
+%endif
+%ifarch x32
+	LIBPOSTFIX="x32" \
+%endif
 	LUA=/usr/bin/lua5.1 \
 	lua_suffix=51 \
 	%{!?with_devil:--disable-devil} \
