@@ -28,10 +28,10 @@
 
 %define		tclver	8.6
 %define		php_name	php55
-%ifarch i386
+%ifarch i386 x32
 %undefine with_dotnet
 %endif
-%ifnarch %{ix86} %{x8664} x32
+%ifnarch %{ix86} %{x8664}
 %undefine with_java
 %endif
 %ifarch i386 i486
