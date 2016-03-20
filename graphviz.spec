@@ -565,6 +565,8 @@ touch $RPM_BUILD_ROOT%{_libdir}/graphviz/config
 rm -rf doc-html doc-pdf
 mv $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/html doc-html
 mv $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/pdf doc-pdf
+rm -r $RPM_BUILD_ROOT%{_datadir}/%{name}/doc
+rm -r $RPM_BUILD_ROOT%{_datadir}/%{name}/examples
 
 cd $RPM_BUILD_ROOT
 patch -p1 --no-backup-if-mismatch < %{PATCH2} || exit 1
