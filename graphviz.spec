@@ -45,7 +45,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.38.0
-Release:	18
+Release:	19
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -485,7 +485,7 @@ CPPFLAGS="$CPPFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
 %endif
 
 %if %{with ruby}
-CPPFLAGS="$CPPFLAGS -I$(pkg-config ruby-%{ruby_abi} --cflags)"
+CPPFLAGS="$CPPFLAGS $(pkg-config ruby-%{ruby_abi} --cflags)"
 %endif
 
 export CPPFLAGS
