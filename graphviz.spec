@@ -63,6 +63,7 @@ Patch12:	%{name}-webp.patch
 Patch13:	%{name}-format.patch
 Patch14:	python-paths.patch
 Patch15:	ghostscript918.patch
+Patch16:	php-dir.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 %{?with_r:BuildRequires:	R}
@@ -462,6 +463,7 @@ Wiązania graphviza dla języka R.
 %patch13 -p1
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua5.1@' -i tclpkg/gv/demo/modgraph.lua
 
@@ -495,6 +497,7 @@ export CPPFLAGS
 %ifarch x32
 	LIBPOSTFIX="x32" \
 %endif
+	PHP=%{__php} \
 	LUA=/usr/bin/lua5.1 \
 	lua_suffix=51 \
 	%{!?with_devil:--disable-devil} \
@@ -524,9 +527,7 @@ export CPPFLAGS
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 %{__make} install \
-	PHP_INSTALL_DIR=%{php_extensiondir} \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %if %{with php}
@@ -537,9 +538,9 @@ extension=gv.so
 EOF
 
 # drop the symlinks and install to php dirs directly
-install -d $RPM_BUILD_ROOT{%{php_extensiondir},%{_examplesdir}/%{php_name}-%{name}-%{version}}
+install -d $RPM_BUILD_ROOT%{_examplesdir}/%{php_name}-%{name}-%{version}
 mv $RPM_BUILD_ROOT{%{_libdir}/%{name}/php,%{php_data_dir}}/gv.php
-mv $RPM_BUILD_ROOT{%{_libdir}/%{name}/php/libgv_php.so,%{php_extensiondir}/gv.so}
+rm $RPM_BUILD_ROOT%{_libdir}/%{name}/php/libgv_php.so
 rm $RPM_BUILD_ROOT%{_libdir}/%{name}/php/gv.so
 mv $RPM_BUILD_ROOT{%{_datadir}/%{name}/demo,%{_examplesdir}/%{php_name}-%{name}-%{version}}/modgraph.php
 %endif
