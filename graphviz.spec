@@ -45,7 +45,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.38.0
-Release:	20
+Release:	21
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
@@ -150,6 +150,7 @@ BuildRequires:	libglade2-devel >= 2.0
 %if %{with qt}
 BuildRequires:	QtCore-devel >= 4
 BuildRequires:	QtGui-devel >= 4
+BuildRequires:	qt4-build >= 4
 BuildRequires:	qt4-qmake >= 4
 %endif
 Requires(post,postun):	/sbin/ldconfig
