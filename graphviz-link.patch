@@ -1,0 +1,11 @@
+--- graphviz-2.40.1/tclpkg/tcldot/Makefile.am.orig	2016-08-09 23:02:10.000000000 +0200
++++ graphviz-2.40.1/tclpkg/tcldot/Makefile.am	2017-06-01 21:51:19.953228362 +0200
+@@ -97,7 +97,7 @@
+ 
+ if WITH_LIBGD
+ libtcldot_builtin_la_LIBADD += $(top_builddir)/plugin/gd/libgvplugin_gd_C.la
+-libtcldot_builtin_la_LIBADD += $(GD_LIBS)
++libtcldot_builtin_la_LIBADD += $(GDLIB_LIBS)
+ endif
+ 
+ libtcldot_builtin_la_LIBADD += $(EXPAT_LIBS) $(LIBGEN_LIBS) $(SOCKET_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)

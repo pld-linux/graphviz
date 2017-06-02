@@ -1,13 +1,13 @@
---- graphviz-2.30.1/configure.ac.orig	2013-03-30 13:33:33.991726307 +0100
-+++ graphviz-2.30.1/configure.ac	2013-03-30 13:35:38.171723708 +0100
-@@ -1567,7 +1567,7 @@
- 	    if test "x$DARWIN" == "xyes"; then
+--- graphviz-2.40.1/configure.ac.orig	2017-06-01 17:38:47.623401374 +0200
++++ graphviz-2.40.1/configure.ac	2017-06-01 20:10:12.199964310 +0200
+@@ -1642,7 +1642,7 @@
+ 	    if test "x$DARWIN" = "xyes"; then
  	      RUBY_CFLAGS=`echo $RUBY_CFLAGS | sed 's/powerpc/universal/'`
  	    fi
--            RUBY_LIBS="-L`$RUBY $srcdir/config/config_ruby.rb lib` `$RUBY -rrbconfig -e \"puts Config::CONFIG[['LIBRUBYARG_SHARED']]\"`"
-+            RUBY_LIBS="-L`$RUBY $srcdir/config/config_ruby.rb lib` $($RUBY -rrbconfig -e "puts Config::CONFIG[['LIBRUBYARG_SHARED']]")"
+-            RUBY_LIBS="-L`$RUBY $srcdir/config/config_ruby.rb lib` `$RUBY -rrbconfig -e \"puts RbConfig::CONFIG[['LIBRUBYARG_SHARED']]\"`"
++            RUBY_LIBS="-L`$RUBY $srcdir/config/config_ruby.rb lib` $($RUBY -rrbconfig -e "puts RbConfig::CONFIG[['LIBRUBYARG_SHARED']]")"
              RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb vendorarchdir`"
- 	    if test "x$RUBY_INSTALL_DIR" == "x"; then
+ 	    if test "x$RUBY_INSTALL_DIR" = "x"; then
  	  	  RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb sitearchdir`"
 --- graphviz-2.34.0/config/config_ruby.rb.orig	2013-11-10 15:08:02.653585861 +0100
 +++ graphviz-2.34.0/config/config_ruby.rb	2013-11-10 15:08:47.280250638 +0100

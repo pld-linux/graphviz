@@ -6,7 +6,7 @@
 # Conditional build:
 # - language bindings
 %bcond_without	dotnet		# C# bindings
-%bcond_with	golang		# Go bindings
+%bcond_without	golang		# Go bindings
 %bcond_without	guile		# guile bindings
 %bcond_without	java		# Java bindings
 %bcond_without	ocaml		# OCaml bindings
@@ -27,7 +27,7 @@
 %bcond_without	ipsepcola	# IPSEPCOLA features in neato engine [C++ portability problems]
 
 %define		tclver	8.6
-%define		php_name	php55
+#define		php_name	php55
 %ifarch i386 x32
 %undefine with_dotnet
 %endif
@@ -44,14 +44,14 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.38.0
-Release:	21
+Version:	2.40.1
+Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	5b6a829b2ac94efcd5fa3c223ed6d3ae
+# Source0-md5:	4ea6fd64603536406166600bcc296fc8
 Patch0:		%{name}-fontpath.patch
-Patch1:		%{name}-tk.patch
+Patch1:		%{name}-link.patch
 Patch2:		%{name}-bad-header.patch
 Patch3:		%{name}-php.patch
 Patch4:		%{name}-ltdl.patch
@@ -71,6 +71,7 @@ BuildRequires:	ann-devel
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
 BuildRequires:	bison
+BuildRequires:	cairo-devel >= 1.0.0
 BuildRequires:	expat-devel >= 1.95
 BuildRequires:	flex
 BuildRequires:	fontconfig-devel
@@ -91,9 +92,9 @@ BuildRequires:	jpackage-utils
 %endif
 BuildRequires:	libLASi-devel
 BuildRequires:	libjpeg-devel
-BuildRequires:	libltdl-devel >= 2:2
+BuildRequires:	libltdl-devel >= 2:2.2
 BuildRequires:	libpng-devel
-BuildRequires:	librsvg-devel >= 2.0
+BuildRequires:	librsvg-devel >= 2.36.0
 BuildRequires:	libstdc++-devel
 BuildRequires:	libtool >= 2:2
 BuildRequires:	libwebp-devel
@@ -112,7 +113,7 @@ BuildRequires:	perl-devel
 %if %{with php}
 BuildRequires:	%{php_name}-devel
 BuildRequires:	%{php_name}-program
-BuildRequires:	swig-php >= 1.3.40
+BuildRequires:	swig-php >= 3.0.11
 %endif
 BuildRequires:	pkgconfig
 BuildRequires:	poppler-glib-devel
@@ -154,7 +155,11 @@ BuildRequires:	qt4-build >= 4
 BuildRequires:	qt4-qmake >= 4
 %endif
 Requires(post,postun):	/sbin/ldconfig
+Requires:	cairo >= 1.0.0
 Requires:	fonts-Type1-urw
+Requires:	gtk+2 >= 2:2.8.0
+Requires:	libltdl >= 2:2.2
+Requires:	librsvg >= 2.36.0
 Requires:	pango >= 1:1.14.9
 %{!?with_golang:Obsoletes:	golang-graphviz < %{version}}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -540,10 +545,10 @@ EOF
 
 # drop the symlinks and install to php dirs directly
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{php_name}-%{name}-%{version}
-mv $RPM_BUILD_ROOT{%{_libdir}/%{name}/php,%{php_data_dir}}/gv.php
-rm $RPM_BUILD_ROOT%{_libdir}/%{name}/php/libgv_php.so
-rm $RPM_BUILD_ROOT%{_libdir}/%{name}/php/gv.so
-mv $RPM_BUILD_ROOT{%{_datadir}/%{name}/demo,%{_examplesdir}/%{php_name}-%{name}-%{version}}/modgraph.php
+%{__mv} $RPM_BUILD_ROOT{%{_libdir}/%{name}/php,%{php_data_dir}}/gv.php
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/%{name}/php/libgv_php.so
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/%{name}/php/gv.so
+%{__mv} $RPM_BUILD_ROOT{%{_datadir}/%{name}/demo,%{_examplesdir}/%{php_name}-%{name}-%{version}}/modgraph.php
 %endif
 
 # "man3/gv.3r.gz" and "man3/gv.3ruby.gz" are both manual for "gv" in "section 3" of man pages
@@ -551,7 +556,7 @@ mv $RPM_BUILD_ROOT{%{_datadir}/%{name}/demo,%{_examplesdir}/%{php_name}-%{name}-
 for a in $RPM_BUILD_ROOT%{_mandir}/man3/gv.*; do
 	m=${a##*/}
 	l=${m#gv.3}
-	mv $a ${a%/*}/gv_$l.3
+	%{__mv} $a ${a%/*}/gv_$l.3
 done
 
 # created by %{_bindir}/dot -c
@@ -564,10 +569,10 @@ touch $RPM_BUILD_ROOT%{_libdir}/graphviz/config
 %endif
 
 rm -rf doc-html doc-pdf
-mv $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/html doc-html
-mv $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/pdf doc-pdf
-rm -r $RPM_BUILD_ROOT%{_datadir}/%{name}/doc
-rm -r $RPM_BUILD_ROOT%{_datadir}/%{name}/examples
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/html doc-html
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/pdf doc-pdf
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/%{name}/doc
+%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/%{name}/examples
 
 cd $RPM_BUILD_ROOT
 patch -p1 --no-backup-if-mismatch < %{PATCH2} || exit 1
@@ -641,6 +646,8 @@ fi
 %attr(755,root,root) %ghost %{_libdir}/libgvc.so.6
 %attr(755,root,root) %{_libdir}/libgvpr.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libgvpr.so.2
+%attr(755,root,root) %{_libdir}/liblab_gamut.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/liblab_gamut.so.1
 %attr(755,root,root) %{_libdir}/libpathplan.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libpathplan.so.4
 %attr(755,root,root) %{_libdir}/libxdot.so.*.*.*
@@ -730,18 +737,21 @@ fi
 %attr(755,root,root) %{_libdir}/libcgraph.so
 %attr(755,root,root) %{_libdir}/libgvc.so
 %attr(755,root,root) %{_libdir}/libgvpr.so
+%attr(755,root,root) %{_libdir}/liblab_gamut.so
 %attr(755,root,root) %{_libdir}/libpathplan.so
 %attr(755,root,root) %{_libdir}/libxdot.so
 %{_libdir}/libcdt.la
 %{_libdir}/libcgraph.la
 %{_libdir}/libgvc.la
 %{_libdir}/libgvpr.la
+%{_libdir}/liblab_gamut.la
 %{_libdir}/libpathplan.la
 %{_libdir}/libxdot.la
 %{_pkgconfigdir}/libcdt.pc
 %{_pkgconfigdir}/libcgraph.pc
 %{_pkgconfigdir}/libgvc.pc
 %{_pkgconfigdir}/libgvpr.pc
+%{_pkgconfigdir}/liblab_gamut.pc
 %{_pkgconfigdir}/libpathplan.pc
 %{_pkgconfigdir}/libxdot.pc
 %{_includedir}/graphviz
@@ -750,6 +760,7 @@ fi
 %{_mandir}/man3/expr.3*
 %{_mandir}/man3/gvc.3*
 %{_mandir}/man3/gvpr.3*
+%{_mandir}/man3/lab_gamut.3*
 %{_mandir}/man3/pack.3*
 %{_mandir}/man3/xdot.3*
 
@@ -786,6 +797,8 @@ fi
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/go
 %attr(755,root,root) %{_libdir}/graphviz/go/libgv_go.so
+%{_libdir}/graphviz/go/gv.go
+%{_libdir}/graphviz/go/runtime.h
 %{_mandir}/man3/gv_go.3*
 %endif
 
@@ -809,7 +822,7 @@ fi
 %files -n java-%{name}
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/java
-%attr(755,root,root) %{_libdir}/graphviz/java/libgv.jnilib
+%attr(755,root,root) %{_libdir}/graphviz/java/libgv.so
 %dir %{_libdir}/graphviz/java/org
 %dir %{_libdir}/graphviz/java/org/graphviz
 %attr(755,root,root) %{_libdir}/graphviz/java/org/graphviz/libgv_java.so
@@ -906,13 +919,11 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtcldot.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtcldot_builtin.so*
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libtclplan.so*
-%attr(755,root,root) %{_libdir}/graphviz/tcl/libtkspline.so*
 %{_libdir}/graphviz/tcl/pkgIndex.tcl
 %{_libdir}/tcl%{tclver}/graphviz
 %{_mandir}/man3/gv_tcl.3*
 %{_mandir}/man3/pathplan.3*
 %{_mandir}/man3/tcldot.3tcl*
-%{_mandir}/man3/tkspline.3tk*
 %{_datadir}/graphviz/demo/pathplan_data
 %{_datadir}/graphviz/demo/*.README
 %{_datadir}/graphviz/demo/*.html
@@ -921,10 +932,15 @@ fi
 %attr(755,root,root) %{_datadir}/graphviz/demo/gcat.tcl
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.tcl
 %attr(755,root,root) %{_datadir}/graphviz/demo/pathplan.tcl
-%attr(755,root,root) %{_datadir}/graphviz/demo/spline.tcl
 %if %{with gd}
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libgdtclft.so*
 %{_mandir}/man3/gdtclft.3tcl*
+%endif
+%if 0
+# tkspline removed since 2.40
+%attr(755,root,root) %{_libdir}/graphviz/tcl/libtkspline.so*
+%{_mandir}/man3/tkspline.3tk*
+attr(755,root,root) %{_datadir}/graphviz/demo/spline.tcl
 %endif
 %endif
 
