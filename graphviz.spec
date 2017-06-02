@@ -27,7 +27,8 @@
 %bcond_without	ipsepcola	# IPSEPCOLA features in neato engine [C++ portability problems]
 
 %define		tclver	8.6
-#define		php_name	php55
+%define		php_name	php55
+
 %ifarch i386 x32
 %undefine with_dotnet
 %endif
@@ -155,6 +156,9 @@ BuildRequires:	qt4-build >= 4
 BuildRequires:	qt4-qmake >= 4
 %endif
 Requires(post,postun):	/sbin/ldconfig
+# gd plugin is required by dot command (if graphviz is built with gd support)
+%{?with_gd:Requires:	%{name}-gd = %{version}-%{release}}
+Requires:	%{name}-libs = %{version}-%{release}
 Requires:	cairo >= 1.0.0
 Requires:	fonts-Type1-urw
 Requires:	gtk+2 >= 2:2.8.0
@@ -172,28 +176,23 @@ of graphs (as in nodes and edges, not as in barcharts).
 Kolekcja narzędzi oraz pakietów tcl służących do manipulacji i
 rozmieszczania grafów.
 
-%package devel
-Summary:	Header files for graphviz libraries
-Summary(pl.UTF-8):	Pliki nagłówkowe do bibliotek graphviz
-Group:		X11/Development/Libraries
-Requires:	%{name} = %{version}-%{release}
-Requires:	libltdl-devel >= 2:2
-# this is perhaps pointless as gd is plugin not needed for graphviz-devel?
-%if %{with gd}
-Requires:	%{name}-gd = %{version}-%{release}
-Requires:	gd-devel >= 2.0.34
-%endif
+%package libs
+Summary:	Graphviz shared libraries
+Summary(pl.UTF-8):	Biblioteki współdzielone graphviza
+Group:		Libraries
+Conflicts:	graphviz < 2.40.1-1
 
-%description devel
-This package contains the header files for graphviz libraries.
+%description libs
+Graphviz shared libraries.
 
-%description devel -l pl.UTF-8
-Ten pakiet zawiera pliki nagłówkowe do bibliotek graphviz.
+%description libs -l pl.UTF-8
+Biblioteki współdzielone graphviza.
 
 %package devil
 Summary:	Graphviz plugin for renderers based on DevIL
+Summary(pl.UTF-8):	Wtyczka Graphviza do renderowania w oparciu o bibliotekę DevIL
 Group:		Applications/Multimedia
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description devil
 Graphviz plugin for renderers based on DevIL. (Unless you absolutely
@@ -201,10 +200,17 @@ have to use BMP, TIF, or TGA, you are recommended to use the PNG
 format instead supported directly by the cairo+pango based renderer in
 the base graphviz rpm.)
 
+%description devil -l pl.UTF-8
+Wtyczka Graphviza do renderowania w oparciu o bibliotekę DevIL (jeśli
+nie ma absolutnej konieczności używania formatu BMP, TIF lub TGA,
+zalecane jest używanie format PNG bezpośrednio z renderera cairo+pango
+obecnego w podstawowym pakiecie graphviz.
+
 %package gd
-Summary:	Graphviz plugin for renderers based on gd
+Summary:	Graphviz plugin for renderers based on GD
+Summary(pl.UTF-8):	Wtyczka Graphviza do renderowania w oparciu o bibliotekę GD
 Group:		Applications/Multimedia
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 Requires:	gd >= 2.0.33-5
 
 %description gd
@@ -212,6 +218,38 @@ Graphviz plugin for renderers based on gd. (Unless you absolutely have
 to use GIF, you are recommended to use the PNG format instead because
 of the better quality anti-aliased lines provided by the cairo+pango
 based renderer.)
+
+%description gd -l pl.UTF-8
+Wtyczka Graphviza do renderowania w oparciu o bibliotekę DevIL (jeśli
+nie ma absolutnej konieczności używania formatu GIF, zalecane jest
+używanie format PNG bezpośrednio z renderera cairo+pango obecnego w
+podstawowym pakiecie graphviz.
+
+%package ming
+Summary:	Graphviz plugin for flash renderer based on ming
+Summary(pl.UTF-8):	Wtyczka Graphviza do renderowania w oparciu o bibliotekę ming
+Group:		Applications/Multimedia
+Requires:	%{name}-libs = %{version}-%{release}
+
+%description ming
+Graphviz plugin for -Tswf (flash) renderer based on ming.
+
+%description ming -l pl.UTF-8
+Wtyczka Graphviza do renderowania z opcją -Tswf (flash) w oparciu o
+bibliotekę ming.
+
+%package devel
+Summary:	Header files for graphviz libraries
+Summary(pl.UTF-8):	Pliki nagłówkowe do bibliotek graphviz
+Group:		X11/Development/Libraries
+Requires:	%{name}-libs = %{version}-%{release}
+Requires:	libltdl-devel >= 2:2
+
+%description devel
+This package contains the header files for graphviz libraries.
+
+%description devel -l pl.UTF-8
+Ten pakiet zawiera pliki nagłówkowe do bibliotek graphviz.
 
 %package gvedit
 Summary:	gvedit - simple graph editor and viewer based on Qt
@@ -224,14 +262,6 @@ gvedit provides a simple Qt-based graph editor and viewer.
 
 %description gvedit -l l.UTF-8
 gvedit to prosty edytor i przeglądarka grafów oparta na Qt.
-
-%package ming
-Summary:	Graphviz plugin for flash renderer based on ming
-Group:		Applications/Multimedia
-Requires:	%{name} = %{version}-%{release}
-
-%description ming
-Graphviz plugin for -Tswf (flash) renderer based on ming.
 
 %package smyrna
 Summary:	SMYRNA large graph viewer
@@ -581,11 +611,13 @@ patch -p1 --no-backup-if-mismatch < %{PATCH2} || exit 1
 rm -rf $RPM_BUILD_ROOT
 
 %post
-/sbin/ldconfig
 umask 022
 [ ! -x %{_bindir}/dot ] || %{_bindir}/dot -c > /dev/null 2>&1
 
 %postun	-p /sbin/ldconfig
+
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
 
 %post -n %{php_name}-%{name}
 %php_webserver_restart
@@ -638,21 +670,6 @@ fi
 %attr(755,root,root) %{_bindir}/twopi
 %attr(755,root,root) %{_bindir}/unflatten
 %attr(755,root,root) %{_bindir}/vimdot
-%attr(755,root,root) %{_libdir}/libcdt.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcdt.so.5
-%attr(755,root,root) %{_libdir}/libcgraph.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libcgraph.so.6
-%attr(755,root,root) %{_libdir}/libgvc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgvc.so.6
-%attr(755,root,root) %{_libdir}/libgvpr.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgvpr.so.2
-%attr(755,root,root) %{_libdir}/liblab_gamut.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/liblab_gamut.so.1
-%attr(755,root,root) %{_libdir}/libpathplan.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libpathplan.so.4
-%attr(755,root,root) %{_libdir}/libxdot.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libxdot.so.4
-%dir %{_libdir}/graphviz
 %ghost %{_libdir}/graphviz/config
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_core.so*
 %attr(755,root,root) %{_libdir}/graphviz/libgvplugin_dot_layout.so*
@@ -709,6 +726,24 @@ fi
 %{_mandir}/man1/unflatten.1*
 %{_mandir}/man1/vimdot.1*
 %{_mandir}/man7/graphviz.7*
+
+%files libs
+%defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libcdt.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libcdt.so.5
+%attr(755,root,root) %{_libdir}/libcgraph.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libcgraph.so.6
+%attr(755,root,root) %{_libdir}/libgvc.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgvc.so.6
+%attr(755,root,root) %{_libdir}/libgvpr.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libgvpr.so.2
+%attr(755,root,root) %{_libdir}/liblab_gamut.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/liblab_gamut.so.1
+%attr(755,root,root) %{_libdir}/libpathplan.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libpathplan.so.4
+%attr(755,root,root) %{_libdir}/libxdot.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libxdot.so.4
+%dir %{_libdir}/graphviz
 
 %if %{with devil}
 %files devil
