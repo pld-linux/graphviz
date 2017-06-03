@@ -18,3 +18,12 @@
  
  /* true if point p is inside box b */
  #define INSIDE(p,b)	(BETWEEN((b).LL.x,(p).x,(b).UR.x) && BETWEEN((b).LL.y,(p).y,(b).UR.y))
+@@ -81,6 +84,8 @@
+ #define MILLIPOINT .001
+ #define MICROPOINT .000001
+ 
++#endif
++
+ #ifdef __cplusplus
+ }
+ #endif
