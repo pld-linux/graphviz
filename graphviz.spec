@@ -10,7 +10,7 @@
 %bcond_without	guile		# guile bindings
 %bcond_without	java		# Java bindings
 %bcond_without	ocaml		# OCaml bindings
-%bcond_without	php		# PHP bindings
+%bcond_with	php		# PHP bindings
 %bcond_without	perl		# Perl bindings
 %bcond_without	ruby		# Ruby bindings
 %bcond_without	tcl		# Tcl bindings
