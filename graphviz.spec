@@ -49,6 +49,7 @@ Version:	2.40.1
 Release:	6
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
+#Source0Download: https://graphviz.gitlab.io/_pages/Download/Download_source.html
 Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
 # Source0-md5:	4ea6fd64603536406166600bcc296fc8
 Patch0:		%{name}-fontpath.patch
