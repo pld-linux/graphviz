@@ -17,6 +17,8 @@
 %bcond_without	lua		# Lua bindings
 %bcond_without	r		# R bindings
 %bcond_without	python		# Python bindings
+%bcond_without	python2		# Python 2 bindings
+%bcond_without	python3		# Python 3 bindings
 %bcond_with	io		# io language bindings (needs swig support)
 # - plugins, features
 %bcond_without	gd		# gd plugin and gd support in tcl package
@@ -27,7 +29,10 @@
 %bcond_without	ipsepcola	# IPSEPCOLA features in neato engine [C++ portability problems]
 
 %define		tclver	8.6
-%define		php_name	php55
+
+%if 0%{!?php_name:1}
+%define		php_name	php73
+%endif
 
 %ifarch i386 x32
 %undefine with_dotnet
@@ -41,31 +46,31 @@
 %ifnarch %{ix86} %{x8664} %{arm}
 %undefine with_golang
 %endif
+%if %{without python}
+%undefine	with_python2
+%undefine	with_python3
+%endif
 %{?with_perl:%include	/usr/lib/rpm/macros.perl}
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.40.1
-Release:	7
+Version:	2.42.3
+Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 #Source0Download: https://graphviz.gitlab.io/_pages/Download/Download_source.html
-Source0:	http://www.graphviz.org/pub/graphviz/ARCHIVE/%{name}-%{version}.tar.gz
-# Source0-md5:	4ea6fd64603536406166600bcc296fc8
+Source0:	https://www2.graphviz.org/Packages/stable/portable_source/%{name}-%{version}.tar.gz
+# Source0-md5:	9f61dc85517957793c6bb24f0611eac1
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-link.patch
 Patch2:		%{name}-bad-header.patch
 Patch3:		%{name}-php.patch
 Patch4:		%{name}-ltdl.patch
-Patch6:		%{name}-php_modules_dir.patch
 Patch7:		%{name}-ruby.patch
 Patch10:	%{name}-ming.patch
-Patch11:	%{name}-visio.patch
 Patch12:	%{name}-webp.patch
-Patch13:	%{name}-format.patch
 Patch14:	python-paths.patch
 Patch15:	ghostscript918.patch
-Patch16:	php-dir.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 %{?with_r:BuildRequires:	R}
@@ -85,6 +90,8 @@ BuildRequires:	gettext-tools
 BuildRequires:	ghostscript-devel
 %{?with_golang:BuildRequires:	golang}
 BuildRequires:	gtk+2-devel >= 2:2.8.0
+# only tested, actually not used
+#BuildRequires:	gtkglarea-devel >= 2.0
 BuildRequires:	gts-devel
 %{?with_guile:BuildRequires:	guile-devel >= 2.0}
 #BuildRequires:	io
@@ -98,7 +105,7 @@ BuildRequires:	libltdl-devel >= 2:2.2
 BuildRequires:	libpng-devel
 BuildRequires:	librsvg-devel >= 2.36.0
 BuildRequires:	libstdc++-devel
-BuildRequires:	libtool >= 2:2
+BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libwebp-devel
 # currently external library is not used
 #BuildRequires:	libvisio-devel
@@ -120,6 +127,8 @@ BuildRequires:	swig-php >= 3.0.11
 BuildRequires:	pkgconfig
 BuildRequires:	poppler-glib-devel
 %{?with_python:BuildRequires:	python-devel >= 2.3}
+%{?with_python2:BuildRequires:	python-devel >= 2.3}
+%{?with_python3:BuildRequires:	python3-devel >= 3.2}
 %{?with_perl:BuildRequires:	rpm-perlprov}
 %{?with_python:BuildRequires:	rpm-pythonprov}
 BuildRequires:	rpmbuild(macros) >= 1.696
@@ -130,7 +139,7 @@ BuildRequires:	sed >= 4.0
 BuildRequires:	swig >= 1.3
 %{?with_guile:BuildRequires:	swig-guile >= 2.0.3}
 %{?with_perl:BuildRequires:	swig-perl >= 1.3}
-BuildRequires:	swig-python >= 1.3
+%{?with_python:BuildRequires:	swig-python >= 1.3}
 %{?with_ruby:BuildRequires:	swig-ruby >= 1.3}
 %if %{with tcl}
 BuildRequires:	swig-tcl >= 1.3
@@ -145,16 +154,15 @@ BuildRequires:	xorg-lib-libXrender-devel
 BuildRequires:	zlib-devel
 %if %{with smyrna}
 BuildRequires:	OpenGL-glut-devel
-# only tested, actually not used
-#BuildRequires:	gtkglarea-devel >= 2.0
 BuildRequires:	gtkglext-devel >= 1.0
 BuildRequires:	libglade2-devel >= 2.0
 %endif
 %if %{with qt}
-BuildRequires:	QtCore-devel >= 4
-BuildRequires:	QtGui-devel >= 4
-BuildRequires:	qt4-build >= 4
-BuildRequires:	qt4-qmake >= 4
+BuildRequires:	Qt5Core-devel >= 5
+BuildRequires:	Qt5Gui-devel >= 5
+BuildRequires:	Qt5Widgets-devel >= 5
+BuildRequires:	qt5-build >= 5
+BuildRequires:	qt5-qmake >= 5
 %endif
 Requires(post,postun):	/sbin/ldconfig
 # gd plugin is required by dot command (if graphviz is built with gd support)
@@ -420,17 +428,29 @@ PHP binding for graphviz.
 Wiązania PHP dla graphviza.
 
 %package -n python-%{name}
-Summary:	Python binding for graphviz
-Summary(pl.UTF-8):	Wiązania Pythona dla graphviza
+Summary:	Python 2 binding for graphviz
+Summary(pl.UTF-8):	Wiązania Pythona 2 dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	graphviz-python
 
 %description -n python-%{name}
-Python binding for graphviz.
+Python 2 binding for graphviz.
 
 %description -n python-%{name} -l pl.UTF-8
-Wiązania Pythona dla graphviza.
+Wiązania Pythona 2 dla graphviza.
+
+%package -n python3-%{name}
+Summary:	Python 3 binding for graphviz
+Summary(pl.UTF-8):	Wiązania Pythona 3 dla graphviza
+Group:		Libraries
+Requires:	%{name} = %{version}-%{release}
+
+%description -n python3-%{name}
+Python 3 binding for graphviz.
+
+%description -n python3-%{name} -l pl.UTF-8
+Wiązania Pythona 3 dla graphviza.
 
 %package -n ruby-%{name}
 Summary:	Ruby binding for graphviz
@@ -492,19 +512,13 @@ Wiązania graphviza dla języka R.
 %patch1 -p1
 %patch3 -p1
 %patch4 -p1
-%patch6 -p1
 %patch7 -p1
 %patch10 -p1
-%patch11 -p1
 %patch12 -p1
-%patch13 -p1
 %patch14 -p1
 %patch15 -p1
-%patch16 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua5.1@' -i tclpkg/gv/demo/modgraph.lua
-
-%{__rm} m4/*.m4
 
 %build
 touch config/config.rpath
@@ -520,22 +534,18 @@ JAVA_HOME=%{java_home}
 export JAVA_HOME
 CPPFLAGS="$CPPFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
 %endif
-
-%if %{with ruby}
-CPPFLAGS="$CPPFLAGS $(pkg-config ruby-%{ruby_abi} --cflags)"
-%endif
-
 export CPPFLAGS
 
 %configure \
-%ifarch %{x8664}
+%ifarch %{x8664} aarch64 ppc64 sparc64 s390x
 	LIBPOSTFIX="64" \
 %endif
 %ifarch x32
 	LIBPOSTFIX="x32" \
 %endif
-	PHP=%{__php} \
 	LUA=/usr/bin/lua5.1 \
+	PHP=%{__php} \
+	%{?with_ruby:RUBY_VER=%{ruby_abi}} \
 	lua_suffix=51 \
 	%{!?with_devil:--disable-devil} \
 	%{?with_golang:--enable-go} \
@@ -546,6 +556,9 @@ export CPPFLAGS
 	%{!?with_ocaml:--disable-ocaml} \
 	%{!?with_perl:--disable-perl} \
 	%{!?with_php:--disable-php} \
+	%{!?with_python:--disable-python} \
+	%{!?with_python2:--disable-python2} \
+	%{!?with_python3:--disable-python3} \
 	%{!?with_r:--disable-r} \
 	%{!?with_ruby:--disable-ruby} \
 	%{!?with_dotnet:--disable-sharp} \
@@ -564,7 +577,8 @@ export CPPFLAGS
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%{__make} install \
+
+%{__make} -j1 install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 %if %{with php}
@@ -696,6 +710,7 @@ fi
 %{_mandir}/man1/cluster.1*
 %{_mandir}/man1/dijkstra.1*
 %{_mandir}/man1/dot.1*
+%{_mandir}/man1/dot2gxl.1*
 %{_mandir}/man1/dotty.1*
 %{_mandir}/man1/edgepaint.1*
 %{_mandir}/man1/fdp.1*
@@ -710,6 +725,7 @@ fi
 %{_mandir}/man1/gvmap.sh.1*
 %{_mandir}/man1/gvpack.1*
 %{_mandir}/man1/gvpr.1*
+%{_mandir}/man1/gxl2dot.1*
 %{_mandir}/man1/gxl2gv.1*
 %{_mandir}/man1/lefty.1*
 %{_mandir}/man1/lneato.1*
@@ -921,10 +937,27 @@ fi
 %attr(755,root,root) %{_libdir}/graphviz/python/libgv_python.so
 %attr(755,root,root) %{_libdir}/graphviz/python/_gv.so
 %{_libdir}/graphviz/python/gv.py
+%if %{with python2}
+%dir %{_libdir}/graphviz/python2
+%attr(755,root,root) %{_libdir}/graphviz/python2/libgv_python2.so
+%attr(755,root,root) %{_libdir}/graphviz/python2/_gv.so
+%{_libdir}/graphviz/python2/gv.py
+%endif
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.py
 %attr(755,root,root) %{py_sitedir}/_gv.so
 %{py_sitedir}/gv.py
 %{_mandir}/man3/gv_python.3*
+%endif
+
+%if %{with python3}
+%files -n python3-%{name}
+%defattr(644,root,root,755)
+%dir %{_libdir}/graphviz/python3
+%attr(755,root,root) %{_libdir}/graphviz/python3/libgv_python3.so
+%attr(755,root,root) %{_libdir}/graphviz/python3/_gv.so
+%{_libdir}/graphviz/python3/gv.py
+%attr(755,root,root) %{py3_sitedir}/_gv.so
+%{py3_sitedir}/gv.py
 %endif
 
 %if %{with ruby}
@@ -971,12 +1004,6 @@ fi
 %if %{with gd}
 %attr(755,root,root) %{_libdir}/graphviz/tcl/libgdtclft.so*
 %{_mandir}/man3/gdtclft.3tcl*
-%endif
-%if 0
-# tkspline removed since 2.40
-%attr(755,root,root) %{_libdir}/graphviz/tcl/libtkspline.so*
-%{_mandir}/man3/tkspline.3tk*
-attr(755,root,root) %{_datadir}/graphviz/demo/spline.tcl
 %endif
 %endif
 
