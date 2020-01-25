@@ -50,7 +50,6 @@
 %undefine	with_python2
 %undefine	with_python3
 %endif
-%{?with_perl:%include	/usr/lib/rpm/macros.perl}
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
