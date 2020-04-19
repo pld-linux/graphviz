@@ -53,13 +53,13 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.42.3
-Release:	5
+Version:	2.44.0
+Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 #Source0Download: https://graphviz.gitlab.io/_pages/Download/Download_source.html
 Source0:	https://www2.graphviz.org/Packages/stable/portable_source/%{name}-%{version}.tar.gz
-# Source0-md5:	9f61dc85517957793c6bb24f0611eac1
+# Source0-md5:	de096f4ba331a42e7045ab530386c5c6
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-link.patch
 Patch2:		%{name}-bad-header.patch
