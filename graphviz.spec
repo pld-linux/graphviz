@@ -53,13 +53,13 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.44.0
+Version:	2.44.1
 Release:	1
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 #Source0Download: https://graphviz.gitlab.io/_pages/Download/Download_source.html
 Source0:	https://www2.graphviz.org/Packages/stable/portable_source/%{name}-%{version}.tar.gz
-# Source0-md5:	de096f4ba331a42e7045ab530386c5c6
+# Source0-md5:	96792adafea5cc6879060c400da31ea3
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-link.patch
 Patch2:		%{name}-bad-header.patch
@@ -78,6 +78,8 @@ BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
 BuildRequires:	bison
 BuildRequires:	cairo-devel >= 1.0.0
+# for tests
+#BuildRequires:	criterion-devel
 BuildRequires:	expat-devel >= 1.95
 BuildRequires:	flex
 BuildRequires:	fontconfig-devel
@@ -548,6 +550,7 @@ export CPPFLAGS
 	LUA=/usr/bin/lua5.1 \
 	PHP=%{__php} \
 	%{?with_ruby:RUBY_VER=%{ruby_abi}} \
+	ac_cv_lib_criterion_main=no \
 	lua_suffix=51 \
 	%{!?with_devil:--disable-devil} \
 	%{?with_golang:--enable-go} \
@@ -609,6 +612,7 @@ done
 # created by %{_bindir}/dot -c
 touch $RPM_BUILD_ROOT%{_libdir}/graphviz/config
 
+%{__rm} $RPM_BUILD_ROOT%{_libdir}/lib*.la
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/graphviz/libgvplugin_*.la
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/graphviz/*/lib*.la
 %if %{with java}
@@ -794,13 +798,6 @@ fi
 %attr(755,root,root) %{_libdir}/liblab_gamut.so
 %attr(755,root,root) %{_libdir}/libpathplan.so
 %attr(755,root,root) %{_libdir}/libxdot.so
-%{_libdir}/libcdt.la
-%{_libdir}/libcgraph.la
-%{_libdir}/libgvc.la
-%{_libdir}/libgvpr.la
-%{_libdir}/liblab_gamut.la
-%{_libdir}/libpathplan.la
-%{_libdir}/libxdot.la
 %{_pkgconfigdir}/libcdt.pc
 %{_pkgconfigdir}/libcgraph.pc
 %{_pkgconfigdir}/libgvc.pc
@@ -814,7 +811,6 @@ fi
 %{_mandir}/man3/expr.3*
 %{_mandir}/man3/gvc.3*
 %{_mandir}/man3/gvpr.3*
-%{_mandir}/man3/lab_gamut.3*
 %{_mandir}/man3/pack.3*
 %{_mandir}/man3/xdot.3*
 
