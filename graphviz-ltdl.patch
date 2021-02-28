@@ -8,5 +8,5 @@
 +#define lt_preloaded_symbols lt_GRAPHVIZ_LTX_preloaded_symbols
 +
  /*visual studio*/
- #ifdef WIN32_DLL
+ #ifdef _WIN32
  #ifndef GVC_EXPORTS

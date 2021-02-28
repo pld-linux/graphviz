@@ -17,4 +17,4 @@
 +libtcldot_builtin_la_LIBADD += $(GDLIB_LIBS)
  endif
  
- libtcldot_builtin_la_LIBADD += $(EXPAT_LIBS) $(LIBGEN_LIBS) $(SOCKET_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
+ libtcldot_builtin_la_LIBADD += $(EXPAT_LIBS) $(SOCKET_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
