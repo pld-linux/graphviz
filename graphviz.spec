@@ -623,7 +623,7 @@ rm -rf doc-html doc-pdf
 %{__mv} $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/html doc-html
 %{__mv} $RPM_BUILD_ROOT%{_datadir}/%{name}/doc/pdf doc-pdf
 %{__rm} -r $RPM_BUILD_ROOT%{_datadir}/%{name}/doc
-%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/%{name}/examples
+%{?with_smyrna:%{__rm} -r $RPM_BUILD_ROOT%{_datadir}/%{name}/examples}
 
 cd $RPM_BUILD_ROOT
 patch -p1 --no-backup-if-mismatch < %{PATCH2} || exit 1
