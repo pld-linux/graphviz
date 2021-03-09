@@ -54,7 +54,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.44.1
-Release:	4
+Release:	5
 License:	CPL v1.0
 Group:		X11/Applications/Graphics
 #Source0Download: https://graphviz.gitlab.io/_pages/Download/Download_source.html
@@ -428,29 +428,29 @@ PHP binding for graphviz.
 %description -n %{php_name}-%{name} -l pl.UTF-8
 Wiązania PHP dla graphviza.
 
-%package -n python-%{name}
+%package -n python-libgraphviz
 Summary:	Python 2 binding for graphviz
 Summary(pl.UTF-8):	Wiązania Pythona 2 dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	graphviz-python
 
-%description -n python-%{name}
+%description -n python-libgraphviz
 Python 2 binding for graphviz.
 
-%description -n python-%{name} -l pl.UTF-8
+%description -n python-libgraphviz -l pl.UTF-8
 Wiązania Pythona 2 dla graphviza.
 
-%package -n python3-%{name}
+%package -n python3-libgraphviz
 Summary:	Python 3 binding for graphviz
 Summary(pl.UTF-8):	Wiązania Pythona 3 dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 
-%description -n python3-%{name}
+%description -n python3-libgraphviz
 Python 3 binding for graphviz.
 
-%description -n python3-%{name} -l pl.UTF-8
+%description -n python3-libgraphviz -l pl.UTF-8
 Wiązania Pythona 3 dla graphviza.
 
 %package -n ruby-%{name}
@@ -929,7 +929,7 @@ fi
 %endif
 
 %if %{with python}
-%files -n python-%{name}
+%files -n python-libgraphviz
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/python
 %attr(755,root,root) %{_libdir}/graphviz/python/libgv_python.so
@@ -948,7 +948,7 @@ fi
 %endif
 
 %if %{with python3}
-%files -n python3-%{name}
+%files -n python3-libgraphviz
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/python3
 %attr(755,root,root) %{_libdir}/graphviz/python3/libgv_python3.so
