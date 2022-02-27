@@ -43,7 +43,7 @@
 %ifarch i386 i486
 %undefine with_java
 %endif
-%ifnarch %{ix86} %{x8664} %{arm}
+%ifnarch %{ix86} %{x8664} %{arm} aarch64
 %undefine with_golang
 %endif
 %if %{without python}
