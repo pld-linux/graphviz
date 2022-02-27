@@ -161,6 +161,7 @@ BuildRequires:	libglade2-devel >= 2.0
 %if %{with qt}
 BuildRequires:	Qt5Core-devel >= 5
 BuildRequires:	Qt5Gui-devel >= 5
+BuildRequires:	Qt5PrintSupport-devel >= 5
 BuildRequires:	Qt5Widgets-devel >= 5
 BuildRequires:	qt5-build >= 5
 BuildRequires:	qt5-qmake >= 5
