@@ -9,18 +9,18 @@
  
  if WITH_WIN32
  libgvplugin_ming_la_LDFLAGS += -no-undefined
---- graphviz-2.38.0/plugin/ming/gvrender_ming.c.orig	2014-04-21 09:12:10.819328588 +0200
-+++ graphviz-2.38.0/plugin/ming/gvrender_ming.c	2014-04-21 09:12:14.539328512 +0200
-@@ -18,6 +18,8 @@
+--- graphviz-2.47.2/plugin/ming/gvrender_ming.c.orig	2021-05-27 02:56:39.000000000 +0200
++++ graphviz-2.47.2/plugin/ming/gvrender_ming.c	2022-03-24 16:55:38.941518316 +0100
+@@ -13,6 +13,8 @@
  #include <stdlib.h>
  #include <string.h>
- #include "gvplugin_render.h"
+ #include <gvc/gvplugin_render.h>
 +#include "gvcint.h"
 +#include "gvcproc.h"
  
  /* from config.h - would conflict with ming.h definitions */
  #undef PACKAGE
-@@ -88,7 +90,6 @@
+@@ -83,7 +85,6 @@ static void ming_end_page(GVJ_t * job)
      SWFMovie_nextFrame(movie);
  }
  
@@ -28,7 +28,7 @@
  #define FONT "Bitstream_Vera_Serif.fdb"
  
  static void ming_textspan(GVJ_t * job, pointf p, textspan_t * span)
-@@ -105,7 +106,7 @@
+@@ -100,7 +101,7 @@ static void ming_textspan(GVJ_t * job, p
  
  /* FIXME - hardcoded to a Times-like font */
      if (font == NULL) {

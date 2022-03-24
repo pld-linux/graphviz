@@ -53,13 +53,13 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.44.1
-Release:	10
-License:	CPL v1.0
+Version:	2.47.2
+Release:	1
+License:	EPL v1.0
 Group:		X11/Applications/Graphics
-#Source0Download: https://graphviz.gitlab.io/_pages/Download/Download_source.html
-Source0:	https://www2.graphviz.org/Packages/stable/portable_source/%{name}-%{version}.tar.gz
-# Source0-md5:	96792adafea5cc6879060c400da31ea3
+#Source0Download: https://graphviz.org/download/source/
+Source0:	https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/%{version}/%{name}-%{version}.tar.xz
+# Source0-md5:	4b60526ed7a6a43dfb23b5c175286cd8
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-link.patch
 Patch2:		%{name}-bad-header.patch
@@ -76,15 +76,16 @@ URL:		http://www.graphviz.org/
 BuildRequires:	ann-devel
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake
-BuildRequires:	bison
+BuildRequires:	bison >= 3.0
 BuildRequires:	cairo-devel >= 1.0.0
 # for tests
 #BuildRequires:	criterion-devel
 BuildRequires:	expat-devel >= 1.95
-BuildRequires:	flex
+BuildRequires:	flex >= 2.5.2
 BuildRequires:	fontconfig-devel
 BuildRequires:	freetype-devel >= 2.0.0
 BuildRequires:	gawk
+BuildRequires:	gcc >= 5:3.2
 %{?with_gd:BuildRequires:	gd-devel >= 2.0.34}
 BuildRequires:	gdk-pixbuf2-devel >= 2.0
 BuildRequires:	gettext-tools
@@ -105,7 +106,7 @@ BuildRequires:	libjpeg-devel
 BuildRequires:	libltdl-devel >= 2:2.2
 BuildRequires:	libpng-devel
 BuildRequires:	librsvg-devel >= 2.36.0
-BuildRequires:	libstdc++-devel
+BuildRequires:	libstdc++-devel >= 6:4.7
 BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libwebp-devel
 # currently external library is not used
@@ -129,7 +130,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	poppler-glib-devel
 %{?with_python:BuildRequires:	python-devel >= 2.3}
 %{?with_python2:BuildRequires:	python-devel >= 2.3}
-%{?with_python3:BuildRequires:	python3-devel >= 3.2}
+%{?with_python3:BuildRequires:	python3-devel >= 1:3.6}
 %{?with_perl:BuildRequires:	rpm-perlprov}
 %{?with_python:BuildRequires:	rpm-pythonprov}
 BuildRequires:	rpmbuild(macros) >= 1.696
@@ -142,6 +143,7 @@ BuildRequires:	swig >= 1.3
 %{?with_perl:BuildRequires:	swig-perl >= 1.3}
 %{?with_python:BuildRequires:	swig-python >= 1.3}
 %{?with_ruby:BuildRequires:	swig-ruby >= 1.3}
+BuildRequires:	tar >= 1:1.22
 %if %{with tcl}
 BuildRequires:	swig-tcl >= 1.3
 BuildRequires:	tcl-devel >= %{tcl_ver}
@@ -152,6 +154,7 @@ BuildRequires:	xorg-lib-libXaw-devel
 BuildRequires:	xorg-lib-libXpm-devel
 # tested in configure to enable ghostscript plugin build, actually not used
 BuildRequires:	xorg-lib-libXrender-devel
+BuildRequires:	xz
 BuildRequires:	zlib-devel
 %if %{with smyrna}
 BuildRequires:	OpenGL-glut-devel
@@ -356,7 +359,7 @@ Summary:	Guile binding for graphviz
 Summary(pl.UTF-8):	Wiązania Guile dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	graphviz-guile
+Obsoletes:	graphviz-guile < 2.26.3-1
 
 %description -n guile-%{name}
 Guile binding for graphviz.
@@ -369,7 +372,7 @@ Summary:	Java binding for graphviz
 Summary(pl.UTF-8):	Wiązania Javy dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	graphviz-java
+Obsoletes:	graphviz-java < 2.26.3-1
 
 %description -n java-%{name}
 Java binding for graphviz.
@@ -382,7 +385,7 @@ Summary:	LUA binding for graphviz
 Summary(pl.UTF-8):	Wiązania LUA dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	graphviz-lua
+Obsoletes:	graphviz-lua < 2.26.3-1
 
 %description -n lua-%{name}
 LUA binding for graphviz.
@@ -395,7 +398,7 @@ Summary:	OCaml binding for graphviz
 Summary(pl.UTF-8):	Wiązania OCamla dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	graphviz-ocaml
+Obsoletes:	graphviz-ocaml < 2.26.3-1
 
 %description -n ocaml-%{name}
 OCaml binding for graphviz.
@@ -408,6 +411,7 @@ Summary:	Perl binding for graphviz
 Summary(pl.UTF-8):	Wiązania Perla dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	ocmal-perl < 2.26.3-1
 
 %description -n perl-%{name}
 Perl binding for graphviz.
@@ -420,7 +424,7 @@ Summary:	PHP binding for graphviz
 Summary(pl.UTF-8):	Wiązania PHP dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	graphviz-php
+Obsoletes:	graphviz-php < 2.26.3-1
 %{?requires_php_extension}
 
 %description -n %{php_name}-%{name}
@@ -434,7 +438,8 @@ Summary:	Python 2 binding for graphviz
 Summary(pl.UTF-8):	Wiązania Pythona 2 dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	graphviz-python
+Obsoletes:	graphviz-python < 2.26.3-1
+Obsoletes:	python-graphviz < 2.44.1-10
 
 %description -n python-libgraphviz
 Python 2 binding for graphviz.
@@ -447,6 +452,7 @@ Summary:	Python 3 binding for graphviz
 Summary(pl.UTF-8):	Wiązania Pythona 3 dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	python3-graphviz < 2.44.1-10
 
 %description -n python3-libgraphviz
 Python 3 binding for graphviz.
@@ -459,7 +465,7 @@ Summary:	Ruby binding for graphviz
 Summary(pl.UTF-8):	Wiązania Ruby'ego dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	graphviz-ruby
+Obsoletes:	graphviz-ruby < 2.26.3-1
 
 %description -n ruby-%{name}
 Ruby binding for graphviz.
@@ -472,8 +478,8 @@ Summary:	C# binding for graphviz
 Summary(pl.UTF-8):	Wiązania C# dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	graphviz-sharp
-Obsoletes:	sharp-graphviz
+Obsoletes:	graphviz-sharp < 2.26.3-1
+Obsoletes:	sharp-graphviz < 2.26.3-6
 
 %description -n dotnet-%{name}-sharp
 C# binding for graphviz.
@@ -486,7 +492,7 @@ Summary:	Tcl extension tools for graphviz
 Summary(pl.UTF-8):	Rozszerzenia Tcl dla graphviza
 Group:		X11/Applications/Graphics
 Requires:	%{name} = %{version}-%{release}
-Obsoletes:	graphviz-tcl
+Obsoletes:	graphviz-tcl < 2.26.3-1
 
 %description -n tcl-%{name}
 This package contains the various Tcl packages (extensions) using
@@ -651,7 +657,7 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS COPYING ChangeLog NEWS README
+%doc AUTHORS CHANGELOG.md COPYING README
 %attr(755,root,root) %{_bindir}/acyclic
 %attr(755,root,root) %{_bindir}/bcomps
 %attr(755,root,root) %{_bindir}/ccomps
