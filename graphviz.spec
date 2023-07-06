@@ -558,8 +558,8 @@ export CPPFLAGS
 	LIBPOSTFIX="x32" \
 %endif
 %if %{with java}
-	JAVA="%{java_home}/bin/java}" \
-	JAVAC="%{java_home}/bin/javac}" \
+	JAVA="%{java_home}/bin/java" \
+	JAVAC="%{java_home}/bin/javac" \
 %endif
 	LUA=/usr/bin/lua5.1 \
 	PHP=%{__php} \
