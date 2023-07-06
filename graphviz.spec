@@ -131,8 +131,8 @@ BuildRequires:	swig-php >= 3.0.11
 %endif
 BuildRequires:	pkgconfig
 BuildRequires:	poppler-glib-devel
-%{?with_python:BuildRequires:	python-devel >= 2.3}
-%{?with_python2:BuildRequires:	python-devel >= 2.3}
+%{?with_python:BuildRequires:	python-devel >= 1:2.3}
+%{?with_python2:BuildRequires:	python-devel >= 1:2.3}
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.6}
 %{?with_perl:BuildRequires:	rpm-perlprov}
 %{?with_python:BuildRequires:	rpm-pythonprov}
