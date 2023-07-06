@@ -1,0 +1,32 @@
+--- graphviz-2.47.2/configure.ac.orig	2023-07-07 00:56:28.786941939 +0200
++++ graphviz-2.47.2/configure.ac	2023-07-07 01:11:13.505632331 +0200
+@@ -808,6 +808,7 @@
+       use_java="No (swig does not support -java option)"
+     else
+       AC_CHECK_PROG(JAVA,java,java)
++      AC_CHECK_PROG(JAVAC,javac,javac)
+       if test "x$JAVA" = "x"; then
+         use_java="No (java not available)"
+       else
+--- graphviz-2.47.2/tclpkg/gv/Makefile.am.orig	2021-05-27 02:56:40.000000000 +0200
++++ graphviz-2.47.2/tclpkg/gv/Makefile.am	2023-07-07 01:10:42.433234989 +0200
+@@ -535,7 +535,7 @@
+ endif
+ install-data-hook:
+ if WITH_JAVA
+-	(cd $(DESTDIR)$(pkgjavadir); $(LN_S) -f org/graphviz/libgv_java.$(JSHEXT) ../../libgv.$(JSHEXT); javac -classpath $(DESTDIR)$(libjavadir) gv.java;)
++	(cd $(DESTDIR)$(pkgjavadir); $(LN_S) -f org/graphviz/libgv_java.$(JSHEXT) ../../libgv.$(JSHEXT); $(JAVAC) -classpath $(DESTDIR)$(libjavadir) gv.java;)
+ endif
+ if WITH_LUA
+ 	(cd $(DESTDIR)$(pkgluadir);    rm -f gv.so;  $(LN_S) libgv_lua.so gv.so;)
+@@ -603,8 +603,8 @@
+ 		ln -f ../$(srcdir)/test.java .; \
+ 		ln -f ../$(srcdir)/hello.gv  .; \
+ 		ln -f ../$(srcdir)/test.java .; \
+-		CLASSPATH=. javac *.java; \
+-		LD_LIBRARY_PATH=. CLASSPATH=. java test)
++		CLASSPATH=. $(JAVAC) *.java; \
++		LD_LIBRARY_PATH=. CLASSPATH=. $(JAVA) test)
+ 
+ .PHONY: test_lua
+ test_lua: libgv_lua.la

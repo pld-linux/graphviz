@@ -73,6 +73,7 @@ Patch10:	%{name}-ming.patch
 Patch12:	%{name}-webp.patch
 Patch14:	python-paths.patch
 Patch15:	ghostscript918.patch
+Patch16:	java.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 %{?with_r:BuildRequires:	R}
@@ -528,6 +529,7 @@ Wiązania graphviza dla języka R.
 %patch12 -p1
 %patch14 -p1
 %patch15 -p1
+%patch16 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua5.1@' -i tclpkg/gv/demo/modgraph.lua
 
@@ -544,9 +546,7 @@ touch config/config.rpath
 
 CPPFLAGS="%{rpmcppflags}"
 %if %{with java}
-JAVA_HOME=%{java_home}
-export JAVA_HOME
-CPPFLAGS="$CPPFLAGS -I$JAVA_HOME/include -I$JAVA_HOME/include/linux"
+CPPFLAGS="$CPPFLAGS -I%{java_home}/include -I%{java_home}/include/linux"
 %endif
 export CPPFLAGS
 
@@ -556,6 +556,10 @@ export CPPFLAGS
 %endif
 %ifarch x32
 	LIBPOSTFIX="x32" \
+%endif
+%if %{with java}
+	JAVA="%{java_home}/bin/java}" \
+	JAVAC="%{java_home}/bin/javac}" \
 %endif
 	LUA=/usr/bin/lua5.1 \
 	PHP=%{__php} \
