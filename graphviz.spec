@@ -74,6 +74,7 @@ Patch12:	%{name}-webp.patch
 Patch14:	python-paths.patch
 Patch15:	ghostscript918.patch
 Patch16:	java.patch
+Patch17:	cppflags.patch
 URL:		http://www.graphviz.org/
 %{?with_devil:BuildRequires:	DevIL-devel}
 %{?with_r:BuildRequires:	R}
@@ -530,6 +531,7 @@ Wiązania graphviza dla języka R.
 %patch14 -p1
 %patch15 -p1
 %patch16 -p1
+%patch17 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua5.1@' -i tclpkg/gv/demo/modgraph.lua
 

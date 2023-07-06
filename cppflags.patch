@@ -1,0 +1,11 @@
+--- graphviz-2.47.2/configure.ac.orig	2023-07-07 01:21:15.427742856 +0200
++++ graphviz-2.47.2/configure.ac	2023-07-07 01:49:04.518671957 +0200
+@@ -739,7 +739,7 @@
+ 			false)
+ 		])
+           ac_save_CFLAGS="$CFLAGS"
+-          ac_save_CPPFLAGS="$save_CPPFLAGS"
++          ac_save_CPPFLAGS="$CPPFLAGS"
+           CFLAGS="$CFLAGS $GUILE_INCLUDES"
+           CPPFLAGS="$CPPFLAGS $GUILE_INCLUDES"
+           AC_CHECK_HEADER(libguile.h,,[
