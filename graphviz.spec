@@ -50,6 +50,9 @@
 %undefine	with_python2
 %undefine	with_python3
 %endif
+
+%{?with_java:%{?use_default_jdk}}
+
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
@@ -98,7 +101,7 @@ BuildRequires:	gts-devel
 %{?with_guile:BuildRequires:	guile-devel >= 2.0}
 #BuildRequires:	io
 %if %{with java}
-BuildRequires:	jdk
+%{?use_jdk:%buildrequires_jdk}%{!?use_jdk:BuildRequires:	jdk}
 BuildRequires:	jpackage-utils
 %endif
 BuildRequires:	libLASi-devel
@@ -133,7 +136,7 @@ BuildRequires:	poppler-glib-devel
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.6}
 %{?with_perl:BuildRequires:	rpm-perlprov}
 %{?with_python:BuildRequires:	rpm-pythonprov}
-BuildRequires:	rpmbuild(macros) >= 1.696
+BuildRequires:	rpmbuild(macros) >= 2.021
 %{?with_ruby:BuildRequires:	ruby-devel >= 1.9}
 BuildRequires:	sed >= 4.0
 # swig-csharp,swig-go,swig-java,swig-lua,swig-ocaml in main swig
