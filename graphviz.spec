@@ -103,7 +103,7 @@ BuildRequires:	gts-devel
 %{?with_guile:BuildRequires:	guile-devel >= 2.0}
 #BuildRequires:	io
 %if %{with java}
-%{?use_jdk:%buildrequires_jdk}%{!?use_jdk:BuildRequires:	jdk}
+%buildrequires_jdk
 BuildRequires:	jpackage-utils
 %endif
 BuildRequires:	libLASi-devel
