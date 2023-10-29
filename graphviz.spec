@@ -57,7 +57,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.47.2
-Release:	4
+Release:	5
 License:	EPL v1.0
 Group:		X11/Applications/Graphics
 #Source0Download: https://graphviz.org/download/source/
