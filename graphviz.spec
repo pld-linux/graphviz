@@ -129,6 +129,7 @@ BuildRequires:	perl-devel
 %if %{with php}
 BuildRequires:	%{php_name}-devel
 BuildRequires:	%{php_name}-program
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	swig-php >= 3.0.11
 %endif
 BuildRequires:	pkgconfig
@@ -303,6 +304,7 @@ płaski oraz topologiczny typu "rybie oko".
 Summary:	HTML documentation for graphviz
 Summary(pl.UTF-8):	Dokumentacja do graphviza w formacie HTML
 Group:		Documentation
+BuildArch:	noarch
 
 %description doc-html
 HTML documentation for graphviz.
@@ -314,6 +316,7 @@ Dokumentacja do graphviza w formacie HTML.
 Summary:	PDF documentation for graphviz
 Summary(pl.UTF-8):	Dokumentacja do graphviza w formacie PDF
 Group:		Documentation
+BuildArch:	noarch
 
 %description doc-pdf
 PDF documentation for graphviz.
@@ -326,6 +329,7 @@ Summary:	Demo graphs for graphviz
 Summary(pl.UTF-8):	Przykładowe grafy dla graphviza
 Group:		X11/Applications/Graphics
 Requires:	%{name} = %{version}-%{release}
+BuildArch:	noarch
 
 %description graphs
 This package provides some example graphs.
@@ -536,7 +540,7 @@ Wiązania graphviza dla języka R.
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua5.1@' -i tclpkg/gv/demo/modgraph.lua
 
 %{__sed} -E -i -e '1s,#!\s*/usr/bin/python(\s|$),#!%{__python}\1,' \
-      tclpkg/gv/demo/modgraph.py
+	tclpkg/gv/demo/modgraph.py
 
 %build
 touch config/config.rpath
