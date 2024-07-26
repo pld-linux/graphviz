@@ -572,8 +572,8 @@ export CPPFLAGS
 	%{?with_ruby:RUBY_VER=%{ruby_abi}} \
 	ac_cv_lib_criterion_main=no \
 	lua_suffix=51 \
-	%{!?with_devil:--disable-devil} \
-	%{?with_golang:--enable-go} \
+	%{!?with_golang:--disable-go} \
+	%{!?with_guile:--disable-guile} \
 	%{?with_io:--enable-io} \
 	%{!?with_java:--disable-java} \
 	--disable-ltdl-install \
@@ -590,11 +590,12 @@ export CPPFLAGS
 	%{!?with_tcl:--disable-tcl} \
 	--disable-silent-rules \
 	--disable-static \
-	%{?with_ipsepcola:--with-ipsepcola} \
+	%{!?with_devil:--without-devil} \
+	%{!?with_ipsepcola:--without-ipsepcola} \
+	%{!?with_gd:--without-libgd} \
 	%{?with_ming:--with-ming} \
 	%{!?with_qt:--without-qt} \
-	%{?with_smyrna:--with-smyrna} \
-	%{!?with_gd:--without-libgd} \
+	%{!?with_smyrna:--without-smyrna} \
 	--with-visio \
 	--with-webp
 
