@@ -17,7 +17,6 @@
 %bcond_without	lua		# Lua bindings
 %bcond_without	r		# R bindings
 %bcond_without	python		# Python bindings
-%bcond_without	python2		# Python 2 bindings
 %bcond_without	python3		# Python 3 bindings
 %bcond_with	io		# io language bindings (needs swig support)
 # - plugins, features
@@ -47,7 +46,6 @@
 %undefine with_golang
 %endif
 %if %{without python}
-%undefine	with_python2
 %undefine	with_python3
 %endif
 
@@ -56,13 +54,13 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.47.2
-Release:	6
+Version:	2.47.3
+Release:	1
 License:	EPL v1.0
 Group:		X11/Applications/Graphics
 #Source0Download: https://graphviz.org/download/source/
 Source0:	https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	4b60526ed7a6a43dfb23b5c175286cd8
+# Source0-md5:	9633762c17754c7612171cd05500a2fb
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-link.patch
 Patch2:		%{name}-bad-header.patch
@@ -134,8 +132,7 @@ BuildRequires:	swig-php >= 3.0.11
 %endif
 BuildRequires:	pkgconfig
 BuildRequires:	poppler-glib-devel
-%{?with_python:BuildRequires:	python-devel >= 1:2.3}
-%{?with_python2:BuildRequires:	python-devel >= 1:2.3}
+%{?with_python:BuildRequires:	python3-devel >= 1:3.6}
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.6}
 %{?with_perl:BuildRequires:	rpm-perlprov}
 %{?with_python:BuildRequires:	rpm-pythonprov}
@@ -442,26 +439,14 @@ PHP binding for graphviz.
 %description -n %{php_name}-%{name} -l pl.UTF-8
 Wiązania PHP dla graphviza.
 
-%package -n python-libgraphviz
-Summary:	Python 2 binding for graphviz
-Summary(pl.UTF-8):	Wiązania Pythona 2 dla graphviza
-Group:		Libraries
-Requires:	%{name} = %{version}-%{release}
-Obsoletes:	graphviz-python < 2.26.3-1
-Obsoletes:	python-graphviz < 2.44.1-10
-
-%description -n python-libgraphviz
-Python 2 binding for graphviz.
-
-%description -n python-libgraphviz -l pl.UTF-8
-Wiązania Pythona 2 dla graphviza.
-
 %package -n python3-libgraphviz
 Summary:	Python 3 binding for graphviz
 Summary(pl.UTF-8):	Wiązania Pythona 3 dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
+Obsoletes:	graphviz-python < 2.26.3-1
 Obsoletes:	python3-graphviz < 2.44.1-10
+Conflicts:	python-libgraphviz < 2.47.3-7
 
 %description -n python3-libgraphviz
 Python 3 binding for graphviz.
@@ -569,6 +554,8 @@ export CPPFLAGS
 %endif
 	LUA=/usr/bin/lua5.1 \
 	PHP=%{__php} \
+	PYTHON=%{__python3} \
+	PYTHON3=%{__python3} \
 	%{?with_ruby:RUBY_VER=%{ruby_abi}} \
 	ac_cv_lib_criterion_main=no \
 	lua_suffix=51 \
@@ -582,7 +569,6 @@ export CPPFLAGS
 	%{!?with_perl:--disable-perl} \
 	%{!?with_php:--disable-php} \
 	%{!?with_python:--disable-python} \
-	%{!?with_python2:--disable-python2} \
 	%{!?with_python3:--disable-python3} \
 	%{!?with_r:--disable-r} \
 	%{!?with_ruby:--disable-ruby} \
@@ -950,33 +936,22 @@ fi
 %endif
 
 %if %{with python}
-%files -n python-libgraphviz
+%files -n python3-libgraphviz
 %defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/python
 %attr(755,root,root) %{_libdir}/graphviz/python/libgv_python.so
 %attr(755,root,root) %{_libdir}/graphviz/python/_gv.so
 %{_libdir}/graphviz/python/gv.py
-%if %{with python2}
-%dir %{_libdir}/graphviz/python2
-%attr(755,root,root) %{_libdir}/graphviz/python2/libgv_python2.so
-%attr(755,root,root) %{_libdir}/graphviz/python2/_gv.so
-%{_libdir}/graphviz/python2/gv.py
-%endif
 %attr(755,root,root) %{_datadir}/graphviz/demo/modgraph.py
-%attr(755,root,root) %{py_sitedir}/_gv.so
-%{py_sitedir}/gv.py
 %{_mandir}/man3/gv_python.3*
-%endif
-
 %if %{with python3}
-%files -n python3-libgraphviz
-%defattr(644,root,root,755)
 %dir %{_libdir}/graphviz/python3
 %attr(755,root,root) %{_libdir}/graphviz/python3/libgv_python3.so
 %attr(755,root,root) %{_libdir}/graphviz/python3/_gv.so
 %{_libdir}/graphviz/python3/gv.py
 %attr(755,root,root) %{py3_sitedir}/_gv.so
 %{py3_sitedir}/gv.py
+%endif
 %endif
 
 %if %{with ruby}
