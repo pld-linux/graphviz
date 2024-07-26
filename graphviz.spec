@@ -54,22 +54,19 @@
 Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
-Version:	2.47.3
+Version:	2.50.0
 Release:	1
 License:	EPL v1.0
 Group:		X11/Applications/Graphics
 #Source0Download: https://graphviz.org/download/source/
 Source0:	https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/%{version}/%{name}-%{version}.tar.xz
-# Source0-md5:	9633762c17754c7612171cd05500a2fb
+# Source0-md5:	ccc1c011d79fcdfccc1cb4be8a81edef
 Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-link.patch
 Patch2:		%{name}-bad-header.patch
 Patch3:		%{name}-php.patch
-Patch4:		%{name}-ltdl.patch
 Patch7:		%{name}-ruby.patch
 Patch10:	%{name}-ming.patch
-Patch12:	%{name}-webp.patch
-Patch14:	python-paths.patch
 Patch15:	ghostscript918.patch
 Patch16:	java.patch
 Patch17:	cppflags.patch
@@ -125,8 +122,8 @@ BuildRequires:	lua51-devel >= 5.1
 BuildRequires:	pango-devel >= 1:1.14.9
 BuildRequires:	perl-devel
 %if %{with php}
-BuildRequires:	%{php_name}-devel
-BuildRequires:	%{php_name}-program
+BuildRequires:	%{php_name}-devel >= 4:7
+BuildRequires:	%{php_name}-program >= 4:7
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	swig-php >= 3.0.11
 %endif
@@ -513,18 +510,15 @@ Wiązania graphviza dla języka R.
 %patch0 -p1
 %patch1 -p1
 %patch3 -p1
-%patch4 -p1
 %patch7 -p1
 %patch10 -p1
-%patch12 -p1
-%patch14 -p1
 %patch15 -p1
 %patch16 -p1
 %patch17 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua5.1@' -i tclpkg/gv/demo/modgraph.lua
 
-%{__sed} -E -i -e '1s,#!\s*/usr/bin/python(\s|$),#!%{__python}\1,' \
+%{__sed} -i -e '1s,/usr/bin/env python3,%{__python3},' \
 	tclpkg/gv/demo/modgraph.py
 
 %build
@@ -564,6 +558,7 @@ export CPPFLAGS
 	%{?with_io:--enable-io} \
 	%{!?with_java:--disable-java} \
 	--disable-ltdl-install \
+	--enable-lefty \
 	%{!?with_lua:--disable-lua} \
 	%{!?with_ocaml:--disable-ocaml} \
 	%{!?with_perl:--disable-perl} \

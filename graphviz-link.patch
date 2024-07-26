@@ -9,12 +9,3 @@
  	$(top_builddir)/plugin/dot_layout/libgvplugin_dot_layout_C.la \
  	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout_C.la \
  	$(top_builddir)/plugin/core/libgvplugin_core_C.la \
-@@ -97,7 +97,7 @@
- 
- if WITH_LIBGD
- libtcldot_builtin_la_LIBADD += $(top_builddir)/plugin/gd/libgvplugin_gd_C.la
--libtcldot_builtin_la_LIBADD += $(GD_LIBS)
-+libtcldot_builtin_la_LIBADD += $(GDLIB_LIBS)
- endif
- 
- libtcldot_builtin_la_LIBADD += $(EXPAT_LIBS) $(SOCKET_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
