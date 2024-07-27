@@ -65,6 +65,7 @@ Patch0:		%{name}-fontpath.patch
 Patch1:		%{name}-link.patch
 Patch2:		%{name}-bad-header.patch
 Patch3:		%{name}-php.patch
+Patch4:		gcc14.patch
 Patch7:		%{name}-ruby.patch
 Patch10:	%{name}-ming.patch
 Patch15:	ghostscript918.patch
@@ -510,6 +511,7 @@ Wiązania graphviza dla języka R.
 %patch0 -p1
 %patch1 -p1
 %patch3 -p1
+%patch4 -p1
 %patch7 -p1
 %patch10 -p1
 %patch15 -p1
