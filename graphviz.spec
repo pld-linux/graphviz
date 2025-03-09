@@ -55,7 +55,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	2.50.0
-Release:	
+Release:	2
 License:	EPL v1.0
 Group:		X11/Applications/Graphics
 #Source0Download: https://graphviz.org/download/source/
@@ -509,16 +509,16 @@ Wiązania graphviza dla języka R.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch7 -p1
-%patch10 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
+%patch -P 0 -p1
+%patch -P 1 -p1
+%patch -P 3 -p1
+%patch -P 4 -p1
+%patch -P 5 -p1
+%patch -P 7 -p1
+%patch -P 10 -p1
+%patch -P 15 -p1
+%patch -P 16 -p1
+%patch -P 17 -p1
 
 %{__sed} '1s@/usr/bin/lua$@/usr/bin/lua5.1@' -i tclpkg/gv/demo/modgraph.lua
 
