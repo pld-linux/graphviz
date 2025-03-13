@@ -143,6 +143,8 @@ BuildRequires:	xz
 BuildRequires:	zlib-devel
 %if %{with smyrna}
 BuildRequires:	OpenGL-glut-devel
+BuildRequires:	gtkglext-devel
+BuildRequires:	gts-devel
 BuildRequires:	libglade2-devel >= 2.0
 %endif
 %if %{with qt}
