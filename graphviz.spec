@@ -49,7 +49,7 @@ Summary:	Graph Visualization Tools
 Summary(pl.UTF-8):	Narzędzie do wizualizacji w postaci grafów
 Name:		graphviz
 Version:	12.2.1
-Release:	1
+Release:	2
 License:	EPL v1.0
 Group:		X11/Applications/Graphics
 #Source0Download: https://graphviz.org/download/source/
@@ -393,7 +393,6 @@ Summary(pl.UTF-8):	Wiązania Pythona 3 dla graphviza
 Group:		Libraries
 Requires:	%{name} = %{version}-%{release}
 Obsoletes:	graphviz-python < 2.26.3-1
-Obsoletes:	python3-graphviz < 2.44.1-10
 Conflicts:	python-libgraphviz < 2.47.3-7
 
 %description -n python3-libgraphviz
