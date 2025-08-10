@@ -168,6 +168,7 @@ Requires:	pango >= 1:1.14.9
 %{!?with_golang:Obsoletes:	golang-graphviz < 12.2.1}
 Obsoletes:	graphviz-doc-html < 12.2.1
 Obsoletes:	graphviz-ming < 12.2.1
+Obsoletes:	graphviz-ocaml < 2.26.3-1
 Obsoletes:	ocaml-graphviz < 12.2.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
